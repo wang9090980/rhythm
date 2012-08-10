@@ -25,8 +25,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
-import org.b3log.latke.action.AbstractAction;
-import org.b3log.latke.action.ActionException;
 import org.b3log.latke.annotation.RequestProcessing;
 import org.b3log.latke.annotation.RequestProcessor;
 import org.b3log.latke.cache.Cache;
@@ -38,6 +36,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
+import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Blog;
@@ -52,7 +51,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Jun 29, 2012
+ * @version 1.0.0.9, Aug 10, 2012
  * @since 0.1.4
  */
 @RequestProcessor
@@ -134,7 +133,7 @@ public final class ArticleProcessor {
         renderer.setJSONObject(jsonObject);
 
         try {
-            final JSONObject requestJSONObject = AbstractAction.parseRequestJSONObject(request, response);
+            final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
             LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
@@ -183,7 +182,7 @@ public final class ArticleProcessor {
 //                }
             } catch (final Exception e) {
                 LOGGER.log(Level.SEVERE, e.getMessage(), e);
-                throw new ActionException(e);
+                return;
             }
 
             latestPostTime = currentPostTime;
