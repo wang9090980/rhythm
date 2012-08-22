@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * </p>
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, May 18, 2012
+ * @version 1.0.0.1, May 22, 2012
  * @since 0.1.6
  */
 @RequestProcessor
@@ -103,22 +103,24 @@ public final class SubdomainMonitor {
             }
         }
 
-        // Sends admin an email SC ^200
-        final MailService mailService = MailServiceFactory.getMailService();
-        final Message message = new MailService.Message();
-        message.addRecipient("DL88250@gmail.com");
-        message.setFrom("DL88250@gmail.com");
-        message.setSubject("B3log.org Sub-domains Monitor Report");
+        if (errorSCSubdomains.length() > 0) {
+            // Sends admin an email SC ^200
+            final MailService mailService = MailServiceFactory.getMailService();
+            final Message message = new MailService.Message();
+            message.addRecipient("DL88250@gmail.com");
+            message.setFrom("DL88250@gmail.com");
+            message.setSubject("B3log.org Sub-domains Monitor Report");
 
-        final StringBuilder contentBuilder = new StringBuilder();
-        contentBuilder.append("<h2>Ping Failed URLs: </h2>");
-        for (int i = 0; i < errorSCSubdomains.length(); i++) {
-            final JSONObject errorURL = errorSCSubdomains.getJSONObject(i);
-            contentBuilder.append(errorURL.getString("URL")).append("    ").append(errorURL.getInt("SC")).append("<br/>");
+            final StringBuilder contentBuilder = new StringBuilder();
+            contentBuilder.append("<h2>Ping Failed URLs: </h2>");
+            for (int i = 0; i < errorSCSubdomains.length(); i++) {
+                final JSONObject errorURL = errorSCSubdomains.getJSONObject(i);
+                contentBuilder.append(errorURL.getString("URL")).append("    ").append(errorURL.getInt("SC")).append("<br/>");
+            }
+            message.setHtmlBody(contentBuilder.toString());
+
+            mailService.send(message);
         }
-        message.setHtmlBody(contentBuilder.toString());
-
-        mailService.send(message);
 
         final DoNothingRenderer renderer = new DoNothingRenderer();
         context.setRenderer(renderer);
