@@ -20,6 +20,7 @@ import org.b3log.latke.model.Pagination;
 import org.b3log.rhythm.model.Article;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,14 @@ import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.util.Rhythms;
 import static org.b3log.rhythm.model.Article.*;
 import org.b3log.rhythm.model.Tag;
+import org.b3log.rhythm.repository.ArticleRepository;
+import org.b3log.rhythm.repository.TagArticleRepository;
+import org.b3log.rhythm.repository.TagRepository;
+import org.b3log.rhythm.repository.impl.ArticleRepositoryImpl;
+import org.b3log.rhythm.repository.impl.TagArticleRepositoryImpl;
+import org.b3log.rhythm.repository.impl.TagRepositoryImpl;
 import org.b3log.rhythm.service.ArticleService;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -65,6 +73,18 @@ public final class ArticleProcessor {
      * Article service.
      */
     private ArticleService articleService = ArticleService.getInstance();
+    /**
+     * Article repository.
+     */
+    private ArticleRepository articleRepository = ArticleRepositoryImpl.getInstance();
+    /**
+     * Tag repository.
+     */
+    private TagRepository tagRepository = TagRepositoryImpl.getInstance();
+    /**
+     * Tag-Article repository.
+     */
+    private TagArticleRepository tagArticleRepository = TagArticleRepositoryImpl.getInstance();
     /**
      * Cache.
      */
@@ -272,76 +292,98 @@ public final class ArticleProcessor {
         context.setRenderer(renderer);
         renderer.setJSONObject(jsonObject);
 
-        final List<JSONObject> articles = articleService.getCachedArticles(pageSize);
-        jsonObject.put(Article.ARTICLES, articles);
         jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
 
-        //        LOGGER.log(Level.INFO, "Getting articles by tags[{0}]....", tagString);
-        //        try {
-        //            final String[] tags = tagString.split(",");
-        //
-        //            final List<JSONObject> articles = new ArrayList<JSONObject>();
-        //            for (int i = 0; i < tags.length; i++) {
-        //                final String tagTitle = tags[i];
-        //                final JSONObject tag = tagRepository.getByTitle(tagTitle);
-        //
-        //                if (null != tag) {
-        //                    LOGGER.log(Level.FINER, "Tag Title[{0}]", tag.getString(Tag.TAG_TITLE_LOWER_CASE));
-        //
-        //                    final String tagId = tag.getString(Keys.OBJECT_ID);
-        //                    final JSONObject result = tagArticleRepository.getByTagId(tagId, 1, pageSize);
-        //                    final JSONArray tagArticleRelations = result.getJSONArray(Keys.RESULTS);
-        //                    final int relationSize = pageSize < tagArticleRelations.length() ? pageSize : tagArticleRelations.length();
-        //                    LOGGER.log(Level.FINEST, "Relation size[{0}]", relationSize);
-        //
-        //                    for (int j = 0; j < relationSize; j++) {
-        //                        final JSONObject tagArticleRelation = tagArticleRelations.getJSONObject(j);
-        //                        LOGGER.log(Level.FINEST, "Relation[{0}]", tagArticleRelation.toString());
-        //                        final String relatedArticleId = tagArticleRelation.getString(Article.ARTICLE + "_" + Keys.OBJECT_ID);
-        //                        final JSONObject article = articleRepository.get(relatedArticleId);
-        //                        if (article.getString(Blog.BLOG_HOST).split(":")[0].equalsIgnoreCase(soloHost)) {
-        //                            continue; // Excludes articles from requested host
-        //                        }
-        //
-        //                        boolean existed = false;
-        //                        for (final JSONObject relevantArticle : articles) {
-        //                            if (relevantArticle.getString(Keys.OBJECT_ID).equals(article.getString(Keys.OBJECT_ID))) {
-        //                                existed = true;
-        //                            }
-        //                        }
-        //
-        //                        if (!existed) {
-        //                            articles.add(article);
-        //                        }
-        //
-        //                        if (articles.size() == pageSize) {
-        //                            break; // Got enough
-        //                        }
-        //                    }
-        //                }
-        //
-        //                if (articles.size() == pageSize) {
-        //                    break; // Got enough
-        //                }
-        //            }
-        //
-        //            Collections.sort(articles, ID_COMPARATOR);
-        //
-        //            removeUnusedProperties(articles);
-        //
-        //            jsonObject.put(Article.ARTICLES, articles);
-        //
-        //            jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
-        //
-        //            LOGGER.log(Level.FINE, "Got articles[{0}] by tag[{1}]", new Object[]{articles, tagString});
-        //        } catch (final Exception e) {
-        //            LOGGER.log(Level.SEVERE, "Can not get articles", e);
-        //
-        //            try {
-        //                context.getResponse().sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-        //            } catch (final IOException ex) {
-        //                throw new RuntimeException(ex);
-        //            }
-        //        }
+        LOGGER.log(Level.INFO, "Getting articles by tags[{0}]....", tagString);
+        try {
+            final String[] tags = tagString.split(",");
+
+            final List<JSONObject> articles = new ArrayList<JSONObject>();
+            for (int i = 0; i < tags.length; i++) {
+                final String tagTitle = tags[i];
+                final JSONObject tag = tagRepository.getByTitle(tagTitle);
+
+                if (null != tag) {
+                    LOGGER.log(Level.FINER, "Tag Title[{0}]", tag.getString(Tag.TAG_TITLE_LOWER_CASE));
+
+                    final String tagId = tag.getString(Keys.OBJECT_ID);
+                    final JSONObject result = tagArticleRepository.getByTagId(tagId, 1, pageSize);
+                    final JSONArray tagArticleRelations = result.getJSONArray(Keys.RESULTS);
+                    final int relationSize = pageSize < tagArticleRelations.length() ? pageSize : tagArticleRelations.length();
+                    LOGGER.log(Level.FINEST, "Relation size[{0}]", relationSize);
+
+                    for (int j = 0; j < relationSize; j++) {
+                        final JSONObject tagArticleRelation = tagArticleRelations.getJSONObject(j);
+                        LOGGER.log(Level.FINEST, "Relation[{0}]", tagArticleRelation.toString());
+                        final String relatedArticleId = tagArticleRelation.getString(Article.ARTICLE + "_" + Keys.OBJECT_ID);
+                        final JSONObject article = articleRepository.get(relatedArticleId);
+                        if (article.getString(Blog.BLOG_HOST).split(":")[0].equalsIgnoreCase(soloHost)) {
+                            continue; // Excludes articles from requested host
+                        }
+
+                        boolean existed = false;
+                        for (final JSONObject relevantArticle : articles) {
+                            if (relevantArticle.getString(Keys.OBJECT_ID).equals(article.getString(Keys.OBJECT_ID))) {
+                                existed = true;
+                            }
+                        }
+
+                        if (!existed) {
+                            articles.add(article);
+                        }
+
+                        if (articles.size() == pageSize) {
+                            break; // Got enough
+                        }
+                    }
+                }
+
+                if (articles.size() == pageSize) {
+                    break; // Got enough
+                }
+            }
+
+            removeUnusedProperties(articles);
+
+            jsonObject.put(Article.ARTICLES, articles);
+
+            jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
+
+            LOGGER.log(Level.FINE, "Got articles[{0}] by tag[{1}]", new Object[]{articles, tagString});
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "Can not get articles", e);
+
+            try {
+                context.getResponse().sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            } catch (final IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+    /**
+     * Removes unused properties of each article in the specified articles.
+     * 
+     * <p>
+     * Remains the following properties:
+     * <ul>
+     *   <li>{@link Article#ARTICLE_TITLE article title}</li>
+     *   <li>{@link Article#ARTICLE_PERMALINK article permalink}</li>
+     * </ul>
+     * </p>
+     * 
+     * @param articles the specified articles
+     */
+    private void removeUnusedProperties(final List<JSONObject> articles) {
+        for (final JSONObject article : articles) {
+            article.remove(Keys.OBJECT_ID);
+            article.remove(ARTICLE_ORIGINAL_ID);
+            article.remove(ARTICLE_AUTHOR_EMAIL);
+            article.remove(ARTICLE_TAGS_REF);
+            article.remove(Blog.BLOG_HOST);
+            article.remove(Blog.BLOG_TITLE);
+            article.remove(Blog.BLOG_VERSION);
+            article.remove(Blog.BLOG);
+        }
     }
 }
