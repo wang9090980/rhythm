@@ -58,33 +58,8 @@
             "length": 256
         },
         {
-            "name": "userName",
-            "type": "String",
-            "length": 20
-        },
-        {
-            "name": "userPassword",
-            "type": "String",
-            "length": 16
-        },
-        {
-            "name": "userRole",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "userArticleCount",
-            "type": "int"
-        },
-        {
-            "name": "userCommentCount",
-            "type": "int"
-        },
-        {
-            "name": "userStatus",
-            "type": "String",
-            "length": 1,
-            "description": "0: valid, 1: invalid",
+            "name": "recentPostTime",
+            "type": "long"
         }
         ]
     },
@@ -93,6 +68,11 @@
         "keys": [
         {
             "name": "oId",
+            "type": "String",
+            "length": 255
+        },
+        {
+            "name": "articleOriginalId",
             "type": "String",
             "length": 255
         },
@@ -146,7 +126,7 @@
         }
         ]
     },
-     {
+    {
         "name": "user",
         "keys": [
         {

@@ -48,7 +48,7 @@ import org.json.JSONObject;
  * Article service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Jun 29, 2012
+ * @version 1.0.0.3, Sep 3, 2012
  * @since 0.1.5
  */
 @SuppressWarnings("unchecked")
@@ -330,12 +330,13 @@ public final class ArticleService {
 
                 user.put(Keys.OBJECT_ID, String.valueOf(currentTimeMillis));
                 user.put(User.USER_EMAIL, authorEmail);
+                user.put(Common.RECENT_POST_TIME, currentTimeMillis);
+                
+                userRepository.add(user);
+            } else {
+                user.put(Common.RECENT_POST_TIME, currentTimeMillis);
+                userRepository.update(user.getString(Keys.OBJECT_ID), user);
             }
-
-            user.put(Common.RECENT_POST_TIME, currentTimeMillis);
-
-            userRepository.update(user.getString(Keys.OBJECT_ID), user);
-
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Updates recent post time of failed", e);
 
