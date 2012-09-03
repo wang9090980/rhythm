@@ -99,7 +99,7 @@ public final class DNSPodService {
 
             final JSONObject content = new JSONObject(new String(response.getContent()));
 
-            LOGGER.log(Level.FINE, "Response[sc={0}, content={1}]",
+            LOGGER.log(Level.INFO, "Response[sc={0}, content={1}]",
                        new Object[]{response.getResponseCode(), content.toString(Rhythms.INDENT_FACTOR)});
 
             final JSONArray records = content.getJSONArray("records");
