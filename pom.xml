@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.0.2.5, Jun 27, 2012
+    Version: 1.0.2.6, Sep 3, 2012
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -11,20 +11,18 @@
     <groupId>org.b3log</groupId>
     <artifactId>rhythm</artifactId>
     <packaging>war</packaging>
-    <version>0.1.6</version>
+    <version>0.2.0</version>
     <name>B3log Rhythm</name>
-    <url>http://b3log-rhythm.googlecode.com</url>
+    <url>https://github.com/b3log/b3log-rhythm</url>
     <description>B3log Rhythm is the community server for B3log Solo.</description>
     <inceptionYear>2010</inceptionYear>
 
     <!-- Version -->
     <properties>
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
-        <org.b3log.latke-gae.version>
-            0.5.0-SNAPSHOT
-        </org.b3log.latke-gae.version>
-<!--        <jabsorb.version>1.3.1</jabsorb.version>-->
-<!--        <commons-lang.version>2.5</commons-lang.version>-->
+          <org.b3log.latke-repository-mysql.version>0.5.0-SNAPSHOT</org.b3log.latke-repository-mysql.version>
+        <!--        <jabsorb.version>1.3.1</jabsorb.version>-->
+        <!--        <commons-lang.version>2.5</commons-lang.version>-->
         <gae.version>1.7.0</gae.version>
         <!-- maven plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
@@ -36,6 +34,7 @@
         <testng.version>6.1.1</testng.version>
         <!-- -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     </properties>
 
     <organization>
@@ -67,13 +66,13 @@
     </developers>
 
     <issueManagement>
-        <system>Google Code Issues</system>
-        <url>http://code.google.com/p/b3log-rhythm/issues/list</url>
+        <system>GitHub Issues</system>
+        <url>https://github.com/b3log/b3log-rhythm/issues</url>
     </issueManagement>
 
-<!--
-    TODO: update mailing list
--->
+    <!--
+        TODO: update mailing list
+    -->
     <mailingLists>
         <mailingList>
             <name>b3log-solo-dev</name>
@@ -83,9 +82,7 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:svn:http://b3log-rhythm.googlecode.com/svn/trunk/b3log-rhythm</connection>
-        <developerConnection>scm:svn:https://b3log-rhythm.googlecode.com/svn/trunk/b3log-rhythm</developerConnection>
-        <url>http://code.google.com/p/b3log-rhythm/source/browse/#svn/trunk/b3log-rhythm</url>
+        <url>https://github.com/b3log/b3log-rhythm</url>
     </scm>
 
     <reporting>
@@ -106,11 +103,11 @@
                 <artifactId>latke</artifactId>
                 <version>${org.b3log.latke.version}</version>
             </dependency>
-
+            
             <dependency>
                 <groupId>org.b3log</groupId>
-                <artifactId>latke-gae</artifactId>
-                <version>${org.b3log.latke-gae.version}</version>
+                <artifactId>latke-repository-mysql</artifactId>
+                <version>${org.b3log.latke-repository-mysql.version}</version>
             </dependency>
 
             <dependency>
@@ -127,7 +124,7 @@
                 <scope>runtime</scope>
             </dependency>
 
-<!--            <dependency>
+            <!--            <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
@@ -142,19 +139,29 @@
             <groupId>org.b3log</groupId>
             <artifactId>latke</artifactId>
             <exclusions>
-                <exclusion><!-- Using GAE Mail Service instead -->
-                    <artifactId>mail</artifactId>
-                    <groupId>javax.mail</groupId>
+                <exclusion>
+                    <groupId>com.jolbox</groupId>
+                    <artifactId>bonecp</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>c3p0</groupId>
+                    <artifactId>c3p0</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.b3log</groupId>
+            <artifactId>latke-repository-mysql</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>bonecp</artifactId>
+                    <groupId>com.jolbox</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>org.b3log</groupId>
-            <artifactId>latke-gae</artifactId>
-        </dependency>
-
-<!--        <dependency>
+        <!--        <dependency>
             <groupId>org.jabsorb</groupId>
             <artifactId>jabsorb</artifactId>
         </dependency>-->
@@ -177,11 +184,11 @@
             <artifactId>appengine-api-1.0-sdk</artifactId>
         </dependency>
 
-<!--        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
--->
+        <!--        <dependency>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </dependency>
+        -->
     </dependencies>
 
     <build>
