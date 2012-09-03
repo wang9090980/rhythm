@@ -18,13 +18,26 @@
 -->
 <!--
     Description: B3log Rhythm web deployment descriptor.
-    Version: 1.0.0.3, Sep 20, 2011
+    Version: 1.0.0.4, Sep 3, 2012
     Author: Liang Ding
 -->
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
     <listener>
         <listener-class>org.b3log.rhythm.RhythmServletListener</listener-class>
     </listener>
+    
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>org.b3log.latke.servlet.filter.EncodingFilter</filter-class>
+        <init-param>
+            <param-name>requestEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>responseEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
     
     <servlet>
         <servlet-name>HTTPRequestDispatcher</servlet-name>
