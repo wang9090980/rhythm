@@ -25,7 +25,7 @@
 -->
 <cronentries>
     <cron>
-        <url>/articles/accessibility/</url>
+        <url>/articles/accessibility</url>
         <description>Checks accessibility of articles</description>
         <schedule>every 1 hours</schedule>
     </cron>

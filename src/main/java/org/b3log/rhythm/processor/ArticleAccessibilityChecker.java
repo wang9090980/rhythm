@@ -72,7 +72,7 @@ public final class ArticleAccessibilityChecker {
      * @param context the specified context
      * @throws Exception exception 
      */
-    @RequestProcessing(value = "/articles/accessibility/", method = HTTPRequestMethod.GET)
+    @RequestProcessing(value = "/articles/accessibility", method = HTTPRequestMethod.GET)
     public void checkAccessibility(final HTTPRequestContext context) throws Exception {
         final List<JSONObject> articles = articleService.getArticlesRandomly(CHECK_CNT);
 
