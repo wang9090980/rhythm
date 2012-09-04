@@ -16,7 +16,6 @@
 package org.b3log.rhythm.service;
 
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -40,7 +39,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, May 18, 2012
+ * @version 1.0.0.1, Sep 4, 2012
  * @since 0.1.6
  */
 public final class DNSPodService {
@@ -84,17 +83,16 @@ public final class DNSPodService {
             httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             httpRequest.setURL(new URL(DNSPOD_API + "/Record.List"));
             httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/0.1.6 (DL88250gmail.com"));
-
-            final StringBuilder params = new StringBuilder();
-            params.append("login_email=").append(URLEncoder.encode(Rhythms.CFG.getString("dnspod.username"), "UTF-8")).
-                    append("&login_password=").append(URLEncoder.encode(Rhythms.CFG.getString("dnspod.password"), "UTF-8")).
-                    append("&format=").append("json").append("&lang=").append("cn").
-                    append("&error_on_empty=").append("no").append("&domain_id=").append(B3LOGORG_DOMAIN_ID).
-                    append("&offset=").append("0").append("&langth=").append("3000");
-
-            LOGGER.log(Level.FINER, "Params[{0}]", params.toString());
-            httpRequest.setPayload(params.toString().getBytes("UTF-8"));
-
+            
+            httpRequest.addPayloadEntry("login_email", Rhythms.CFG.getString("dnspod.username"));
+            httpRequest.addPayloadEntry("login_password", Rhythms.CFG.getString("dnspod.password"));
+            httpRequest.addPayloadEntry("format", "json");
+            httpRequest.addPayloadEntry("lang", "cn");
+            httpRequest.addPayloadEntry("error_on_empty", "no");
+            httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
+            httpRequest.addPayloadEntry("offset", "0");
+            httpRequest.addPayloadEntry("langth", "3000");
+            
             final HTTPResponse response = URL_FETCH_SVC.fetch(httpRequest);
 
             final JSONObject content = new JSONObject(new String(response.getContent()));
