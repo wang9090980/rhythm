@@ -91,7 +91,7 @@ public final class DNSPodService {
             httpRequest.addPayloadEntry("error_on_empty", "no");
             httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
             httpRequest.addPayloadEntry("offset", "0");
-            httpRequest.addPayloadEntry("langth", "3000");
+            httpRequest.addPayloadEntry("length", "3000");
             
             final HTTPResponse response = URL_FETCH_SVC.fetch(httpRequest);
 
