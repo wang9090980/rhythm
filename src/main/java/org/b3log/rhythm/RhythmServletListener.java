@@ -39,12 +39,7 @@ public final class RhythmServletListener extends AbstractServletListener {
     /**
      * Logger.
      */
-    private static final Logger LOGGER =
-            Logger.getLogger(RhythmServletListener.class.getName());
-    /**
-     * JSONO print indent factor.
-     */
-    public static final int JSON_PRINT_INDENT_FACTOR = 4;
+    private static final Logger LOGGER = Logger.getLogger(RhythmServletListener.class.getName());
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {

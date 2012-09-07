@@ -25,6 +25,7 @@ import org.b3log.latke.annotation.RequestProcessor;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
+import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
@@ -32,6 +33,7 @@ import org.b3log.latke.urlfetch.URLFetchServiceFactory;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.service.ArticleService;
+import org.b3log.rhythm.util.Rhythms;
 import org.json.JSONObject;
 
 /**
@@ -39,7 +41,7 @@ import org.json.JSONObject;
  * permalink of an article.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Jun 26, 2012
+ * @version 1.0.0.5, Sep 7, 2012
  * @since 0.1.5
  */
 @RequestProcessor
@@ -83,6 +85,7 @@ public final class ArticleAccessibilityChecker {
 
             try {
                 final HTTPRequest request = new HTTPRequest();
+                request.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION));
                 request.setURL(new URL(articlePermalink));
 
                 final HTTPResponse response = urlFetchService.fetch(request);

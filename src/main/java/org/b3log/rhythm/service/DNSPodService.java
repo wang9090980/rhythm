@@ -82,8 +82,8 @@ public final class DNSPodService {
             final HTTPRequest httpRequest = new HTTPRequest();
             httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             httpRequest.setURL(new URL(DNSPOD_API + "/Record.List"));
-            httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/0.1.6 (DL88250gmail.com)"));
-            
+            httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION + " (DL88250gmail.com)"));
+
             httpRequest.addPayloadEntry("login_email", Rhythms.CFG.getString("dnspod.username"));
             httpRequest.addPayloadEntry("login_password", Rhythms.CFG.getString("dnspod.password"));
             httpRequest.addPayloadEntry("format", "json");
@@ -92,7 +92,7 @@ public final class DNSPodService {
             httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
             httpRequest.addPayloadEntry("offset", "0");
             httpRequest.addPayloadEntry("length", "3000");
-            
+
             final HTTPResponse response = URL_FETCH_SVC.fetch(httpRequest);
 
             final JSONObject content = new JSONObject(new String(response.getContent()));
