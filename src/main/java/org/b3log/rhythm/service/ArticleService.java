@@ -16,7 +16,6 @@
 package org.b3log.rhythm.service;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
@@ -31,7 +30,6 @@ import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.service.ServiceException;
-import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Common;
@@ -48,7 +46,7 @@ import org.json.JSONObject;
  * Article service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Sep 3, 2012
+ * @version 1.0.0.4, Sep 26, 2012
  * @since 0.1.5
  */
 @SuppressWarnings("unchecked")
@@ -78,98 +76,6 @@ public final class ArticleService {
      * Default article batch size.
      */
     private static final int BATCH_SIZE = 50;
-    /**
-     * Cache size.
-     */
-    private static final int CACHE_SIZE = 50;
-    /**
-     * Fetch cache size.
-     */
-    private static final int FETCH_CACHE_SIZE = 10;
-    /**
-     * Cache time of articles.
-     */
-    private long cacheTime;
-    /**
-     * Cache expiration.
-     */
-    private static final long CACHE_EXPIRATION = 1000 * 60 * 60 * 12; // 12 hours
-    /**
-     * Local cache.
-     */
-    private List<JSONObject> articlesCache = new ArrayList<JSONObject>();
-    /**
-     * Key of random article cache.
-     */
-    private static final String RANDOM_ARTICLE_CACHE = "randomArticleCache";
-
-    /**
-     * Gets cached articles.
-     * 
-     * @param fetchSize the specified fetch size
-     * @return articles
-     */
-    // XXX: a workround temp caused by getByTags performance issue
-    public List<JSONObject> getCachedArticles(final int fetchSize) {
-        final boolean readFromCache = System.currentTimeMillis() - cacheTime < CACHE_EXPIRATION;
-        LOGGER.log(Level.FINER, "[cacheTime={0}], [readFromCache={1}]", new Object[]{cacheTime, readFromCache});
-
-        if (readFromCache) {
-            return getFromCache(fetchSize);
-        }
-
-        // Cache expired, regen
-        regen();
-
-        return getFromCache(fetchSize);
-    }
-
-    /**
-     * Gets articles from cache.
-     * 
-     * <p>
-     * An article in the returned list just contains the following properties:
-     * <ul>
-     *   <li>{@link Article#ARTICLE_TITLE article title}</li>
-     *   <li>{@link Article#ARTICLE_PERMALINK article permalink}</li>
-     * </ul>
-     * </p>
-     * 
-     * @param fetchSize the specified fetch size
-     * @return articles
-     */
-    private List<JSONObject> getFromCache(final int fetchSize) {
-        if (articlesCache.isEmpty()) {
-            regen();
-        }
-
-        final int maxSize = fetchSize <= FETCH_CACHE_SIZE ? fetchSize : FETCH_CACHE_SIZE;
-
-        final List<Integer> randomIntegers = CollectionUtils.getRandomIntegers(1, CACHE_SIZE - 1, maxSize);
-
-        final List<JSONObject> ret = new ArrayList<JSONObject>();
-        for (final int randomInteger : randomIntegers) {
-            final JSONObject cachedArticle = articlesCache.get(randomInteger);
-            ret.add(new JSONObject(cachedArticle, new String[]{
-                        Article.ARTICLE_TITLE,
-                        Article.ARTICLE_PERMALINK
-                    }));
-        }
-
-        LOGGER.log(Level.FINER, "[ret={0}]", ret);
-
-        return ret;
-    }
-
-    /**
-     * Regenerates cache.
-     */
-    private void regen() {
-        LOGGER.info("Regenerating article cache");
-        articlesCache = getArticlesRandomly(CACHE_SIZE);
-        cacheTime = System.currentTimeMillis();
-        LOGGER.info("Regenerated article cache");
-    }
 
     /**
      * Gets article randomly with the specified fetch size.
@@ -220,7 +126,7 @@ public final class ArticleService {
             LOGGER.log(Level.FINER, "Article Ids[{0}]", ret.toString());
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Gets article ids by accessibility check count[greaterOrLess=" + greaterOrLess
-                                     + ", checkCnt=" + checkCnt + "] failed", e);
+                    + ", checkCnt=" + checkCnt + "] failed", e);
         }
 
         return ret;
@@ -331,7 +237,7 @@ public final class ArticleService {
                 user.put(Keys.OBJECT_ID, String.valueOf(currentTimeMillis));
                 user.put(User.USER_EMAIL, authorEmail);
                 user.put(Common.RECENT_POST_TIME, currentTimeMillis);
-                
+
                 userRepository.add(user);
             } else {
                 user.put(Common.RECENT_POST_TIME, currentTimeMillis);

@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Jul 23, 2011
+ * @version 1.0.0.9, Sep 26, 2012
  * @since 0.1.4
  */
 public final class ArticleSender
@@ -46,13 +46,11 @@ public final class ArticleSender
     /**
      * Logger.
      */
-    private static final Logger LOGGER =
-            Logger.getLogger(ArticleSender.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ArticleSender.class.getName());
     /**
      * URL fetch service.
      */
-    private final URLFetchService urlFetchService =
-            URLFetchServiceFactory.getURLFetchService();
+    private final URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
     /**
      * URL of adding article to Rhythm.
      */
@@ -70,10 +68,10 @@ public final class ArticleSender
     public void action(final Event<JSONObject> event) throws EventException {
         final JSONObject data = event.getData();
         LOGGER.log(Level.FINER, "Processing an event[type={0}, data={1}] in listener[className={2}]",
-                   new Object[]{event.getType(), data, ArticleSender.class.getName()});
+                new Object[]{event.getType(), data, ArticleSender.class.getName()});
         try {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
-
+            
             final String blogTitle = data.getString(Blog.BLOG_TITLE);
             final String blogHost = data.getString(Blog.BLOG_HOST);
             final String blogVersion = data.getString(Blog.BLOG_VERSION);
@@ -103,7 +101,7 @@ public final class ArticleSender
             throw new EventException(e);
         }
     }
-
+    
     /**
      * Gets the event type {@linkplain EventTypes#PREFERENCE_LOAD}.
      *
