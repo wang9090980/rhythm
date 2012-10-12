@@ -46,7 +46,7 @@ public final class Securities {
     public static String securedHTML(final String html) {
         // TODO: DX
         
-        throw new UnsupportedOperationException();
+    	return html.replace("onclick", "");
     }
 
     /**
