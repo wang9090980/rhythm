@@ -19,7 +19,7 @@ package org.b3log.rhythm.model;
  * This class defines all article model relevant keys.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Nov 4, 2011
+ * @version 1.0.0.5, Oct 15, 2012
  * @since 0.1.4
  */
 public final class Article {
@@ -55,13 +55,16 @@ public final class Article {
     /**
      * Key of accessibility check count.
      */
-    public static final String ARTICLE_ACCESSIBILITY_CHECK_CNT =
-            "articleAccessibilityCheckCnt";
+    public static final String ARTICLE_ACCESSIBILITY_CHECK_CNT = "articleAccessibilityCheckCnt";
     /**
      * Key of accessibility check not HTTP 200 count.
      */
-    public static final String ARTICLE_ACCESSIBILITY_NOT_200_CNT =
-            "articleAccessibilityNot200Cnt";
+    public static final String ARTICLE_ACCESSIBILITY_NOT_200_CNT = "articleAccessibilityNot200Cnt";
+    //// Transient ////
+    /**
+     * Key of article content.
+     */
+    public static final String ARTICLE_CONTENT = "articleContent";
 
     /**
      * Private default constructor.

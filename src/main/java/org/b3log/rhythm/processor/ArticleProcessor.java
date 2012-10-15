@@ -15,35 +15,34 @@
  */
 package org.b3log.rhythm.processor;
 
-import java.util.List;
-import org.b3log.latke.model.Pagination;
-import org.b3log.rhythm.model.Article;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
-import org.b3log.latke.annotation.RequestProcessing;
-import org.b3log.latke.annotation.RequestProcessor;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.model.Pagination;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
+import org.b3log.latke.servlet.annotation.RequestProcessing;
+import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
+import org.b3log.rhythm.model.Article;
+import static org.b3log.rhythm.model.Article.*;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
-import org.b3log.rhythm.util.Rhythms;
-import static org.b3log.rhythm.model.Article.*;
 import org.b3log.rhythm.model.Tag;
 import org.b3log.rhythm.repository.ArticleRepository;
 import org.b3log.rhythm.repository.TagArticleRepository;
@@ -52,7 +51,10 @@ import org.b3log.rhythm.repository.impl.ArticleRepositoryImpl;
 import org.b3log.rhythm.repository.impl.TagArticleRepositoryImpl;
 import org.b3log.rhythm.repository.impl.TagRepositoryImpl;
 import org.b3log.rhythm.service.ArticleService;
+import org.b3log.rhythm.util.Rhythms;
+import org.b3log.rhythm.util.Securities;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -168,17 +170,17 @@ public final class ArticleProcessor {
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
                 LOGGER.log(Level.WARNING, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                           new String[]{blogHost, blogVersion});
+                        new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
                 return;
             }
 
             final JSONObject originalArticle = requestJSONObject.getJSONObject(ARTICLE);
-            final String title = originalArticle.getString(ARTICLE_TITLE);
+            securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                       new String[]{title, blogHost, blogVersion});
+                    new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
             final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
 
             Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
@@ -213,7 +215,7 @@ public final class ArticleProcessor {
 
             final String id = originalArticle.getString(Keys.OBJECT_ID);
             article.put(ARTICLE_ORIGINAL_ID, id);
-            article.put(ARTICLE_TITLE, title);
+            article.put(ARTICLE_TITLE, originalArticle.getString(ARTICLE_TITLE));
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
             final String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
@@ -385,5 +387,25 @@ public final class ArticleProcessor {
             article.remove(Blog.BLOG_VERSION);
             article.remove(Blog.BLOG);
         }
+    }
+
+    /**
+     * Security process.
+     * 
+     * @param article the specified article
+     * @throws JSONException json exception
+     */
+    private void securityProcess(final JSONObject article) throws JSONException {
+        String content = article.getString(ARTICLE_CONTENT);
+        content = Securities.securedHTML(content);
+        article.put(ARTICLE_CONTENT, content);
+
+        String title = article.getString(ARTICLE_TITLE);
+        title = Securities.securedHTML(title);
+        article.put(ARTICLE_TITLE, title);
+
+        String tagString = article.getString(ARTICLE_TAGS_REF);
+        tagString = Securities.securedHTML(tagString);
+        article.put(ARTICLE_TAGS_REF, tagString);
     }
 }

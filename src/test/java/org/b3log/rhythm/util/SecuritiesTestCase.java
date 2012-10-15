@@ -23,21 +23,22 @@ import org.testng.annotations.Test;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
- * @version 1.0.0.0, Sep 26, 2012
+ * @version 1.0.0.1, Oct 15, 2012
  * @since 0.1.6
  */
-public final class SecuritiesTestCase {
-
+public class SecuritiesTestCase {
+    
     /**
      * Tests {@link Securities#securedHTML(java.lang.String)} for event properties processing.
      */
     @Test
-    public void securedHTMLForProperty() {
-        // TODO: DX
-        final String html = "<a href='google.com' onclick='test'>a link</a>";
+    public void securedHTML() {
+        final String html = "<a href='google.com' onclick='test'>a link</a><script>alert(1);</script><p>test";
 
         final String securedHTML = Securities.securedHTML(html);
 
         Assert.assertFalse(securedHTML.contains("onclick"));
+        Assert.assertFalse(securedHTML.contains("<script>"));
+        Assert.assertTrue(securedHTML.contains("</p>"));
     }
 }
