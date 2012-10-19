@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, Sep 26, 2012
+ * @version 1.0.1.0, Oct 18, 2012
  * @since 0.1.4
  */
 public final class ArticleSender
@@ -58,7 +58,7 @@ public final class ArticleSender
 
     static {
         try {
-            ADD_ARTICLE_URL = new URL("http://b3log-symphony.appspot.com/add-article");
+            ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:8080/rhythm/article");
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -68,26 +68,30 @@ public final class ArticleSender
     public void action(final Event<JSONObject> event) throws EventException {
         final JSONObject data = event.getData();
         LOGGER.log(Level.FINER, "Processing an event[type={0}, data={1}] in listener[className={2}]",
-                new Object[]{event.getType(), data, ArticleSender.class.getName()});
+                   new Object[]{event.getType(), data, ArticleSender.class.getName()});
         try {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
-            
-            final String blogTitle = data.getString(Blog.BLOG_TITLE);
-            final String blogHost = data.getString(Blog.BLOG_HOST);
-            final String blogVersion = data.getString(Blog.BLOG_VERSION);
-            final String blog = data.getString(Blog.BLOG);
+
+            final String clientHost = data.getString(Blog.BLOG_HOST);
+            final String clientVersion = data.getString(Blog.BLOG_VERSION);
+            final String clientName = data.getString(Blog.BLOG);
+            final String clientRuntimeEnv = data.getString("clientRuntimeEnv");
+            final String userB3Key = data.getString("userB3Key");
+            final String clientAdminEmail = data.getString("clientAdminEmail");
 
             final HTTPRequest httpRequest = new HTTPRequest();
             httpRequest.setURL(ADD_ARTICLE_URL);
-            httpRequest.setRequestMethod(HTTPRequestMethod.POST);
+            httpRequest.setRequestMethod(HTTPRequestMethod.PUT);
             final JSONObject requestJSONObject = new JSONObject();
-            requestJSONObject.put("key", Rhythms.KEY_OF_SYMPHONY);
-            requestJSONObject.put("from", blog);
-            requestJSONObject.put("version", blogVersion);
-            requestJSONObject.put("title", blogTitle);
-            article.put(Article.ARTICLE_ORIGINAL_ID, article.getString(Keys.OBJECT_ID));
+            requestJSONObject.put("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
+            requestJSONObject.put("userB3Key", userB3Key);
+            requestJSONObject.put("clientName", clientName);
+            requestJSONObject.put("clientVersion", clientVersion);
+            requestJSONObject.put("clientHost", clientHost);
+            requestJSONObject.put("clientRuntimeEnv", clientRuntimeEnv);
+            requestJSONObject.put("clientAdminEmail", clientAdminEmail);
+            article.put("clientArticleId", article.getString(Keys.OBJECT_ID));
             requestJSONObject.put(Article.ARTICLE, article);
-            requestJSONObject.put("host", blogHost.split(":")[0]);
             httpRequest.setPayload(requestJSONObject.toString().getBytes("UTF-8"));
 //            final Future<HTTPResponse> futureResponse =
             urlFetchService.fetchAsync(httpRequest);
@@ -101,9 +105,9 @@ public final class ArticleSender
             throw new EventException(e);
         }
     }
-    
+
     /**
-     * Gets the event type {@linkplain EventTypes#PREFERENCE_LOAD}.
+     * Gets the event type {@linkplain EventTypes#ADD_ARTICLE_TO_SYMPHONY}.
      *
      * @return event type
      */

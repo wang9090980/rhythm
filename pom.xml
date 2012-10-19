@@ -22,6 +22,8 @@
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
         <org.b3log.latke-repository-mysql.version>0.5.0-SNAPSHOT</org.b3log.latke-repository-mysql.version>
         <jsoup.version>1.7.1</jsoup.version>
+        <!-- JDBC Drivers -->
+        <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- maven plugin -->
         <maven-license-plugin.version>1.9.0</maven-license-plugin.version>
         <maven-checkstyle-plugin.version>2.5</maven-checkstyle-plugin.version>
@@ -84,6 +86,12 @@
 
     <dependencyManagement>
         <dependencies>
+            
+            <dependency>         
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.b3log</groupId>
@@ -119,15 +127,16 @@
     </dependencyManagement>
 
     <dependencies>
+        
+        <dependency>         
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke</artifactId>
             <exclusions>
-                <exclusion>
-                    <groupId>com.jolbox</groupId>
-                    <artifactId>bonecp</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>c3p0</groupId>
                     <artifactId>c3p0</artifactId>

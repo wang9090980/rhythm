@@ -137,9 +137,12 @@ public final class ArticleProcessor {
      *         "postToCommunity": boolean
      *     },
      *     "blogTitle": "",
-     *     "blogHost": "",
-     *     "blogVersion": "",
-     *     "blog": ""
+     *     "blogHost": "", // clientHost
+     *     "blogVersion": "", // clientVersion
+     *     "blog": "", // clientName
+     *     "userB3Key": ""
+     *     "clientRuntimeEnv": "",
+     *     "clientAdminEmail": ""
      * }
      * </pre>
      */
@@ -160,7 +163,7 @@ public final class ArticleProcessor {
             LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
             if (!"B3log Solo".equals(blog)) {
-                jsonObject.put(Keys.STATUS_CODE, "Unsupported Sender");
+                jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
 
                 return;
             }
