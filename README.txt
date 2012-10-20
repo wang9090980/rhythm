@@ -1,4 +1,4 @@
 B3log Rhythm is the community server for B3log Solo.
 
-Home: http://b3log-rhythm.googlecode.com
-B3log Solo Home: http://b3log-solo.googlecode.com
+Home: https://github.com/b3log/b3log-rhythm
+B3log Solo Home: https://github.com/b3log/b3log-solo
