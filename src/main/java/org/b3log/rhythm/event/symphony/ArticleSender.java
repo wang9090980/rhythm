@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.0, Oct 18, 2012
+ * @version 1.0.1.1, Nov 2, 2012
  * @since 0.1.4
  */
 public final class ArticleSender
@@ -58,7 +58,7 @@ public final class ArticleSender
 
     static {
         try {
-            ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:8080/rhythm/article");
+            ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:80/rhythm/article");
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
