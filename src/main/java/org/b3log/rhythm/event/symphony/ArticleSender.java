@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.1, Nov 2, 2012
+ * @version 1.0.1.2, Nov 16, 2012
  * @since 0.1.4
  */
 public final class ArticleSender
@@ -81,25 +81,19 @@ public final class ArticleSender
 
             final HTTPRequest httpRequest = new HTTPRequest();
             httpRequest.setURL(ADD_ARTICLE_URL);
-            httpRequest.setRequestMethod(HTTPRequestMethod.PUT);
-            final JSONObject requestJSONObject = new JSONObject();
-            requestJSONObject.put("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
-            requestJSONObject.put("userB3Key", userB3Key);
-            requestJSONObject.put("clientName", clientName);
-            requestJSONObject.put("clientVersion", clientVersion);
-            requestJSONObject.put("clientHost", clientHost);
-            requestJSONObject.put("clientRuntimeEnv", clientRuntimeEnv);
-            requestJSONObject.put("clientAdminEmail", clientAdminEmail);
+            httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             article.put("clientArticleId", article.getString(Keys.OBJECT_ID));
-            requestJSONObject.put(Article.ARTICLE, article);
-            httpRequest.setPayload(requestJSONObject.toString().getBytes("UTF-8"));
-//            final Future<HTTPResponse> futureResponse =
+
+            httpRequest.addPayloadEntry("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
+            httpRequest.addPayloadEntry("userB3Key", userB3Key);
+            httpRequest.addPayloadEntry("clientName", clientName);
+            httpRequest.addPayloadEntry("clientVersion", clientVersion);
+            httpRequest.addPayloadEntry("clientHost", clientHost);
+            httpRequest.addPayloadEntry("clientRuntimeEnv", clientRuntimeEnv);
+            httpRequest.addPayloadEntry("clientAdminEmail", clientAdminEmail);
+            httpRequest.addPayloadEntry(Article.ARTICLE, article.toString());
+
             urlFetchService.fetchAsync(httpRequest);
-//            final HTTPResponse httpResponse =
-//                    futureResponse.get(TIMEOUT, TimeUnit.MILLISECONDS);
-//            final int statusCode = httpResponse.getResponseCode();
-//            LOGGER.log(Level.FINEST, "Response from Rhythm[statusCode={0}]",
-//                       statusCode);
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Sends article to Symphony error: {0}", e.getMessage());
             throw new EventException(e);
