@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.2, Nov 16, 2012
+ * @version 1.0.1.3, Nov 19, 2012
  * @since 0.1.4
  */
 public final class ArticleSender
@@ -75,6 +75,7 @@ public final class ArticleSender
             final String clientHost = data.getString(Blog.BLOG_HOST);
             final String clientVersion = data.getString(Blog.BLOG_VERSION);
             final String clientName = data.getString(Blog.BLOG);
+            final String clientTitle = data.getString(Blog.BLOG_TITLE);
             final String clientRuntimeEnv = data.getString("clientRuntimeEnv");
             final String userB3Key = data.getString("userB3Key");
             final String clientAdminEmail = data.getString("clientAdminEmail");
@@ -87,6 +88,7 @@ public final class ArticleSender
             httpRequest.addPayloadEntry("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
             httpRequest.addPayloadEntry("userB3Key", userB3Key);
             httpRequest.addPayloadEntry("clientName", clientName);
+            httpRequest.addPayloadEntry("clientTitle", clientTitle);
             httpRequest.addPayloadEntry("clientVersion", clientVersion);
             httpRequest.addPayloadEntry("clientHost", clientHost);
             httpRequest.addPayloadEntry("clientRuntimeEnv", clientRuntimeEnv);
