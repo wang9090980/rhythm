@@ -37,11 +37,10 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Nov 19, 2012
+ * @version 1.0.1.4, Nov 19, 2012
  * @since 0.1.4
  */
-public final class ArticleSender
-        extends AbstractEventListener<JSONObject> {
+public final class ArticleSender extends AbstractEventListener<JSONObject> {
 
     /**
      * Logger.
@@ -68,11 +67,15 @@ public final class ArticleSender
     public void action(final Event<JSONObject> event) throws EventException {
         final JSONObject data = event.getData();
         LOGGER.log(Level.FINER, "Processing an event[type={0}, data={1}] in listener[className={2}]",
-                   new Object[]{event.getType(), data, ArticleSender.class.getName()});
+                new Object[]{event.getType(), data, ArticleSender.class.getName()});
         try {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
 
-            final String clientHost = data.getString(Blog.BLOG_HOST);
+            String clientHost = data.getString(Blog.BLOG_HOST);
+            if (!clientHost.startsWith("http://") && !clientHost.startsWith("https://")) {
+                clientHost = "http://" + clientHost;
+            }
+
             final String clientVersion = data.getString(Blog.BLOG_VERSION);
             final String clientName = data.getString(Blog.BLOG);
             final String clientTitle = data.getString(Blog.BLOG_TITLE);
