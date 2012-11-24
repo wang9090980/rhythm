@@ -33,7 +33,7 @@ import org.json.JSONObject;
  * Version processor.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Jun 1, 2012
+ * @version 1.0.0.3, Nov 24, 2012
  * @since 0.1.4
  */
 @RequestProcessor
@@ -78,6 +78,6 @@ public final class VersionProcessor {
 
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 
-        jsonObject.put(Solo.SOLO_DOWNLOAD, "http://code.google.com/p/b3log-solo/downloads/list");
+        jsonObject.put(Solo.SOLO_DOWNLOAD, "https://github.com/b3log/b3log-solo/downloads");
     }
 }
