@@ -41,7 +41,7 @@ import org.json.JSONObject;
  * permalink of an article.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.5, Sep 7, 2012
+ * @version 1.0.0.6, Dec 26, 2012
  * @since 0.1.5
  */
 @RequestProcessor
@@ -62,7 +62,7 @@ public final class ArticleAccessibilityChecker {
     /**
      * Check count.
      */
-    private static final int CHECK_CNT = 50;
+    private static final int CHECK_CNT = 10;
     /**
      * Threshold of not 200.
      */
