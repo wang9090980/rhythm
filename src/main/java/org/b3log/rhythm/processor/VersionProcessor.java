@@ -33,7 +33,7 @@ import org.json.JSONObject;
  * Version processor.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Nov 24, 2012
+ * @version 1.0.0.4, Dec 28, 2012
  * @since 0.1.4
  */
 @RequestProcessor
@@ -74,7 +74,7 @@ public final class VersionProcessor {
 
         final String latestVersion = Rhythms.getLatestSoloVersion(currentVersion);
 
-        LOGGER.log(Level.INFO, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
+        LOGGER.log(Level.FINER, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
 
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 

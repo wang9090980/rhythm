@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.4, Nov 19, 2012
+ * @version 1.0.1.5, Dec 28, 2012
  * @since 0.1.4
  */
 public final class ArticleSender extends AbstractEventListener<JSONObject> {
@@ -54,7 +54,7 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
      * URL of adding article to Rhythm.
      */
     private static final URL ADD_ARTICLE_URL;
-
+    
     static {
         try {
             ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:80/rhythm/article");
@@ -62,32 +62,32 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
             throw new RuntimeException(e);
         }
     }
-
+    
     @Override
     public void action(final Event<JSONObject> event) throws EventException {
         final JSONObject data = event.getData();
-        LOGGER.log(Level.FINER, "Processing an event[type={0}, data={1}] in listener[className={2}]",
+        LOGGER.log(Level.INFO, "Processing an event[type={0}, data={1}] in listener[className={2}]",
                 new Object[]{event.getType(), data, ArticleSender.class.getName()});
         try {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
-
+            
             String clientHost = data.getString(Blog.BLOG_HOST);
             if (!clientHost.startsWith("http://") && !clientHost.startsWith("https://")) {
                 clientHost = "http://" + clientHost;
             }
-
+            
             final String clientVersion = data.getString(Blog.BLOG_VERSION);
             final String clientName = data.getString(Blog.BLOG);
             final String clientTitle = data.getString(Blog.BLOG_TITLE);
             final String clientRuntimeEnv = data.getString("clientRuntimeEnv");
             final String userB3Key = data.getString("userB3Key");
             final String clientAdminEmail = data.getString("clientAdminEmail");
-
+            
             final HTTPRequest httpRequest = new HTTPRequest();
             httpRequest.setURL(ADD_ARTICLE_URL);
             httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             article.put("clientArticleId", article.getString(Keys.OBJECT_ID));
-
+            
             httpRequest.addPayloadEntry("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
             httpRequest.addPayloadEntry("userB3Key", userB3Key);
             httpRequest.addPayloadEntry("clientName", clientName);
@@ -97,8 +97,10 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
             httpRequest.addPayloadEntry("clientRuntimeEnv", clientRuntimeEnv);
             httpRequest.addPayloadEntry("clientAdminEmail", clientAdminEmail);
             httpRequest.addPayloadEntry(Article.ARTICLE, article.toString());
-
+            
             urlFetchService.fetchAsync(httpRequest);
+            
+            LOGGER.log(Level.INFO, "Sent an article to Symphony [articleTitle={0}]", article.optString(Article.ARTICLE_TITLE));
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Sends article to Symphony error: {0}", e.getMessage());
             throw new EventException(e);
