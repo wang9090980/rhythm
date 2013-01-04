@@ -97,6 +97,17 @@
                 <groupId>org.b3log</groupId>
                 <artifactId>latke</artifactId>
                 <version>${org.b3log.latke.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                    </exclusion>
+                    
+                    <exclusion>
+                        <artifactId>bonecp</artifactId>
+                        <groupId>com.jolbox</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             
             <dependency>
@@ -147,12 +158,6 @@
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke-repository-mysql</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>bonecp</artifactId>
-                    <groupId>com.jolbox</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <dependency>

@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.9, Aug 10, 2012
+ * @version 1.0.0.10, Jan 4, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -252,12 +252,7 @@ public final class ArticleProcessor {
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Can not add article", e);
 
-            try {
-                context.getResponse().sendError(
-                        HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-            } catch (final IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            jsonObject.put(Keys.STATUS_CODE, e.getMessage());
         }
     }
 
