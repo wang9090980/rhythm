@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.3, Nov 24, 2012
+ * @version 1.0.1.4, Jan 4, 2013
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -65,6 +65,17 @@ public final class Rhythms {
 
         KEY_OF_SYMPHONY = CFG.getString("keyOfSymphony");
         MIN_STEP_POST_TIME = Long.valueOf(CFG.getString("minStepPostTime"));
+    }
+    
+    /**
+     * Checks whether the specified client name is valid.
+     * 
+     * @param clientName the specified client name
+     * @return {@code true} if it is valid, returns {@code false} otherwise
+     */
+    public static boolean isValidClient(final String clientName) {
+        // TODO: HARD-CODING
+        return "B3log Solo".equals(clientName) || "Cat".equals(clientName);
     }
 
     /**

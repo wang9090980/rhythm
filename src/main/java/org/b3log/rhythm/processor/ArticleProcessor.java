@@ -162,7 +162,7 @@ public final class ArticleProcessor {
 
             LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
-            if (!"B3log Solo".equals(blog)) {
+            if (!Rhythms.isValidClient(blog)) {
                 jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
 
                 return;
