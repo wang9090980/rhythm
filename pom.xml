@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.0.2.9, Dec 26, 2012
+    Version: 1.0.3.0, Feb 19, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -107,6 +107,15 @@
                         <artifactId>bonecp</artifactId>
                         <groupId>com.jolbox</groupId>
                     </exclusion>
+                    
+                    <exclusion>
+                        <groupId>c3p0</groupId>
+                        <artifactId>c3p0</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>jboss-vfs</artifactId>
+                        <groupId>org.jboss</groupId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             
@@ -147,12 +156,6 @@
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>c3p0</groupId>
-                    <artifactId>c3p0</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <dependency>
