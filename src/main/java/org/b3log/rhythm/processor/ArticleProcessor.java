@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.10, Jan 4, 2013
+ * @version 1.0.0.11, Mar 19, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -98,7 +98,7 @@ public final class ArticleProcessor {
     private EventManager eventManager = EventManager.getInstance();
 
     /**
-     * Index.
+     * Index, redirects to the B3log.org home: <a href="http://www.b3log.org">http://www.b3log.org</a>.
      * 
      * @param context the specified context
      * @throws IOException io exception 
@@ -146,7 +146,7 @@ public final class ArticleProcessor {
      * }
      * </pre>
      */
-    @RequestProcessing(value = "/add-article.do", method = HTTPRequestMethod.POST)
+    @RequestProcessing(value = "/article", method = HTTPRequestMethod.POST)
     public void addArticle(final HTTPRequestContext context) {
         final HttpServletRequest request = context.getRequest();
         final HttpServletResponse response = context.getResponse();
