@@ -18,6 +18,11 @@
                     "length": 255
                 },
                 {
+                    "name": "broadcastChanceEmail",
+                    "type": "String",
+                    "length": 256
+                },
+                {
                     "name": "broadcastChancePostTime",
                     "type": "long"
                 },

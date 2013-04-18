@@ -78,6 +78,26 @@ public final class BroadcastChanceService {
     private static final long CYCLE_TIME = 1000 * 60 * 30; // 30 minutes
 
     /**
+     * Determines whether the specified email has a broadcast chance.
+     * 
+     * @param email the specified email
+     * @return {@code true} if it has, returns {@code false} otherwise
+     */
+    public boolean hasBroadcastChance(final String email) {
+        final Query query = new Query().setFilter(new PropertyFilter(BroadcastChance.BROADCAST_CHANCE_EMAIL, FilterOperator.EQUAL, email));
+
+        try {
+            final JSONObject result = broadcastChanceRepository.get(query);
+
+            return 0 != result.optJSONArray(Keys.RESULTS).length();
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "Determines broadcast chance failed", e);
+
+            return false;
+        }
+    }
+
+    /**
      * Generates broadcast chances.
      */
     public void generateBroadcastChances() {
@@ -166,6 +186,7 @@ public final class BroadcastChanceService {
 
                 final JSONObject broadcastChance = new JSONObject();
                 broadcastChance.put(BroadcastChance.BROADCAST_CHANCE_HOST, userURL);
+                broadcastChance.put(BroadcastChance.BROADCAST_CHANCE_EMAIL, user.getString(User.USER_EMAIL));
                 broadcastChance.put(BroadcastChance.BROADCAST_CHANCE_POST_TIME, System.currentTimeMillis());
                 broadcastChance.put(BroadcastChance.BROADCAST_CHANCE_CYCLE_TIME, CYCLE_TIME);
 

@@ -38,6 +38,11 @@ public final class BroadcastChance {
      * Key of host.
      */
     public static final String BROADCAST_CHANCE_HOST = "broadcastChanceHost";
+    
+    /**
+     * Key of email.
+     */
+    public static final String BROADCAST_CHANCE_EMAIL = "broadcastChanceEmail";
 
     /**
      * Key of post time.

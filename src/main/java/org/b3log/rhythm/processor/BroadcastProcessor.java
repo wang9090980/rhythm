@@ -15,6 +15,7 @@
  */
 package org.b3log.rhythm.processor;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.Requests;
 import org.b3log.rhythm.event.symphony.ArticleSender;
 import org.b3log.rhythm.model.Article;
@@ -99,14 +101,26 @@ public final class BroadcastProcessor {
     @RequestProcessing(value = "/broadcast", method = HTTPRequestMethod.POST)
     public void addBroadcast(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
+                final JSONRenderer renderer = new JSONRenderer();
+        context.setRenderer(renderer);
+
+        
+        final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
+        renderer.setJSONObject(ret);
+        
         final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
         final String b3logKey = requestJSONObject.getString("b3logKey");
         final String email = requestJSONObject.getString("email");
         // TODO: verify b3 key
 
-        final JSONObject broadcast = requestJSONObject.getJSONObject("broadcast");
+        if (!broadcastChanceService.hasBroadcastChance(email)) {
+            LOGGER.log(Level.WARNING, "The user[email={0}] has no broadcast chance", email);
+            
+            return;
+        }
 
+        final JSONObject broadcast = requestJSONObject.getJSONObject("broadcast");
 
         final JSONObject addRequest = new JSONObject();
         final JSONObject article = new JSONObject();
@@ -156,5 +170,7 @@ public final class BroadcastProcessor {
         addRequest.put("clientAdminEmail", email);
 
         ArticleSender.addArticleToSymphony(addRequest);
+        
+        ret.put(Keys.STATUS_CODE, true);
     }
 }

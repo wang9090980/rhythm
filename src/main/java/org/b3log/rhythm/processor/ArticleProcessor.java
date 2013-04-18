@@ -238,6 +238,12 @@ public final class ArticleProcessor {
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
             final String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
+            if (tagString.contains("B3log Broadcast")) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
+
+                return;
+            }
+
             article.put(ARTICLE_TAGS_REF, tagString);
             final String permalink = "http://" + blogHost + originalArticle.getString(ARTICLE_PERMALINK);
 
