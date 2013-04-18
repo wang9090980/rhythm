@@ -141,16 +141,14 @@ public final class BroadcastChanceService {
                     clientURL += "/";
                 }
 
-                clientURL += "console/plugins/b3log-broadcast/chance";
+                 final long expiration = broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_POST_TIME)
+                        + broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_CYCLE_TIME);
+                 
+                clientURL += "console/plugins/b3log-broadcast/chance?time=" + expiration;
 
                 final HTTPRequest request = new HTTPRequest();
                 request.setURL(new URL(clientURL));
                 request.setRequestMethod(HTTPRequestMethod.POST);
-
-                final long expiration = broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_POST_TIME)
-                        + broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_CYCLE_TIME);
-
-                request.addPayloadEntry(BroadcastChance.BROADCAST_CHANCE_T_EXPIRATION_TIME, Long.toString(expiration));
 
                 urlFetchService.fetchAsync(request);
 

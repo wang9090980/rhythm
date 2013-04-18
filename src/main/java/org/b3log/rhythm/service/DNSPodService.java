@@ -39,7 +39,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Sep 4, 2012
+ * @version 1.0.0.2, Apr 18, 2013
  * @since 0.1.6
  */
 public final class DNSPodService {
@@ -84,14 +84,15 @@ public final class DNSPodService {
             httpRequest.setURL(new URL(DNSPOD_API + "/Record.List"));
             httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION + " (DL88250gmail.com)"));
 
-            httpRequest.addPayloadEntry("login_email", Rhythms.CFG.getString("dnspod.username"));
-            httpRequest.addPayloadEntry("login_password", Rhythms.CFG.getString("dnspod.password"));
-            httpRequest.addPayloadEntry("format", "json");
-            httpRequest.addPayloadEntry("lang", "cn");
-            httpRequest.addPayloadEntry("error_on_empty", "no");
-            httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
-            httpRequest.addPayloadEntry("offset", "0");
-            httpRequest.addPayloadEntry("length", "3000");
+// TODO: DNSPod login request            
+//            httpRequest.addPayloadEntry("login_email", Rhythms.CFG.getString("dnspod.username"));
+//            httpRequest.addPayloadEntry("login_password", Rhythms.CFG.getString("dnspod.password"));
+//            httpRequest.addPayloadEntry("format", "json");
+//            httpRequest.addPayloadEntry("lang", "cn");
+//            httpRequest.addPayloadEntry("error_on_empty", "no");
+//            httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
+//            httpRequest.addPayloadEntry("offset", "0");
+//            httpRequest.addPayloadEntry("length", "3000");
 
             final HTTPResponse response = URL_FETCH_SVC.fetch(httpRequest);
 
