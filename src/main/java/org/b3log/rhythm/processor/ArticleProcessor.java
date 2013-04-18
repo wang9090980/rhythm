@@ -135,7 +135,7 @@ public final class ArticleProcessor {
      *     "article": {
      *         "oId": "", 
      *         "articleTitle": "",
-     *         "articlePermalink": "",
+     *         "articlePermalink": "/test",
      *         "articleTags": "tag1, tag2, ....",
      *         "articleAuthorEmail": "",
      *         "articleContent": "",
@@ -143,7 +143,7 @@ public final class ArticleProcessor {
      *         "postToCommunity": boolean
      *     },
      *     "blogTitle": "",
-     *     "blogHost": "", // clientHost
+     *     "blogHost": "http://xxx.com", // clientHost
      *     "blogVersion": "", // clientVersion
      *     "blog": "", // clientName
      *     "userB3Key": ""
@@ -179,7 +179,7 @@ public final class ArticleProcessor {
                 blogHost = "http://" + blogHost;
 
                 if (!Strings.isURL(blogHost)) {
-                    jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
+                    jsonObject.put(Keys.STATUS_CODE, "Invalid Host");
 
                     return;
                 }
@@ -245,7 +245,15 @@ public final class ArticleProcessor {
             }
 
             article.put(ARTICLE_TAGS_REF, tagString);
-            final String permalink = "http://" + blogHost + originalArticle.getString(ARTICLE_PERMALINK);
+
+            String permalink = originalArticle.getString(ARTICLE_PERMALINK);
+            if ("aBroadcast".equals(permalink)) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid Permalink");
+
+                return;
+            }
+
+            permalink = blogHost + originalArticle.getString(ARTICLE_PERMALINK);
 
             article.put(ARTICLE_PERMALINK, permalink);
             article.put(Blog.BLOG_HOST, blogHost);
