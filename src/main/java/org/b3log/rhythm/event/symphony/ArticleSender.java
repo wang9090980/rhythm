@@ -25,12 +25,12 @@ import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
-import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.util.Rhythms;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -46,15 +46,12 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ArticleSender.class.getName());
-    /**
-     * URL fetch service.
-     */
-    private final URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
+
     /**
      * URL of adding article to Rhythm.
      */
     private static final URL ADD_ARTICLE_URL;
-    
+
     static {
         try {
             ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:80/rhythm/article");
@@ -62,7 +59,7 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void action(final Event<JSONObject> event) throws EventException {
         final JSONObject data = event.getData();
@@ -70,37 +67,30 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
                 new Object[]{event.getType(), data, ArticleSender.class.getName()});
         try {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
-            
+
             String clientHost = data.getString(Blog.BLOG_HOST);
             if (!clientHost.startsWith("http://") && !clientHost.startsWith("https://")) {
                 clientHost = "http://" + clientHost;
             }
-            
+
             final String clientVersion = data.getString(Blog.BLOG_VERSION);
             final String clientName = data.getString(Blog.BLOG);
             final String clientTitle = data.getString(Blog.BLOG_TITLE);
             final String clientRuntimeEnv = data.getString("clientRuntimeEnv");
             final String userB3Key = data.getString("userB3Key");
             final String clientAdminEmail = data.getString("clientAdminEmail");
+
+            final JSONObject request = new JSONObject();
+            request.put("article", article);
+            request.put("userB3Key", userB3Key);
+            request.put("clientName", clientName);
+            request.put("clientTitle", clientTitle);
+            request.put("clientVersion", clientVersion);
+            request.put("clientHost", clientHost);
+            request.put("clientRuntimeEnv", clientRuntimeEnv);
+            request.put("clientAdminEmail", clientAdminEmail);
             
-            final HTTPRequest httpRequest = new HTTPRequest();
-            httpRequest.setURL(ADD_ARTICLE_URL);
-            httpRequest.setRequestMethod(HTTPRequestMethod.POST);
-            article.put("clientArticleId", article.getString(Keys.OBJECT_ID));
-            
-            httpRequest.addPayloadEntry("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
-            httpRequest.addPayloadEntry("userB3Key", userB3Key);
-            httpRequest.addPayloadEntry("clientName", clientName);
-            httpRequest.addPayloadEntry("clientTitle", clientTitle);
-            httpRequest.addPayloadEntry("clientVersion", clientVersion);
-            httpRequest.addPayloadEntry("clientHost", clientHost);
-            httpRequest.addPayloadEntry("clientRuntimeEnv", clientRuntimeEnv);
-            httpRequest.addPayloadEntry("clientAdminEmail", clientAdminEmail);
-            httpRequest.addPayloadEntry(Article.ARTICLE, article.toString());
-            
-            urlFetchService.fetchAsync(httpRequest);
-            
-            LOGGER.log(Level.INFO, "Sent an article to Symphony [articleTitle={0}]", article.optString(Article.ARTICLE_TITLE));
+            addArticleToSymphony(request);
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Sends article to Symphony error: {0}", e.getMessage());
             throw new EventException(e);
@@ -115,5 +105,62 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
     @Override
     public String getEventType() {
         return EventTypes.ADD_ARTICLE_TO_SYMPHONY;
+    }
+
+    /**
+     * Adds an article to B3log Symphony with the specified request.
+     * 
+     * @param request the specified request, for example, 
+     * <pre>
+     * {
+     *     "article": {
+     *         "articleAuthorEmail": "DL88250@gmail.com",
+     *         "articleContent": "&lt;p&gt;test&lt;\/p&gt;",
+     *         "articleCreateDate": 1350635469922,
+     *         "articlePermalink": "/articles/2012/10/19/1350635469866.html",
+     *         "articleTags": "test",
+     *         "articleTitle": "test",
+     *         "clientArticleId": "1350635469866",
+     *         "oId": "1350635469866"
+     *     },
+     *     "userB3Key": "",
+     *     "clientName": "",
+     *     "clientTitle": "",
+     *     "clientVersion": "",
+     *     "clientHost": "",
+     *     "clientRuntimeEnv": "",
+     *     "clientAdminEmail": ""
+     * }
+     * </pre>
+     * @throws JSONException json exception
+     */
+    public static void addArticleToSymphony(final JSONObject request) throws JSONException {
+        final JSONObject article = request.getJSONObject("article");
+        final String userB3Key = request.getString("userB3Key");
+        final String clientName = request.getString("clientName");
+        final String clientTitle = request.getString("clientTitle");
+        final String clientVersion = request.getString("clientVersion");
+        final String clientHost = request.getString("clientHost");
+        final String clientRuntimeEnv = request.getString("clientRuntimeEnv");
+        final String clientAdminEmail = request.getString("clientAdminEmail");
+
+        final HTTPRequest httpRequest = new HTTPRequest();
+        httpRequest.setURL(ADD_ARTICLE_URL);
+        httpRequest.setRequestMethod(HTTPRequestMethod.POST);
+        article.put("clientArticleId", article.getString(Keys.OBJECT_ID));
+
+        httpRequest.addPayloadEntry("symphonyKey", Rhythms.KEY_OF_SYMPHONY);
+        httpRequest.addPayloadEntry("userB3Key", userB3Key);
+        httpRequest.addPayloadEntry("clientName", clientName);
+        httpRequest.addPayloadEntry("clientTitle", clientTitle);
+        httpRequest.addPayloadEntry("clientVersion", clientVersion);
+        httpRequest.addPayloadEntry("clientHost", clientHost);
+        httpRequest.addPayloadEntry("clientRuntimeEnv", clientRuntimeEnv);
+        httpRequest.addPayloadEntry("clientAdminEmail", clientAdminEmail);
+        httpRequest.addPayloadEntry(Article.ARTICLE, article.toString());
+
+        URLFetchServiceFactory.getURLFetchService().fetchAsync(httpRequest);
+
+        LOGGER.log(Level.INFO, "Sent an article to Symphony [articleTitle={0}]", article.optString(Article.ARTICLE_TITLE));
     }
 }

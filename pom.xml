@@ -103,10 +103,10 @@
                         <artifactId>h2</artifactId>
                     </exclusion>
                     
-                    <exclusion>
+<!--                    <exclusion>
                         <artifactId>bonecp</artifactId>
                         <groupId>com.jolbox</groupId>
-                    </exclusion>
+                    </exclusion>-->
                     
                     <exclusion>
                         <groupId>c3p0</groupId>

@@ -3,147 +3,155 @@
     "version": "1.0.0.0, Sep 3, 2012",
     "authors": ["Liang Ding"],
     "since": "0.2.0",
-    
     "repositories": [
-    {
-        "name": "tag",
-        "keys": [
         {
-            "name": "oId",
-            "type": "String",
-            "length": 255
+            "name": "broadcastChance",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "broadcastChanceHost",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "broadcastChancePostTime",
+                    "type": "long"
+                },
+                {
+                    "name": "broadcastChanceCycleTime",
+                    "type": "int"
+                }
+            ]
         },
         {
-            "name": "tagReferenceCount",
-            "type": "int"
+            "name": "tag",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "tagReferenceCount",
+                    "type": "int"
+                },
+                {
+                    "name": "tagTitleLowerCase",
+                    "type": "String",
+                    "length": 255
+                }
+            ]
         },
         {
-            "name": "tagTitleLowerCase",
-            "type": "String",
-            "length": 255
+            "name": "tag_article",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "article_oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "tag_oId",
+                    "type": "String",
+                    "length": 255
+                }
+            ]
+        },
+        {
+            "name": "user",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "userEmail",
+                    "type": "String",
+                    "length": 256
+                },
+                {
+                    "name": "userURL",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "recentPostTime",
+                    "type": "long"
+                }
+            ]
+        },
+        {
+            "name": "article",
+            "keys": [
+                {
+                    "name": "oId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleOriginalId",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleTitle",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articleTags",
+                    "type": "String",
+                    "length": 2000
+                },
+                {
+                    "name": "articleAuthorEmail",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "articlePermalink",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "blog",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "blogHost",
+                    "type": "String",
+                    "lenght": 255
+                },
+                {
+                    "name": "blogTitle",
+                    "type": "String",
+                    "lenght": 255
+                },
+                {
+                    "name": "blogVersion",
+                    "type": "String",
+                    "legnth": 255
+                },
+                {
+                    "name": "articleAccessibilityCheckCnt",
+                    "type": "int"
+                },
+                {
+                    "name": "articleAccessibilityNot200Cnt",
+                    "type": "int"
+                }
+            ]
         }
-        ]
-    },
-    {
-        "name": "tag_article",
-        "keys": [
-        {
-            "name": "oId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "article_oId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "tag_oId",
-            "type": "String",
-            "length": 255
-        }
-        ]
-    },
-    {
-        "name": "user",
-        "keys": [
-        {
-            "name": "oId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "userEmail",
-            "type": "String",
-            "length": 256
-        },
-        {
-            "name": "recentPostTime",
-            "type": "long"
-        }
-        ]
-    },
-    {
-        "name": "article",
-        "keys": [
-        {
-            "name": "oId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "articleOriginalId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "articleTitle",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "articleTags",
-            "type": "String",
-            "length": 2000
-        },
-        {
-            "name": "articleAuthorEmail",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "articlePermalink",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "blog",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "blogHost",
-            "type": "String",
-            "lenght": 255
-        },
-        {
-            "name": "blogTitle",
-            "type": "String",
-            "lenght": 255
-        },
-        {
-            "name": "blogVersion",
-            "type": "String",
-            "legnth": 255
-        },
-        {
-            "name": "articleAccessibilityCheckCnt",
-            "type": "int"
-        },
-        {
-            "name": "articleAccessibilityNot200Cnt",
-            "type": "int"
-        }
-        ]
-    },
-    {
-        "name": "user",
-        "keys": [
-        {
-            "name": "oId",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "userEmail",
-            "type": "String",
-            "length": 255
-        },
-        {
-            "name": "recentPostTime",
-            "type": "long"
-        }
-        ]
-    }
     ]
 }

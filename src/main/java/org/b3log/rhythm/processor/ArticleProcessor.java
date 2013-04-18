@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.11, Mar 19, 2013
+ * @version 1.0.0.12, Apr 16, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -71,27 +71,33 @@ public final class ArticleProcessor {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ArticleProcessor.class.getName());
+
     /**
      * Article service.
      */
     private ArticleService articleService = ArticleService.getInstance();
+
     /**
      * Article repository.
      */
     private ArticleRepository articleRepository = ArticleRepositoryImpl.getInstance();
+
     /**
      * Tag repository.
      */
     private TagRepository tagRepository = TagRepositoryImpl.getInstance();
+
     /**
      * Tag-Article repository.
      */
     private TagArticleRepository tagArticleRepository = TagArticleRepositoryImpl.getInstance();
+
     /**
      * Cache.
      */
     @SuppressWarnings("unchecked")
     private Cache<String, Serializable> cache = (Cache<String, Serializable>) CacheFactory.getCache("RhythmCache");
+
     /**
      * Event manager.
      */
@@ -168,7 +174,17 @@ public final class ArticleProcessor {
                 return;
             }
 
-            final String blogHost = requestJSONObject.getString(Blog.BLOG_HOST);
+            String blogHost = requestJSONObject.getString(Blog.BLOG_HOST);
+            if (!Strings.isURL(blogHost)) {
+                blogHost = "http://" + blogHost;
+
+                if (!Strings.isURL(blogHost)) {
+                    jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
+
+                    return;
+                }
+            }
+
             final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
@@ -230,9 +246,6 @@ public final class ArticleProcessor {
             article.put(Blog.BLOG, blog);
             article.put(Blog.BLOG_VERSION, blogVersion);
             article.put(Blog.BLOG_TITLE, blogTitle);
-
-            article.put(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT, 0);
-            article.put(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT, 0);
 
             articleService.addArticle(article);
 

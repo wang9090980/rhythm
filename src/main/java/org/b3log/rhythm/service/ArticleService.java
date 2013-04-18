@@ -32,6 +32,7 @@ import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.rhythm.model.Article;
+import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.repository.ArticleRepository;
 import org.b3log.rhythm.repository.UserRepository;
@@ -56,22 +57,27 @@ public final class ArticleService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(ArticleService.class.getName());
+
     /**
      * Article repository.
      */
     private ArticleRepository articleRepository = ArticleRepositoryImpl.getInstance();
+
     /**
      * User repository.
      */
     private UserRepository userRepository = UserRepositoryImpl.getInstance();
+
     /**
      * Tag utilities.
      */
     private TagUtils tagUtils = TagUtils.getInstance();
+
     /**
      * Article utilities.
      */
     private ArticleUtils articleUtils = ArticleUtils.getInstance();
+
     /**
      * Default article batch size.
      */
@@ -194,12 +200,28 @@ public final class ArticleService {
     /**
      * Adds the specified article.
      * 
-     * @param article the specified article
+     * @param article the specified article, for example,
+     * <pre>
+     * {
+     *     "articleOriginalId": "",
+     *     "articleTitle": "",
+     *     "articleAuthorEmail": "",
+     *     "articleTags": "",
+     *     "articlePermalink": "",
+     *     "blogHost": "",
+     *     "blog": "",
+     *     "blogVersion": "",
+     *     "blogTitle": ""
+     * }
+     * </pre>
      */
     public void addArticle(final JSONObject article) {
         final Transaction transaction = articleRepository.beginTransaction();
 
         try {
+            article.put(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT, 0);
+            article.put(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT, 0);
+
             articleRepository.add(article);
 
             final String[] tagTitles = article.getString(Article.ARTICLE_TAGS_REF).split(",");
@@ -229,6 +251,8 @@ public final class ArticleService {
 
         try {
             final String authorEmail = article.getString(Article.ARTICLE_AUTHOR_EMAIL);
+            final String authorURL = article.getString(Blog.BLOG_HOST);
+
             JSONObject user = userRepository.getByEmail(authorEmail);
             if (null == user) {
                 // This author is a new user
@@ -237,10 +261,13 @@ public final class ArticleService {
                 user.put(Keys.OBJECT_ID, String.valueOf(currentTimeMillis));
                 user.put(User.USER_EMAIL, authorEmail);
                 user.put(Common.RECENT_POST_TIME, currentTimeMillis);
+                user.put(User.USER_URL, authorURL);
 
                 userRepository.add(user);
             } else {
                 user.put(Common.RECENT_POST_TIME, currentTimeMillis);
+                user.put(User.USER_URL, authorURL);
+
                 userRepository.update(user.getString(Keys.OBJECT_ID), user);
             }
         } catch (final Exception e) {
