@@ -15,60 +15,32 @@
  */
 package org.b3log.rhythm.repository.impl;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.b3log.latke.Keys;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.AbstractRepository;
-import org.b3log.latke.repository.FilterOperator;
-import org.b3log.latke.repository.PropertyFilter;
-import org.b3log.latke.repository.Query;
-import org.b3log.latke.repository.RepositoryException;
-import org.b3log.rhythm.repository.UserRepository;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.b3log.rhythm.repository.BroadcastChanceRepository;
 
 /**
- * User repository implementation.
+ * Broadcast chance repository implementation.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Jun 27, 2012
- * @since 0.1.5
+ * @version 1.0.0.0, Apr 15, 2013
+ * @since 0.1.6
  */
-public final class UserRepositoryImpl extends AbstractRepository implements UserRepository {
+public final class BroadcastChanceRepositoryImpl extends AbstractRepository
+        implements BroadcastChanceRepository {
 
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(UserRepositoryImpl.class.getName());
-
-    @Override
-    public JSONObject getByEmail(final String email) throws RepositoryException {
-        final Query query = new Query().setPageCount(1);
-        query.setFilter(new PropertyFilter(User.USER_EMAIL, FilterOperator.EQUAL, email.toLowerCase().trim()));
-
-        try {
-            final JSONObject result = get(query);
-            final JSONArray array = result.getJSONArray(Keys.RESULTS);
-
-            if (0 == array.length()) {
-                return null;
-            }
-
-            return array.getJSONObject(0);
-        } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-
-            throw new RepositoryException(e);
-        }
-    }
+    private static final Logger LOGGER = Logger.getLogger(BroadcastChanceRepositoryImpl.class.getName());
 
     /**
-     * Gets the {@link UserRepositoryImpl} singleton.
+     * Gets the {@link BroadcastChanceRepositoryImpl} singleton.
      *
      * @return the singleton
      */
-    public static UserRepositoryImpl getInstance() {
+    public static BroadcastChanceRepositoryImpl getInstance() {
         return SingletonHolder.SINGLETON;
     }
 
@@ -77,7 +49,7 @@ public final class UserRepositoryImpl extends AbstractRepository implements User
      * 
      * @param name the specified name
      */
-    private UserRepositoryImpl(final String name) {
+    private BroadcastChanceRepositoryImpl(final String name) {
         super(name);
     }
 
@@ -85,14 +57,14 @@ public final class UserRepositoryImpl extends AbstractRepository implements User
      * Singleton holder.
      *
      * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Jan 23, 2011
+     * @version 1.0.0.0, Apr 15, 2013
      */
     private static final class SingletonHolder {
 
         /**
          * Singleton.
          */
-        private static final UserRepositoryImpl SINGLETON = new UserRepositoryImpl(User.USER);
+        private static final BroadcastChanceRepositoryImpl SINGLETON = new BroadcastChanceRepositoryImpl(User.USER);
 
         /**
          * Private default constructor.

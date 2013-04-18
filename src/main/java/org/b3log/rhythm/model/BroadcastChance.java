@@ -16,26 +16,48 @@
 package org.b3log.rhythm.model;
 
 /**
- * This class defines all Solo model relevant keys.
+ * This class defines all broadcast chance model relevant keys.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Sep 30, 2011
- * @since 0.1.4
+ * @version 1.0.0.0, Apr 15, 2013
+ * @since 0.1.6
  */
-public final class Solo {
+public final class BroadcastChance {
 
     /**
-     * Key of Solo version.
+     * Broadcast chance.
      */
-    public static final String SOLO_VERSION = "soloVersion";
+    public static final String BROADCAST_CHANCE = "broadcastChance";
+
     /**
-     * Key of download.
+     * Broadcast chances.
      */
-    public static final String SOLO_DOWNLOAD = "soloDownload";
+    public static final String BROADCAST_CHANCES = "broadcastChances";
+
+    /**
+     * Key of host.
+     */
+    public static final String BROADCAST_CHANCE_HOST = "broadcastChanceHost";
+
+    /**
+     * Key of post time.
+     */
+    public static final String BROADCAST_CHANCE_POST_TIME = "broadcastChancePostTime";
+
+    /**
+     * Key of live time.
+     */
+    public static final String BROADCAST_CHANCE_CYCLE_TIME = "broadcastChanceCycleTime";
+
+    //// Transient ////
+    /**
+     * Key of expiration time.
+     */
+    public static final String BROADCAST_CHANCE_T_EXPIRATION_TIME = "broadcastChanceExpirationTime";
 
     /**
      * Private default constructor.
      */
-    private Solo() {
+    private BroadcastChance() {
     }
 }
