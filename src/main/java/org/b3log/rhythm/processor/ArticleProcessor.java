@@ -115,9 +115,176 @@ public final class ArticleProcessor {
 
         context.setRenderer(new DoNothingRenderer());
     }
+    
+    /**
+     * Updates an article.
+     * 
+     * <p>
+     * Renders the response with a json object, for example,
+     * <pre>
+     * {
+     *     "sc": "ADD_ARTICLE_SUCC"
+     * }
+     * </pre>
+     * </p>
+     *
+     * @param context the specified context, 
+     * including a request json object, for example,
+     * <pre>
+     * {
+     *     "article": {
+     *         "oId": "", 
+     *         "articleTitle": "",
+     *         "articlePermalink": "/test",
+     *         "articleTags": "tag1, tag2, ....",
+     *         "articleAuthorEmail": "",
+     *         "articleContent": "",
+     *         "articleCreateDate": long,
+     *         "postToCommunity": boolean
+     *     },
+     *     "blogTitle": "",
+     *     "blogHost": "http://xxx.com", // clientHost
+     *     "blogVersion": "", // clientVersion
+     *     "blog": "", // clientName
+     *     "userB3Key": ""
+     *     "clientRuntimeEnv": "",
+     *     "clientAdminEmail": ""
+     * }
+     * </pre>
+     */
+    @RequestProcessing(value = "/article", method = HTTPRequestMethod.PUT)
+    public void updateArticle(final HTTPRequestContext context) {
+        final HttpServletRequest request = context.getRequest();
+        final HttpServletResponse response = context.getResponse();
+
+        final JSONObject jsonObject = new JSONObject();
+
+        final JSONRenderer renderer = new JSONRenderer();
+        context.setRenderer(renderer);
+        renderer.setJSONObject(jsonObject);
+
+        try {
+            final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
+
+            LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
+            final String blog = requestJSONObject.optString(Blog.BLOG);
+            if (!Rhythms.isValidClient(blog)) {
+                jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
+
+                return;
+            }
+
+            String blogHost = requestJSONObject.getString(Blog.BLOG_HOST);
+            if (!Strings.isURL(blogHost)) {
+                blogHost = "http://" + blogHost;
+
+                if (!Strings.isURL(blogHost)) {
+                    jsonObject.put(Keys.STATUS_CODE, "Invalid Host");
+
+                    return;
+                }
+            }
+
+            final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
+
+            if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
+                LOGGER.log(Level.WARNING, "Version of Solo[host={0}] is [{1}], so ignored this request",
+                        new String[]{blogHost, blogVersion});
+                jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
+
+                return;
+            }
+
+            final JSONObject originalArticle = requestJSONObject.getJSONObject(ARTICLE);
+            securityProcess(originalArticle);
+
+            LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
+                    new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
+            final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
+
+            Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
+            final Long currentPostTime = System.currentTimeMillis();
+            if (null == latestPostTime) {
+                latestPostTime = 0L;
+            }
+            try {
+                if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
+                    jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
+
+                    return;
+                }
+
+                // TODO: check article
+//                if (isInvalid(data)) {
+//                    ret.put(Keys.STATUS_CODE, false);
+//                    ret.put(Keys.MSG, Langs.get("badRequestLabel"));
+//
+//                    return ret;
+//                }
+            } catch (final Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                return;
+            }
+
+            latestPostTime = currentPostTime;
+
+            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
+
+            final JSONObject article = new JSONObject();
+
+            final String id = originalArticle.getString(Keys.OBJECT_ID);
+            article.put(ARTICLE_ORIGINAL_ID, id);
+            article.put(ARTICLE_TITLE, originalArticle.getString(ARTICLE_TITLE));
+
+            article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
+            final String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
+            if (tagString.contains("B3log Broadcast")) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
+
+                return;
+            }
+
+            article.put(ARTICLE_TAGS_REF, tagString);
+
+            String permalink = originalArticle.getString(ARTICLE_PERMALINK);
+            if ("aBroadcast".equals(permalink)) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid Permalink");
+
+                return;
+            }
+
+            permalink = blogHost + originalArticle.getString(ARTICLE_PERMALINK);
+
+            article.put(ARTICLE_PERMALINK, permalink);
+            article.put(Blog.BLOG_HOST, blogHost);
+            article.put(Blog.BLOG, blog);
+            article.put(Blog.BLOG_VERSION, blogVersion);
+            article.put(Blog.BLOG_TITLE, blogTitle);
+
+            articleService.updateByOriginalId(article);
+
+            if (originalArticle.optBoolean(Common.POST_TO_COMMUNITY, true)) {
+                try {
+                    originalArticle.remove(Common.POST_TO_COMMUNITY);
+
+                    eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.ADD_ARTICLE_TO_SYMPHONY, requestJSONObject));
+                } catch (final EventException e) {
+                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                }
+            }
+
+            jsonObject.put(Keys.STATUS_CODE, StatusCodes.ADD_ARTICLE_SUCC);
+
+            cache.put(authorEmail + ".lastPostTime", latestPostTime);
+        } catch (final Exception e) {
+            LOGGER.log(Level.SEVERE, "Can not add article", e);
+
+            jsonObject.put(Keys.STATUS_CODE, e.getMessage());
+        }
+    }
 
     /**
-     * Adds article.
+     * Adds an article.
      * 
      * <p>
      * Renders the response with a json object, for example,

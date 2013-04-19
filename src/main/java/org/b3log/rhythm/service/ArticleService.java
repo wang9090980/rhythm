@@ -241,6 +241,58 @@ public final class ArticleService {
     }
 
     /**
+     * Updates the specified article.
+     * 
+     * @param article the specified article, for example,
+     * <pre>
+     * {
+     *     "articleOriginalId": "",
+     *     "articleTitle": "",
+     *     "articleAuthorEmail": "",
+     *     "articleTags": "",
+     *     "articlePermalink": "",
+     *     "blogHost": "",
+     *     "blog": "",
+     *     "blogVersion": "",
+     *     "blogTitle": ""
+     * }
+     * </pre>
+     */
+    public void updateByOriginalId(final JSONObject article) {
+        final Transaction transaction = articleRepository.beginTransaction();
+
+        final String originalId = article.optString(Article.ARTICLE_ORIGINAL_ID);
+
+        final Query query = new Query().setFilter(new PropertyFilter(Article.ARTICLE_ORIGINAL_ID, FilterOperator.EQUAL, originalId));
+
+        try {
+            final JSONObject result = articleRepository.get(query);
+            final JSONArray array = result.optJSONArray(Keys.RESULTS);
+            if (0 == array.length()) {
+                LOGGER.log(Level.WARNING, "Not found article by original id [{0}]", originalId);
+
+                return;
+            }
+
+            final JSONObject old = array.getJSONObject(0);
+            final String id = old.getString(Keys.OBJECT_ID);
+            article.put(Keys.OBJECT_ID, id);
+
+            article.put(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT, old.getInt(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT));
+            article.put(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT, old.getInt(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT));
+
+            articleRepository.update(id, article);
+
+            transaction.commit();
+        } catch (final Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            LOGGER.log(Level.SEVERE, "Updates article by original id [" + originalId + "] failed", e);
+        }
+    }
+
+    /**
      * Updates the author's recent post time with the specified article.
      * 
      * @param article the specified article

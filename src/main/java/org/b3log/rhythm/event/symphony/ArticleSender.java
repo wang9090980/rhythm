@@ -26,6 +26,7 @@ import org.b3log.latke.event.EventException;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+import org.b3log.rhythm.RhythmServletListener;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Blog;
@@ -36,7 +37,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.5, Dec 28, 2012
+ * @version 1.0.1.6, Apr 19, 2013
  * @since 0.1.4
  */
 public final class ArticleSender extends AbstractEventListener<JSONObject> {
@@ -53,7 +54,7 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
 
     static {
         try {
-            ADD_ARTICLE_URL = new URL("http://symphony.b3log.org:80/rhythm/article");
+            ADD_ARTICLE_URL = new URL(RhythmServletListener.B3LOG_SYMPHONY_SERVE_PATH + "/rhythm/article");
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -159,7 +160,7 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
         requestJSONObject.put("clientRuntimeEnv", clientRuntimeEnv);
         requestJSONObject.put("clientAdminEmail", clientAdminEmail);
         requestJSONObject.put(Article.ARTICLE, article);
-        
+
         httpRequest.setPayload(requestJSONObject.toString().getBytes("UTF-8"));
 
         URLFetchServiceFactory.getURLFetchService().fetchAsync(httpRequest);

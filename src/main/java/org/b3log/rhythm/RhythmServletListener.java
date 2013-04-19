@@ -15,6 +15,7 @@
  */
 package org.b3log.rhythm;
 
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
@@ -40,6 +41,17 @@ public final class RhythmServletListener extends AbstractServletListener {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(RhythmServletListener.class.getName());
+
+    /**
+     * B3log Symphony address.
+     */
+    public static final String B3LOG_SYMPHONY_SERVE_PATH;
+
+    static {
+        final ResourceBundle b3log = ResourceBundle.getBundle("b3log");
+
+        B3LOG_SYMPHONY_SERVE_PATH = b3log.getString("symphony.servePath");
+    }
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
@@ -78,8 +90,8 @@ public final class RhythmServletListener extends AbstractServletListener {
         Stopwatchs.end();
 
         LOGGER.log(Level.FINE, "Stopwatch: {0}{1}",
-                   new Object[]{Strings.LINE_SEPARATOR,
-                                Stopwatchs.getTimingStat()});
+                new Object[]{Strings.LINE_SEPARATOR,
+            Stopwatchs.getTimingStat()});
         Stopwatchs.release();
     }
 
