@@ -111,14 +111,16 @@ public final class BroadcastChanceService {
 
             final long expirationTime = System.currentTimeMillis() - CYCLE_TIME;
 
-            final Query query = new Query().setPageCount(1);
+            Query query = new Query().setPageCount(1);
             query.setFilter(new PropertyFilter(BroadcastChance.BROADCAST_CHANCE_POST_TIME, FilterOperator.LESS_THAN, expirationTime));
 
-            final JSONObject result = broadcastChanceRepository.get(query);
-            final JSONArray array = result.getJSONArray(Keys.RESULTS);
+            JSONObject result = broadcastChanceRepository.get(query);
+            JSONArray array = result.getJSONArray(Keys.RESULTS);
             if (0 == array.length()) { // All broadcast chances are active
                 return;
             }
+ 
+            removeExpiredChances(array);
 
             gen(array.length());
         } catch (final Exception e) {
@@ -141,9 +143,9 @@ public final class BroadcastChanceService {
                     clientURL += "/";
                 }
 
-                 final long expiration = broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_POST_TIME)
+                final long expiration = broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_POST_TIME)
                         + broadcastChance.getLong(BroadcastChance.BROADCAST_CHANCE_CYCLE_TIME);
-                 
+
                 clientURL += "console/plugins/b3log-broadcast/chance?time=" + expiration;
 
                 final HTTPRequest request = new HTTPRequest();
@@ -156,6 +158,34 @@ public final class BroadcastChanceService {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Generates broadcast chances failed", e);
+        }
+    }
+
+    /**
+     * Removes the specified expired chances.
+     *
+     * @param expiredChances the specified expired chances
+     */
+    private void removeExpiredChances(final JSONArray expiredChances) {
+        final Transaction transaction = broadcastChanceRepository.beginTransaction();
+
+        try {
+            for (int i = 0; i < expiredChances.length(); i++) {
+                final JSONObject expiredChance = expiredChances.getJSONObject(i);
+
+                broadcastChanceRepository.remove(expiredChance.getString(Keys.OBJECT_ID));
+
+                LOGGER.log(Level.INFO, "Removed expired broadcast chance [host={0}]",
+                        expiredChance.getString(BroadcastChance.BROADCAST_CHANCE_HOST));
+            }
+
+            transaction.commit();
+        } catch (final Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+
+            LOGGER.log(Level.SEVERE, "Removes broadcast chances failed", e);
         }
     }
 
