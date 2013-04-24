@@ -119,7 +119,7 @@ public final class BroadcastChanceService {
             if (0 == array.length()) { // All broadcast chances are active
                 return;
             }
- 
+
             removeExpiredChances(array);
 
             gen(array.length());
@@ -158,6 +158,39 @@ public final class BroadcastChanceService {
             }
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Generates broadcast chances failed", e);
+        }
+    }
+
+    /**
+     * Removes a broadcast chance with the specified email.
+     * 
+     * @param email the specified email
+     */
+    public void removeBroadcastChance(final String email) {
+        final Transaction transaction = broadcastChanceRepository.beginTransaction();
+
+        try {
+            final Query query = new Query().setPageCount(1);
+            query.setFilter(new PropertyFilter(BroadcastChance.BROADCAST_CHANCE_EMAIL, FilterOperator.EQUAL, email));
+
+            final JSONObject result = broadcastChanceRepository.get(query);
+            final JSONArray array = result.getJSONArray(Keys.RESULTS);
+            if (0 == array.length()) {
+                return;
+            }
+
+            final JSONObject chanceToRemove = array.optJSONObject(0);
+            final String idToRemove = chanceToRemove.optString(Keys.OBJECT_ID);
+
+            broadcastChanceRepository.remove(idToRemove);
+
+            transaction.commit();
+        } catch (final Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+
+            LOGGER.log(Level.SEVERE, "Removes broadcast chances failed", e);
         }
     }
 

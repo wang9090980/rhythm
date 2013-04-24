@@ -26,6 +26,7 @@ import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.Requests;
+import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.symphony.ArticleSender;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.service.ArticleService;
@@ -41,7 +42,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Apr 15, 2013
+ * @version 1.0.0.1, Apr 24, 2013
  * @since 0.1.6
  */
 @RequestProcessor
@@ -91,7 +92,7 @@ public final class BroadcastProcessor {
      *     "broadcast": {
      *         "title": "",
      *         "content": "",
-     *         "link": ""
+     *         "link": "" // optional
      *     }
      * }
      * </pre>
@@ -101,13 +102,13 @@ public final class BroadcastProcessor {
     @RequestProcessing(value = "/broadcast", method = HTTPRequestMethod.POST)
     public void addBroadcast(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws Exception {
-                final JSONRenderer renderer = new JSONRenderer();
+        final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
 
-        
+
         final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
         renderer.setJSONObject(ret);
-        
+
         final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
         final String b3logKey = requestJSONObject.getString("b3logKey");
@@ -116,7 +117,7 @@ public final class BroadcastProcessor {
 
         if (!broadcastChanceService.hasBroadcastChance(email)) {
             LOGGER.log(Level.WARNING, "The user[email={0}] has no broadcast chance", email);
-            
+
             return;
         }
 
@@ -152,13 +153,21 @@ public final class BroadcastProcessor {
          */
         final long time = System.currentTimeMillis();
 
+        String content = broadcast.getString("content");
+        final String link = broadcast.optString("link");
+        if (!Strings.isEmptyOrNull(link)) {
+            content += "<p><a href='" + link + ">" +link + "</a></p>";
+        }
+
         article.put(Article.ARTICLE_AUTHOR_EMAIL, email);
-        article.put(Article.ARTICLE_CONTENT, broadcast.getString("content"));
+        article.put(Article.ARTICLE_CONTENT, content);
         article.put("articleCreateDate", time);
         article.put(Article.ARTICLE_PERMALINK, "aBroadcast");
         article.put(Article.ARTICLE_TAGS_REF, "B3log Broadcast");
         article.put(Article.ARTICLE_TITLE, broadcast.getString("title"));
         article.put(Keys.OBJECT_ID, String.valueOf(time));
+
+        ArticleProcessor.securityProcess(article);
 
         addRequest.put("userB3Key", b3logKey);
         addRequest.put("clientName", requestJSONObject.getString("clientName"));
@@ -171,6 +180,8 @@ public final class BroadcastProcessor {
 
         ArticleSender.addArticleToSymphony(addRequest);
         
+        broadcastChanceService.removeBroadcastChance(email);
+
         ret.put(Keys.STATUS_CODE, true);
     }
 }

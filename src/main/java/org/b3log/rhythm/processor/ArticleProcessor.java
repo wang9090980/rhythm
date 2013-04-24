@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.12, Apr 16, 2013
+ * @version 1.0.0.13, Apr 24, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -582,12 +582,12 @@ public final class ArticleProcessor {
     }
 
     /**
-     * Security process.
+     * Security process for the specified article.
      * 
      * @param article the specified article
      * @throws JSONException json exception
      */
-    private void securityProcess(final JSONObject article) throws JSONException {
+    public static void securityProcess(final JSONObject article) throws JSONException {
         String content = article.getString(ARTICLE_CONTENT);
         content = Securities.securedHTML(content);
         article.put(ARTICLE_CONTENT, content);
