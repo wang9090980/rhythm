@@ -111,11 +111,11 @@ public final class BroadcastChanceService {
 
             final long expirationTime = System.currentTimeMillis() - CYCLE_TIME;
 
-            Query query = new Query().setPageCount(1);
+            final Query query = new Query().setPageCount(1);
             query.setFilter(new PropertyFilter(BroadcastChance.BROADCAST_CHANCE_POST_TIME, FilterOperator.LESS_THAN, expirationTime));
 
-            JSONObject result = broadcastChanceRepository.get(query);
-            JSONArray array = result.getJSONArray(Keys.RESULTS);
+            final JSONObject result = broadcastChanceRepository.get(query);
+            final JSONArray array = result.getJSONArray(Keys.RESULTS);
             if (0 == array.length()) { // All broadcast chances are active
                 return;
             }
