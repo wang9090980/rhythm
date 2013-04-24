@@ -39,7 +39,7 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Apr 18, 2013
+ * @version 1.0.0.3, Apr 24, 2013
  * @since 0.1.6
  */
 public final class DNSPodService {
@@ -48,18 +48,22 @@ public final class DNSPodService {
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(DNSPodService.class.getName());
+
     /**
      * URL fetch service.
      */
     private static final URLFetchService URL_FETCH_SVC = URLFetchServiceFactory.getURLFetchService();
+
     /**
      * DNSPod API URL.
      */
     private static final String DNSPOD_API = "https://dnsapi.cn";
+
     /**
      * b3log.org domain id.
      */
     private static final String B3LOGORG_DOMAIN_ID = "612290";
+
     /**
      * Exclusions of records.
      */
@@ -83,23 +87,19 @@ public final class DNSPodService {
             httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             httpRequest.setURL(new URL(DNSPOD_API + "/Record.List"));
             httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION + " (DL88250gmail.com)"));
-
-// TODO: DNSPod login request            
-//            httpRequest.addPayloadEntry("login_email", Rhythms.CFG.getString("dnspod.username"));
-//            httpRequest.addPayloadEntry("login_password", Rhythms.CFG.getString("dnspod.password"));
-//            httpRequest.addPayloadEntry("format", "json");
-//            httpRequest.addPayloadEntry("lang", "cn");
-//            httpRequest.addPayloadEntry("error_on_empty", "no");
-//            httpRequest.addPayloadEntry("domain_id", B3LOGORG_DOMAIN_ID);
-//            httpRequest.addPayloadEntry("offset", "0");
-//            httpRequest.addPayloadEntry("length", "3000");
+       
+            final String data = "login_email=" + Rhythms.CFG.getString("dnspod.username")
+                    + "&login_password=" + Rhythms.CFG.getString("dnspod.password")
+                    + "&format=json" + "&lang=cn" + "&error_on_empty=no" + "&domain_id=" + B3LOGORG_DOMAIN_ID
+                    + "&offset=0" + "&length=3000";
+            httpRequest.setPayload(data.getBytes("UTF-8"));
 
             final HTTPResponse response = URL_FETCH_SVC.fetch(httpRequest);
 
             final JSONObject content = new JSONObject(new String(response.getContent()));
 
             LOGGER.log(Level.INFO, "Response[sc={0}, content={1}]",
-                       new Object[]{response.getResponseCode(), content.toString(Rhythms.INDENT_FACTOR)});
+                    new Object[]{response.getResponseCode(), content.toString(Rhythms.INDENT_FACTOR)});
 
             final JSONArray records = content.getJSONArray("records");
 

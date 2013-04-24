@@ -20,7 +20,7 @@
     Description: Cron job for GAE. See
                  http://code.google.com/intl/en/appengine/docs/java/config/cron.html
                  for more details.
-    Version: 1.0.0.6, May 18, 2012
+    Version: 1.0.0.7, Apr 24, 2013
     Author: Liang Ding
 -->
 <cronentries>
@@ -40,5 +40,11 @@
         <url>/dns/monitor</url>
         <description>Monitor *.b3log.org and Report</description>
         <schedule>every 24 hours</schedule>
+    </cron>
+    
+    <cron>
+        <url>/broadcast/chance/gen</url>
+        <description>Generates broadcast chances</description>
+        <schedule>every 30 minutes</schedule>
     </cron>
 </cronentries>
