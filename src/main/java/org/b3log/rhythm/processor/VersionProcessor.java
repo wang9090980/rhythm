@@ -78,6 +78,6 @@ public final class VersionProcessor {
 
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 
-        jsonObject.put(Solo.SOLO_DOWNLOAD, "https://github.com/b3log/b3log-solo/downloads");
+        jsonObject.put(Solo.SOLO_DOWNLOAD, "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F0.6.0");
     }
 }
