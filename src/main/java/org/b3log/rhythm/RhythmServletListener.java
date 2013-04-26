@@ -27,12 +27,13 @@ import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.symphony.ArticleSender;
+import org.b3log.rhythm.event.symphony.ArticleUpdater;
 
 /**
  * B3log Rhythm servlet listener.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.5, Nov 4, 2011
+ * @version 1.0.0.6, Apr 26, 2013
  * @since 0.1.4
  */
 public final class RhythmServletListener extends AbstractServletListener {
@@ -103,6 +104,7 @@ public final class RhythmServletListener extends AbstractServletListener {
             final EventManager eventManager = EventManager.getInstance();
 
             eventManager.registerListener(new ArticleSender());
+            eventManager.registerListener(new ArticleUpdater());
 
         } catch (final Exception e) {
             LOGGER.log(Level.SEVERE, "Register event processors error", e);
