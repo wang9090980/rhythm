@@ -87,7 +87,7 @@
     <dependencyManagement>
         <dependencies>
             
-            <dependency>         
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
@@ -103,7 +103,7 @@
                         <artifactId>h2</artifactId>
                     </exclusion>
                     
-<!--                    <exclusion>
+                    <!--                    <exclusion>
                         <artifactId>bonecp</artifactId>
                         <groupId>com.jolbox</groupId>
                     </exclusion>-->
@@ -149,7 +149,7 @@
 
     <dependencies>
         
-        <dependency>         
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>

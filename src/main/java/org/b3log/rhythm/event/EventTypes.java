@@ -19,7 +19,7 @@ package org.b3log.rhythm.event;
  * Event types.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Jan 23, 2011
+ * @version 1.0.0.1, Apr 26, 2013
  * @since 0.1.4
  */
 public final class EventTypes {
@@ -28,6 +28,11 @@ public final class EventTypes {
      * Indicates a add article event.
      */
     public static final String ADD_ARTICLE_TO_SYMPHONY = "Add Article To Symphony";
+    
+    /**
+     * Indicates a update article event.
+     */
+    public static final String UPDATE_ARTICLE_TO_SYMPHONY = "Update Article To Symphony";
 
     /**
      * Private default constructor.

@@ -61,7 +61,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.13, Apr 24, 2013
+ * @version 1.0.0.14, Apr 26, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -267,7 +267,7 @@ public final class ArticleProcessor {
                 try {
                     originalArticle.remove(Common.POST_TO_COMMUNITY);
 
-                    eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.ADD_ARTICLE_TO_SYMPHONY, requestJSONObject));
+                    eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.UPDATE_ARTICLE_TO_SYMPHONY, requestJSONObject));
                 } catch (final EventException e) {
                     LOGGER.log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -333,7 +333,7 @@ public final class ArticleProcessor {
         try {
             final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
-            LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
+            LOGGER.log(Level.SEVERE, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
             if (!Rhythms.isValidClient(blog)) {
                 jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
