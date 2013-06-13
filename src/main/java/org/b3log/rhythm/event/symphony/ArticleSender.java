@@ -26,6 +26,7 @@ import org.b3log.latke.event.EventException;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.RhythmServletListener;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
@@ -37,7 +38,7 @@ import org.json.JSONObject;
  * This listener is responsible for sending article to B3log Symphony.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.6, Apr 19, 2013
+ * @version 1.0.1.7, Jun 13, 2013
  * @since 0.1.4
  */
 public final class ArticleSender extends AbstractEventListener<JSONObject> {
@@ -69,8 +70,14 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
             final JSONObject article = data.getJSONObject(Article.ARTICLE);
 
             String clientHost = data.getString(Blog.BLOG_HOST);
-            if (!clientHost.startsWith("http://") && !clientHost.startsWith("https://")) {
+            if (!Strings.isURL(clientHost)) {
                 clientHost = "http://" + clientHost;
+
+                if (!Strings.isURL(clientHost)) {
+                    LOGGER.log(Level.WARNING, "Invalid Host [{0}]", clientHost);
+
+                    return;
+                }
             }
 
             final String clientVersion = data.getString(Blog.BLOG_VERSION);
