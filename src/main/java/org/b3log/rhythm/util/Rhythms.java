@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.6, Apr 26, 2013
+ * @version 1.0.1.7, Jun 14, 2013
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -33,26 +33,37 @@ public final class Rhythms {
      * Version.
      */
     public static final String RHYTHM_VERSION = "0.2.0";
+
     /**
      * Indent factor.
      */
     public static final int INDENT_FACTOR = 4;
+
     /**
      * Key of symphony.
      */
     public static final String KEY_OF_SYMPHONY;
+
+    /**
+     * Number of broadcast chance.
+     */
+    public static final int BROADCAST_CHANCE_NUM;
+
     /**
      * Minimum article post period in milliseconds.
      */
     public static final long MIN_STEP_POST_TIME;
+
     /**
      * Configurations.
      */
     public static final ResourceBundle CFG = ResourceBundle.getBundle("rhythm");
+
     /**
      * Released B3log Solo versions.
      */
     public static final List<String> RELEASED_SOLO_VERSIONS = new ArrayList<String>();
+
     /**
      * The latest development B3log Solo version.
      */
@@ -65,8 +76,9 @@ public final class Rhythms {
 
         KEY_OF_SYMPHONY = CFG.getString("keyOfSymphony");
         MIN_STEP_POST_TIME = Long.valueOf(CFG.getString("minStepPostTime"));
+        BROADCAST_CHANCE_NUM = Integer.valueOf(CFG.getString("broadcastChanceNum"));
     }
-    
+
     /**
      * Checks whether the specified client name is valid.
      * 

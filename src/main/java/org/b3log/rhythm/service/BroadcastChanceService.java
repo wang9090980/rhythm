@@ -35,6 +35,7 @@ import org.b3log.rhythm.repository.BroadcastChanceRepository;
 import org.b3log.rhythm.repository.UserRepository;
 import org.b3log.rhythm.repository.impl.BroadcastChanceRepositoryImpl;
 import org.b3log.rhythm.repository.impl.UserRepositoryImpl;
+import org.b3log.rhythm.util.Rhythms;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -68,11 +69,6 @@ public final class BroadcastChanceService {
     private URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
     /**
-     * Max size of active broadcast chances.
-     */
-    private static final int MAX_SIZE = 5;
-
-    /**
      * Cycle time (active time).
      */
     private static final long CYCLE_TIME = 1000 * 60 * 30; // 30 minutes
@@ -103,10 +99,10 @@ public final class BroadcastChanceService {
     public void generateBroadcastChances() {
         try {
             final long count = broadcastChanceRepository.count();
-            if (0 == count) {
-                gen(MAX_SIZE);
+            final int remains = (int) (Rhythms.BROADCAST_CHANCE_NUM - count);
 
-                return;
+            if (remains > 0) {
+                gen(remains);
             }
 
             final long expirationTime = System.currentTimeMillis() - CYCLE_TIME;

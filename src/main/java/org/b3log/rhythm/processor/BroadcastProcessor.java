@@ -24,12 +24,13 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
+import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
+import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.symphony.ArticleSender;
 import org.b3log.rhythm.model.Article;
-import org.b3log.rhythm.service.ArticleService;
 import org.b3log.rhythm.service.BroadcastChanceService;
 import org.json.JSONObject;
 
@@ -42,7 +43,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, Apr 24, 2013
+ * @version 1.0.0.2, Jun 14, 2013
  * @since 0.1.6
  */
 @RequestProcessor
@@ -59,11 +60,6 @@ public final class BroadcastProcessor {
     private BroadcastChanceService broadcastChanceService = BroadcastChanceService.getInstance();
 
     /**
-     * Article service.
-     */
-    private ArticleService articleService = ArticleService.getInstance();
-
-    /**
      * Generates broadcast chances.
      * 
      * @param context the specified context
@@ -73,6 +69,9 @@ public final class BroadcastProcessor {
     public void generateBroadcastChance(final HTTPRequestContext context) throws Exception {
         broadcastChanceService.generateBroadcastChances();
         broadcastChanceService.sendBroadcastChances();
+
+        final AbstractHTTPResponseRenderer renderer = new DoNothingRenderer();
+        context.setRenderer(renderer);
     }
 
     /**
@@ -104,7 +103,6 @@ public final class BroadcastProcessor {
             throws Exception {
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
-
 
         final JSONObject ret = new JSONObject().put(Keys.STATUS_CODE, false);
         renderer.setJSONObject(ret);
@@ -156,7 +154,7 @@ public final class BroadcastProcessor {
         String content = broadcast.getString("content");
         final String link = broadcast.optString("link");
         if (!Strings.isEmptyOrNull(link)) {
-            content += "<p><a href='" + link + ">" +link + "</a></p>";
+            content += "<p><a href='" + link + ">" + link + "</a></p>";
         }
 
         article.put(Article.ARTICLE_AUTHOR_EMAIL, email);
@@ -179,7 +177,7 @@ public final class BroadcastProcessor {
         addRequest.put("clientAdminEmail", email);
 
         ArticleSender.addArticleToSymphony(addRequest);
-        
+
         broadcastChanceService.removeBroadcastChance(email);
 
         ret.put(Keys.STATUS_CODE, true);
