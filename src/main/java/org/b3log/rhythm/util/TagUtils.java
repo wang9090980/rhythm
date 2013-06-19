@@ -16,9 +16,9 @@
 package org.b3log.rhythm.util;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Tag;
@@ -62,7 +62,7 @@ public final class TagUtils {
             JSONObject tag = tagRepository.getByTitle(tagTitle);
             String tagId;
             if (null == tag) {
-                LOGGER.log(Level.FINEST, "Found a new tag[title={0}] in article[title={1}]",
+                LOGGER.log(Level.TRACE, "Found a new tag[title={0}] in article[title={1}]",
                            new Object[]{tagTitle, article.getString(Article.ARTICLE_TITLE)});
                 tag = new JSONObject();
                 tag.put(Tag.TAG_TITLE_LOWER_CASE, tagTitle.toLowerCase());
@@ -73,7 +73,7 @@ public final class TagUtils {
                 tag.put(Keys.OBJECT_ID, tagId);
             } else {
                 tagId = tag.getString(Keys.OBJECT_ID);
-                LOGGER.log(Level.FINEST, "Found a existing tag[title={0}, oId={1}] in article[title={2}]",
+                LOGGER.log(Level.TRACE, "Found a existing tag[title={0}, oId={1}] in article[title={2}]",
                            new Object[]{tag.getString(Tag.TAG_TITLE_LOWER_CASE), tag.getString(Keys.OBJECT_ID),
                                         article.getString(Article.ARTICLE_TITLE)});
                 final int refCnt = tag.getInt(Tag.TAG_REFERENCE_COUNT);
@@ -105,11 +105,11 @@ public final class TagUtils {
             tag.put(Tag.TAG_REFERENCE_COUNT, refCnt - 1);
 
             tagRepository.update(tagId, tag);
-            LOGGER.log(Level.FINEST, "Deced tag[tagTitle={0}] reference count[{1}] of article[oId={2}]",
+            LOGGER.log(Level.TRACE, "Deced tag[tagTitle={0}] reference count[{1}] of article[oId={2}]",
                        new Object[]{tag.getString(Tag.TAG_TITLE_LOWER_CASE), tag.getInt(Tag.TAG_REFERENCE_COUNT), articleId});
         }
 
-        LOGGER.log(Level.FINER, "Deced all tag reference count of article[oId={0}]", articleId);
+        LOGGER.log(Level.DEBUG, "Deced all tag reference count of article[oId={0}]", articleId);
     }
 
     /**

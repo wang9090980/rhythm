@@ -17,9 +17,9 @@ package org.b3log.rhythm.service;
 
 import java.net.URL;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
@@ -87,7 +87,7 @@ public final class BroadcastChanceService {
 
             return 0 != result.optJSONArray(Keys.RESULTS).length();
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Determines broadcast chance failed", e);
+            LOGGER.log(Level.ERROR, "Determines broadcast chance failed", e);
 
             return false;
         }
@@ -120,7 +120,7 @@ public final class BroadcastChanceService {
 
             gen(array.length());
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Generates broadcast chances failed", e);
+            LOGGER.log(Level.ERROR, "Generates broadcast chances failed", e);
         }
     }
 
@@ -153,7 +153,7 @@ public final class BroadcastChanceService {
                 LOGGER.log(Level.INFO, "Sent a broadcast chance to client[{0}]", clientURL);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Generates broadcast chances failed", e);
+            LOGGER.log(Level.ERROR, "Generates broadcast chances failed", e);
         }
     }
 
@@ -186,7 +186,7 @@ public final class BroadcastChanceService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Removes broadcast chances failed", e);
+            LOGGER.log(Level.ERROR, "Removes broadcast chances failed", e);
         }
     }
 
@@ -214,7 +214,7 @@ public final class BroadcastChanceService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Removes broadcast chances failed", e);
+            LOGGER.log(Level.ERROR, "Removes broadcast chances failed", e);
         }
     }
 
@@ -235,7 +235,7 @@ public final class BroadcastChanceService {
                     userURL = "http://" + userURL;
 
                     if (!Strings.isURL(userURL)) {
-                        LOGGER.log(Level.WARNING, "User URL [{0}] is invalid", userURL);
+                        LOGGER.log(Level.WARN, "User URL [{0}] is invalid", userURL);
 
                         continue;
                     }
@@ -258,7 +258,7 @@ public final class BroadcastChanceService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Adds broadcast chances failed", e);
+            LOGGER.log(Level.ERROR, "Adds broadcast chances failed", e);
         }
     }
 

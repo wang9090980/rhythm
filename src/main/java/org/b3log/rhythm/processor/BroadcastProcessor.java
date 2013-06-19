@@ -15,11 +15,11 @@
  */
 package org.b3log.rhythm.processor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -114,7 +114,7 @@ public final class BroadcastProcessor {
         // TODO: verify b3 key
 
         if (!broadcastChanceService.hasBroadcastChance(email)) {
-            LOGGER.log(Level.WARNING, "The user[email={0}] has no broadcast chance", email);
+            LOGGER.log(Level.WARN, "The user[email={0}] has no broadcast chance", email);
 
             return;
         }

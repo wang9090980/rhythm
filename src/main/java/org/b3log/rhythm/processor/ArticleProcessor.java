@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
@@ -29,6 +27,8 @@ import org.b3log.latke.cache.CacheFactory;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.Pagination;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
@@ -166,7 +166,7 @@ public final class ArticleProcessor {
         try {
             final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
-            LOGGER.log(Level.FINEST, "Request[data={0}]", requestJSONObject);
+            LOGGER.log(Level.TRACE, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
             if (!Rhythms.isValidClient(blog)) {
                 jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
@@ -188,7 +188,7 @@ public final class ArticleProcessor {
             final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
-                LOGGER.log(Level.WARNING, "Version of Solo[host={0}] is [{1}], so ignored this request",
+                LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
                         new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
@@ -222,7 +222,7 @@ public final class ArticleProcessor {
 //                    return ret;
 //                }
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                LOGGER.log(Level.ERROR, e.getMessage(), e);
                 return;
             }
 
@@ -269,7 +269,7 @@ public final class ArticleProcessor {
 
                     eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.UPDATE_ARTICLE_TO_SYMPHONY, requestJSONObject));
                 } catch (final EventException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    LOGGER.log(Level.ERROR, e.getMessage(), e);
                 }
             }
 
@@ -277,7 +277,7 @@ public final class ArticleProcessor {
 
             cache.put(authorEmail + ".lastPostTime", latestPostTime);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Can not add article", e);
+            LOGGER.log(Level.ERROR, "Can not add article", e);
 
             jsonObject.put(Keys.STATUS_CODE, e.getMessage());
         }
@@ -333,7 +333,7 @@ public final class ArticleProcessor {
         try {
             final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
-            LOGGER.log(Level.SEVERE, "Request[data={0}]", requestJSONObject);
+            LOGGER.log(Level.ERROR, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
             if (!Rhythms.isValidClient(blog)) {
                 jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
@@ -355,7 +355,7 @@ public final class ArticleProcessor {
             final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
-                LOGGER.log(Level.WARNING, "Version of Solo[host={0}] is [{1}], so ignored this request",
+                LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
                         new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
@@ -389,7 +389,7 @@ public final class ArticleProcessor {
 //                    return ret;
 //                }
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                LOGGER.log(Level.ERROR, e.getMessage(), e);
                 return;
             }
 
@@ -436,7 +436,7 @@ public final class ArticleProcessor {
 
                     eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.ADD_ARTICLE_TO_SYMPHONY, requestJSONObject));
                 } catch (final EventException e) {
-                    LOGGER.log(Level.SEVERE, e.getMessage(), e);
+                    LOGGER.log(Level.ERROR, e.getMessage(), e);
                 }
             }
 
@@ -444,7 +444,7 @@ public final class ArticleProcessor {
 
             cache.put(authorEmail + ".lastPostTime", latestPostTime);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Can not add article", e);
+            LOGGER.log(Level.ERROR, "Can not add article", e);
 
             jsonObject.put(Keys.STATUS_CODE, e.getMessage());
         }
@@ -498,17 +498,17 @@ public final class ArticleProcessor {
                 final JSONObject tag = tagRepository.getByTitle(tagTitle);
 
                 if (null != tag) {
-                    LOGGER.log(Level.FINER, "Tag Title[{0}]", tag.getString(Tag.TAG_TITLE_LOWER_CASE));
+                    LOGGER.log(Level.DEBUG, "Tag Title[{0}]", tag.getString(Tag.TAG_TITLE_LOWER_CASE));
 
                     final String tagId = tag.getString(Keys.OBJECT_ID);
                     final JSONObject result = tagArticleRepository.getByTagId(tagId, 1, pageSize);
                     final JSONArray tagArticleRelations = result.getJSONArray(Keys.RESULTS);
                     final int relationSize = pageSize < tagArticleRelations.length() ? pageSize : tagArticleRelations.length();
-                    LOGGER.log(Level.FINEST, "Relation size[{0}]", relationSize);
+                    LOGGER.log(Level.TRACE, "Relation size[{0}]", relationSize);
 
                     for (int j = 0; j < relationSize; j++) {
                         final JSONObject tagArticleRelation = tagArticleRelations.getJSONObject(j);
-                        LOGGER.log(Level.FINEST, "Relation[{0}]", tagArticleRelation.toString());
+                        LOGGER.log(Level.TRACE, "Relation[{0}]", tagArticleRelation.toString());
                         final String relatedArticleId = tagArticleRelation.getString(Article.ARTICLE + "_" + Keys.OBJECT_ID);
                         final JSONObject article = articleRepository.get(relatedArticleId);
                         if (article.getString(Blog.BLOG_HOST).split(":")[0].equalsIgnoreCase(soloHost)) {
@@ -543,9 +543,9 @@ public final class ArticleProcessor {
 
             jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
 
-            LOGGER.log(Level.FINE, "Got articles[{0}] by tag[{1}]", new Object[]{articles, tagString});
+            LOGGER.log(Level.DEBUG, "Got articles[{0}] by tag[{1}]", new Object[]{articles, tagString});
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Can not get articles", e);
+            LOGGER.log(Level.ERROR, "Can not get articles", e);
 
             try {
                 context.getResponse().sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);

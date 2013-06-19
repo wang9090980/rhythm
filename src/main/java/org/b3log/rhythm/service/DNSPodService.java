@@ -18,8 +18,8 @@ package org.b3log.rhythm.service;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
@@ -110,7 +110,7 @@ public final class DNSPodService {
 
                 final String name = record.getString("name");
                 if (EXCLUDES.contains(name)) {
-                    LOGGER.log(Level.FINE, "Skips record[name={0}]", name);
+                    LOGGER.log(Level.DEBUG, "Skips record[name={0}]", name);
                     continue;
                 }
 
@@ -127,9 +127,9 @@ public final class DNSPodService {
 
             domainsBuilder.append(Strings.LINE_SEPARATOR).append("]");
 
-            LOGGER.log(Level.FINEST, domainsBuilder.toString());
+            LOGGER.log(Level.TRACE, domainsBuilder.toString());
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Gets sub-domains failed", e);
+            LOGGER.log(Level.ERROR, "Gets sub-domains failed", e);
         }
 
         LOGGER.log(Level.INFO, "Got [{0}] sub-domains", ret.size());

@@ -18,8 +18,8 @@ package org.b3log.rhythm.processor;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -95,7 +95,7 @@ public final class ArticleAccessibilityChecker {
 
                 articleService.updateAccessibility(article, responseCode);
             } catch (final Exception e) {
-                LOGGER.warning(e.getMessage());
+                LOGGER.warn(e.getMessage());
             } finally {
                 Stopwatchs.end();
             }

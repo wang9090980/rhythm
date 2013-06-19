@@ -15,10 +15,10 @@
  */
 package org.b3log.rhythm.processor;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -74,7 +74,7 @@ public final class VersionProcessor {
 
         final String latestVersion = Rhythms.getLatestSoloVersion(currentVersion);
 
-        LOGGER.log(Level.FINER, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
+        LOGGER.log(Level.DEBUG, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
 
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 

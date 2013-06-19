@@ -15,9 +15,9 @@
  */
 package org.b3log.rhythm.repository.impl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.latke.repository.FilterOperator;
@@ -57,7 +57,7 @@ public final class UserRepositoryImpl extends AbstractRepository implements User
 
             return array.getJSONObject(0);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             throw new RepositoryException(e);
         }

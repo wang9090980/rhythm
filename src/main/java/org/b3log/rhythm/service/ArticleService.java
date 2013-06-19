@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.model.User;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
@@ -96,7 +96,7 @@ public final class ArticleService {
         try {
             return articleRepository.getRandomly(fetchSize);
         } catch (final RepositoryException e) {
-            LOGGER.log(Level.SEVERE, "Gets articles ranomly failed", e);
+            LOGGER.log(Level.ERROR, "Gets articles ranomly failed", e);
 
             return Collections.<JSONObject>emptyList();
         } finally {
@@ -129,9 +129,9 @@ public final class ArticleService {
                 ret.add(articles.getJSONObject(i).getString(Keys.OBJECT_ID));
             }
 
-            LOGGER.log(Level.FINER, "Article Ids[{0}]", ret.toString());
+            LOGGER.log(Level.DEBUG, "Article Ids[{0}]", ret.toString());
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Gets article ids by accessibility check count[greaterOrLess=" + greaterOrLess
+            LOGGER.log(Level.ERROR, "Gets article ids by accessibility check count[greaterOrLess=" + greaterOrLess
                     + ", checkCnt=" + checkCnt + "] failed", e);
         }
 
@@ -170,7 +170,7 @@ public final class ArticleService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Updates accessibility of article[" + article.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Updates accessibility of article[" + article.toString() + "] failed", e);
         }
     }
 
@@ -193,7 +193,7 @@ public final class ArticleService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Removes an article[id=" + articleId + "] failed", e);
+            LOGGER.log(Level.ERROR, "Removes an article[id=" + articleId + "] failed", e);
         }
     }
 
@@ -236,7 +236,7 @@ public final class ArticleService {
                 transaction.rollback();
             }
 
-            LOGGER.log(Level.SEVERE, "Adds article[" + article.toString() + "] failed", e);
+            LOGGER.log(Level.ERROR, "Adds article[" + article.toString() + "] failed", e);
         }
     }
 
@@ -269,7 +269,7 @@ public final class ArticleService {
             final JSONObject result = articleRepository.get(query);
             final JSONArray array = result.optJSONArray(Keys.RESULTS);
             if (0 == array.length()) {
-                LOGGER.log(Level.WARNING, "Not found article by original id [{0}]", originalId);
+                LOGGER.log(Level.WARN, "Not found article by original id [{0}]", originalId);
 
                 return;
             }
@@ -288,7 +288,7 @@ public final class ArticleService {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            LOGGER.log(Level.SEVERE, "Updates article by original id [" + originalId + "] failed", e);
+            LOGGER.log(Level.ERROR, "Updates article by original id [" + originalId + "] failed", e);
         }
     }
 
@@ -323,7 +323,7 @@ public final class ArticleService {
                 userRepository.update(user.getString(Keys.OBJECT_ID), user);
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Updates recent post time of failed", e);
+            LOGGER.log(Level.ERROR, "Updates recent post time of failed", e);
 
             throw new ServiceException(e);
         }

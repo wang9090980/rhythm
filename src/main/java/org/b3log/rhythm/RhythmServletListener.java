@@ -16,13 +16,13 @@
 package org.b3log.rhythm;
 
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.AbstractServletListener;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.latke.util.Strings;
@@ -90,9 +90,7 @@ public final class RhythmServletListener extends AbstractServletListener {
     public void requestDestroyed(final ServletRequestEvent servletRequestEvent) {
         Stopwatchs.end();
 
-        LOGGER.log(Level.FINE, "Stopwatch: {0}{1}",
-                new Object[]{Strings.LINE_SEPARATOR,
-            Stopwatchs.getTimingStat()});
+        LOGGER.log(Level.DEBUG, "Stopwatch: {0}{1}", new Object[]{Strings.LINE_SEPARATOR, Stopwatchs.getTimingStat()});
         Stopwatchs.release();
     }
 
@@ -107,7 +105,7 @@ public final class RhythmServletListener extends AbstractServletListener {
             eventManager.registerListener(new ArticleUpdater());
 
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Register event processors error", e);
+            LOGGER.log(Level.ERROR, "Register event processors error", e);
             throw new RuntimeException(e);
         }
     }

@@ -15,7 +15,6 @@
  */
 package org.b3log.rhythm.repository.impl;
 
-import java.util.logging.Logger;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.rhythm.model.BroadcastChance;
 import org.b3log.rhythm.repository.BroadcastChanceRepository;
@@ -29,11 +28,6 @@ import org.b3log.rhythm.repository.BroadcastChanceRepository;
  */
 public final class BroadcastChanceRepositoryImpl extends AbstractRepository
         implements BroadcastChanceRepository {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(BroadcastChanceRepositoryImpl.class.getName());
 
     /**
      * Gets the {@link BroadcastChanceRepositoryImpl} singleton.

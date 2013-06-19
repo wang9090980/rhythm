@@ -17,11 +17,11 @@ package org.b3log.rhythm.dev;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
@@ -65,7 +65,7 @@ public class InitProcessor {
                            new Object[]{createTableResult.getName(), createTableResult.isSuccess()});
             }
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Creates database tables failed", e);
+            LOGGER.log(Level.ERROR, "Creates database tables failed", e);
         }
 
         Stopwatchs.end();

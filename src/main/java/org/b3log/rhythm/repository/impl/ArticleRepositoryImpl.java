@@ -15,7 +15,6 @@
  */
 package org.b3log.rhythm.repository.impl;
 
-import java.util.logging.Logger;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.repository.ArticleRepository;
@@ -27,13 +26,7 @@ import org.b3log.rhythm.repository.ArticleRepository;
  * @version 1.0.0.2, Jan 23, 2011
  * @since 0.1.4
  */
-public final class ArticleRepositoryImpl extends AbstractRepository
-        implements ArticleRepository {
-
-    /**
-     * Logger.
-     */
-    private static final Logger LOGGER = Logger.getLogger(ArticleRepositoryImpl.class.getName());
+public final class ArticleRepositoryImpl extends AbstractRepository implements ArticleRepository {
 
     /**
      * Gets the {@link ArticleRepositoryImpl} singleton.

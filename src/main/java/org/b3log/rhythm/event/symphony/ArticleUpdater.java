@@ -17,12 +17,12 @@ package org.b3log.rhythm.event.symphony;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
 import org.b3log.latke.event.AbstractEventListener;
 import org.b3log.latke.event.Event;
 import org.b3log.latke.event.EventException;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
@@ -92,7 +92,7 @@ public final class ArticleUpdater extends AbstractEventListener<JSONObject> {
 
             updateArticleToSymphony(request);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, "Sends article to Symphony error: {0}", e.getMessage());
+            LOGGER.log(Level.ERROR, "Sends article to Symphony error: {0}", e.getMessage());
             throw new EventException(e);
         }
     }

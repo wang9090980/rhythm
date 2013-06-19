@@ -18,9 +18,9 @@ package org.b3log.rhythm.repository.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.b3log.latke.Keys;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.AbstractRepository;
 import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
@@ -67,7 +67,7 @@ public final class TagRepositoryImpl extends AbstractRepository implements TagRe
 
             return array.getJSONObject(0);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
 
             return null;
         }
@@ -86,7 +86,7 @@ public final class TagRepositoryImpl extends AbstractRepository implements TagRe
 
             return CollectionUtils.jsonArrayToList(array);
         } catch (final Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            LOGGER.log(Level.ERROR, e.getMessage(), e);
             return Collections.emptyList();
         }
     }
@@ -105,7 +105,7 @@ public final class TagRepositoryImpl extends AbstractRepository implements TagRe
                 ret.add(tag);
             }
         } catch (final JSONException e) {
-            LOGGER.severe(e.getMessage());
+            LOGGER.error(e.getMessage());
             throw new RepositoryException(e);
         }
 

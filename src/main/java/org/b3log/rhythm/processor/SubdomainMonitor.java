@@ -17,10 +17,10 @@ package org.b3log.rhythm.processor;
 
 import java.net.URL;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.b3log.latke.logging.Level;
+import org.b3log.latke.logging.Logger;
 import org.b3log.latke.mail.MailService;
 import org.b3log.latke.mail.MailService.Message;
 import org.b3log.latke.mail.MailServiceFactory;
@@ -99,7 +99,7 @@ public final class SubdomainMonitor {
                 }
 
             } catch (final Exception e) {
-                LOGGER.log(Level.SEVERE, "Ping URL[" + url + "] failed", e);
+                LOGGER.log(Level.ERROR, "Ping URL[" + url + "] failed", e);
             }
         }
 
