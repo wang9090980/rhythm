@@ -22,6 +22,7 @@
         <org.b3log.latke.version>0.5.0-SNAPSHOT</org.b3log.latke.version>
         <org.b3log.latke-repository-mysql.version>0.5.0-SNAPSHOT</org.b3log.latke-repository-mysql.version>
         <jsoup.version>1.7.1</jsoup.version>
+        <slf4j.version>1.7.5</slf4j.version>
         <!-- JDBC Drivers -->
         <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- maven plugin -->
@@ -88,6 +89,12 @@
         <dependencies>
             
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            
+            <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
@@ -99,23 +106,24 @@
                 <version>${org.b3log.latke.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                    </exclusion>
-                    
-                    <!--                    <exclusion>
-                        <artifactId>bonecp</artifactId>
-                        <groupId>com.jolbox</groupId>
-                    </exclusion>-->
-                    
-                    <exclusion>
                         <groupId>c3p0</groupId>
                         <artifactId>c3p0</artifactId>
                     </exclusion>
-                    
                     <exclusion>
-                        <artifactId>jboss-vfs</artifactId>
+                        <groupId>com.jolbox</groupId>
+                        <artifactId>bonecp</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>mail</artifactId>
+                        <groupId>javax.mail</groupId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>org.jboss</groupId>
+                        <artifactId>jboss-vfs</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -148,6 +156,10 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
         
         <dependency>
             <groupId>mysql</groupId>
