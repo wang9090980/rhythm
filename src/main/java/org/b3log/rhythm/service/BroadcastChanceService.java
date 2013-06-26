@@ -17,6 +17,7 @@ package org.b3log.rhythm.service;
 
 import java.net.URL;
 import java.util.List;
+import javax.inject.Inject;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -25,6 +26,7 @@ import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.Transaction;
+import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.URLFetchService;
@@ -33,8 +35,6 @@ import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.model.BroadcastChance;
 import org.b3log.rhythm.repository.BroadcastChanceRepository;
 import org.b3log.rhythm.repository.UserRepository;
-import org.b3log.rhythm.repository.impl.BroadcastChanceRepositoryImpl;
-import org.b3log.rhythm.repository.impl.UserRepositoryImpl;
 import org.b3log.rhythm.util.Rhythms;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,6 +46,7 @@ import org.json.JSONObject;
  * @version 1.0.0.0, Apr 15, 2013
  * @since 0.1.6
  */
+@Service
 public final class BroadcastChanceService {
 
     /**
@@ -56,12 +57,14 @@ public final class BroadcastChanceService {
     /**
      * Broadcast chance repository.
      */
-    private BroadcastChanceRepository broadcastChanceRepository = BroadcastChanceRepositoryImpl.getInstance();
+    @Inject
+    private BroadcastChanceRepository broadcastChanceRepository;
 
     /**
      * User repository.
      */
-    private UserRepository userRepository = UserRepositoryImpl.getInstance();
+    @Inject
+    private UserRepository userRepository;
 
     /**
      * URL fetch service.
@@ -263,37 +266,20 @@ public final class BroadcastChanceService {
     }
 
     /**
-     * Gets the {@link BroadcastChanceService} singleton.
-     *
-     * @return the singleton
+     * Sets the broadcast chance repository with the specified broadcast chance repository.
+     * 
+     * @param broadcastChanceRepository the specified broadcast chance repository
      */
-    public static BroadcastChanceService getInstance() {
-        return BroadcastChanceService.SingletonHolder.SINGLETON;
+    public void setBroadcastChanceRepository(final BroadcastChanceRepository broadcastChanceRepository) {
+        this.broadcastChanceRepository = broadcastChanceRepository;
     }
 
     /**
-     * Private constructor.
+     * Sets the user repository with the specified user repository.
+     * 
+     * @param userRepository the specified user repository
      */
-    private BroadcastChanceService() {
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Apr 15, 2013
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final BroadcastChanceService SINGLETON = new BroadcastChanceService();
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
+    public void setUserRepository(final UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }

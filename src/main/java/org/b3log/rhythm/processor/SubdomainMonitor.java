@@ -17,6 +17,7 @@ package org.b3log.rhythm.processor;
 
 import java.net.URL;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.logging.Level;
@@ -58,7 +59,8 @@ public final class SubdomainMonitor {
     /**
      * DNSPod service.
      */
-    private DNSPodService dnsPodService = DNSPodService.getInstance();
+    @Inject
+    private DNSPodService dnsPodService;
     /**
      * URL fetch service.
      */

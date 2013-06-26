@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
@@ -47,9 +48,6 @@ import org.b3log.rhythm.model.Tag;
 import org.b3log.rhythm.repository.ArticleRepository;
 import org.b3log.rhythm.repository.TagArticleRepository;
 import org.b3log.rhythm.repository.TagRepository;
-import org.b3log.rhythm.repository.impl.ArticleRepositoryImpl;
-import org.b3log.rhythm.repository.impl.TagArticleRepositoryImpl;
-import org.b3log.rhythm.repository.impl.TagRepositoryImpl;
 import org.b3log.rhythm.service.ArticleService;
 import org.b3log.rhythm.util.Rhythms;
 import org.b3log.rhythm.util.Securities;
@@ -75,22 +73,26 @@ public final class ArticleProcessor {
     /**
      * Article service.
      */
-    private ArticleService articleService = ArticleService.getInstance();
+    @Inject
+    private ArticleService articleService;
 
     /**
      * Article repository.
      */
-    private ArticleRepository articleRepository = ArticleRepositoryImpl.getInstance();
+    @Inject
+    private ArticleRepository articleRepository;
 
     /**
      * Tag repository.
      */
-    private TagRepository tagRepository = TagRepositoryImpl.getInstance();
+    @Inject
+    private TagRepository tagRepository;
 
     /**
      * Tag-Article repository.
      */
-    private TagArticleRepository tagArticleRepository = TagArticleRepositoryImpl.getInstance();
+    @Inject
+    private TagArticleRepository tagArticleRepository;
 
     /**
      * Cache.
@@ -115,7 +117,7 @@ public final class ArticleProcessor {
 
         context.setRenderer(new DoNothingRenderer());
     }
-    
+
     /**
      * Updates an article.
      * 

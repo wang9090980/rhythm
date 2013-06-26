@@ -18,6 +18,7 @@ package org.b3log.rhythm.processor;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
+import javax.inject.Inject;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -54,7 +55,8 @@ public final class ArticleAccessibilityChecker {
     /**
      * Article service.
      */
-    private ArticleService articleService = ArticleService.getInstance();
+    @Inject
+    private ArticleService articleService;
     /**
      * URL fetch service.
      */
@@ -121,7 +123,7 @@ public final class ArticleAccessibilityChecker {
         final Set<String> articleIds = articleService.getArticleIdsByAccessibilityCheckCnt('>', NOT_200_THRESHOLD);
 
         for (final String articleId : articleIds) {
-            ArticleService.getInstance().removeArticle(articleId);
+            articleService.removeArticle(articleId);
         }
 
         final DoNothingRenderer renderer = new DoNothingRenderer();

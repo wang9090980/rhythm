@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
@@ -30,17 +31,18 @@ import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.service.ServiceException;
+import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.Stopwatchs;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
+import org.b3log.rhythm.model.Tag;
 import org.b3log.rhythm.repository.ArticleRepository;
+import org.b3log.rhythm.repository.TagArticleRepository;
+import org.b3log.rhythm.repository.TagRepository;
 import org.b3log.rhythm.repository.UserRepository;
-import org.b3log.rhythm.repository.impl.ArticleRepositoryImpl;
-import org.b3log.rhythm.repository.impl.UserRepositoryImpl;
-import org.b3log.rhythm.util.ArticleUtils;
-import org.b3log.rhythm.util.TagUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -50,7 +52,7 @@ import org.json.JSONObject;
  * @version 1.0.0.4, Sep 26, 2012
  * @since 0.1.5
  */
-@SuppressWarnings("unchecked")
+@Service
 public final class ArticleService {
 
     /**
@@ -61,27 +63,135 @@ public final class ArticleService {
     /**
      * Article repository.
      */
-    private ArticleRepository articleRepository = ArticleRepositoryImpl.getInstance();
+    @Inject
+    private ArticleRepository articleRepository;
 
     /**
      * User repository.
      */
-    private UserRepository userRepository = UserRepositoryImpl.getInstance();
+    @Inject
+    private UserRepository userRepository;
 
     /**
-     * Tag utilities.
+     * Tag-Article repository.
      */
-    private TagUtils tagUtils = TagUtils.getInstance();
+    @Inject
+    private TagArticleRepository tagArticleRepository;
 
     /**
-     * Article utilities.
+     * Tag repository.
      */
-    private ArticleUtils articleUtils = ArticleUtils.getInstance();
+    @Inject
+    private TagRepository tagRepository;
 
     /**
      * Default article batch size.
      */
     private static final int BATCH_SIZE = 50;
+
+    /**
+     * Tags the specified article with the specified tag titles.
+     *
+     * @param tagTitles the specified tag titles
+     * @param article the specified article
+     * @return an array of tags
+     * @throws RepositoryException repository exception
+     * @throws JSONException json exception
+     */
+    public JSONArray tag(final String[] tagTitles, final JSONObject article) throws RepositoryException, JSONException {
+        final JSONArray ret = new JSONArray();
+        for (int i = 0; i < tagTitles.length; i++) {
+            final String tagTitle = tagTitles[i].trim();
+            JSONObject tag = tagRepository.getByTitle(tagTitle);
+            String tagId;
+            if (null == tag) {
+                LOGGER.log(Level.TRACE, "Found a new tag[title={0}] in article[title={1}]",
+                        new Object[]{tagTitle, article.getString(Article.ARTICLE_TITLE)});
+                tag = new JSONObject();
+                tag.put(Tag.TAG_TITLE_LOWER_CASE, tagTitle.toLowerCase());
+                tag.put(Tag.TAG_REFERENCE_COUNT, 1);
+
+
+                tagId = tagRepository.add(tag);
+                tag.put(Keys.OBJECT_ID, tagId);
+            } else {
+                tagId = tag.getString(Keys.OBJECT_ID);
+                LOGGER.log(Level.TRACE, "Found a existing tag[title={0}, oId={1}] in article[title={2}]",
+                        new Object[]{tag.getString(Tag.TAG_TITLE_LOWER_CASE), tag.getString(Keys.OBJECT_ID),
+                    article.getString(Article.ARTICLE_TITLE)});
+                final int refCnt = tag.getInt(Tag.TAG_REFERENCE_COUNT);
+                final JSONObject tagTmp = new JSONObject(tag, JSONObject.getNames(tag));
+                tagTmp.put(Tag.TAG_REFERENCE_COUNT, refCnt + 1);
+                tagRepository.update(tagId, tagTmp);
+            }
+
+            ret.put(tag);
+        }
+
+        return ret;
+    }
+
+    /**
+     * Decrements reference count of every tag of an article specified by the
+     * given article id.
+     *
+     * @param articleId the given article id
+     * @throws JSONException json exception
+     * @throws RepositoryException repository exception
+     */
+    public void decTagRefCount(final String articleId) throws JSONException, RepositoryException {
+        final List<JSONObject> tags = tagRepository.getByArticleId(articleId);
+
+        for (final JSONObject tag : tags) {
+            final String tagId = tag.getString(Keys.OBJECT_ID);
+            final int refCnt = tag.getInt(Tag.TAG_REFERENCE_COUNT);
+            tag.put(Tag.TAG_REFERENCE_COUNT, refCnt - 1);
+
+            tagRepository.update(tagId, tag);
+            LOGGER.log(Level.TRACE, "Deced tag[tagTitle={0}] reference count[{1}] of article[oId={2}]",
+                    new Object[]{tag.getString(Tag.TAG_TITLE_LOWER_CASE), tag.getInt(Tag.TAG_REFERENCE_COUNT), articleId});
+        }
+
+        LOGGER.log(Level.DEBUG, "Deced all tag reference count of article[oId={0}]", articleId);
+    }
+
+    /**
+     * Removes tag-article relations by the specified article id.
+     *
+     * @param articleId the specified article id
+     * @throws JSONException json exception
+     * @throws RepositoryException repository exception
+     */
+    public void removeTagArticleRelations(final String articleId)
+            throws JSONException, RepositoryException {
+        final List<JSONObject> tagArticleRelations = tagArticleRepository.getByArticleId(articleId);
+        for (int i = 0; i < tagArticleRelations.size(); i++) {
+            final JSONObject tagArticleRelation = tagArticleRelations.get(i);
+            final String relationId = tagArticleRelation.getString(Keys.OBJECT_ID);
+            tagArticleRepository.remove(relationId);
+        }
+    }
+
+    /**
+     * Adds relation of the specified tags and article.
+     *
+     * @param tags the specified tags
+     * @param article the specified article
+     * @throws JSONException json exception
+     * @throws RepositoryException repository exception
+     */
+    public void addTagArticleRelation(final JSONArray tags, final JSONObject article)
+            throws JSONException, RepositoryException {
+        for (int i = 0; i < tags.length(); i++) {
+            final JSONObject tag = tags.getJSONObject(i);
+            final JSONObject tagArticleRelation = new JSONObject();
+
+            tagArticleRelation.put(Tag.TAG + "_" + Keys.OBJECT_ID, tag.getString(Keys.OBJECT_ID));
+            tagArticleRelation.put(Article.ARTICLE + "_" + Keys.OBJECT_ID, article.getString(Keys.OBJECT_ID));
+
+            tagArticleRepository.add(tagArticleRelation);
+        }
+    }
 
     /**
      * Gets article randomly with the specified fetch size.
@@ -184,8 +294,8 @@ public final class ArticleService {
 
         try {
             articleRepository.remove(articleId);
-            tagUtils.decTagRefCount(articleId);
-            articleUtils.removeTagArticleRelations(articleId);
+            decTagRefCount(articleId);
+            removeTagArticleRelations(articleId);
 
             transaction.commit();
         } catch (final Exception e) {
@@ -225,8 +335,8 @@ public final class ArticleService {
             articleRepository.add(article);
 
             final String[] tagTitles = article.getString(Article.ARTICLE_TAGS_REF).split(",");
-            final JSONArray tags = tagUtils.tag(tagTitles, article);
-            articleUtils.addTagArticleRelation(tags, article);
+            final JSONArray tags = tag(tagTitles, article);
+            addTagArticleRelation(tags, article);
 
             updateRecentPostTime(article);
 
@@ -326,42 +436,6 @@ public final class ArticleService {
             LOGGER.log(Level.ERROR, "Updates recent post time of failed", e);
 
             throw new ServiceException(e);
-        }
-    }
-
-    /**
-     * Gets the {@link ArticleService} singleton.
-     *
-     * @return the singleton
-     */
-    public static ArticleService getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     */
-    private ArticleService() {
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Nov 3, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final ArticleService SINGLETON =
-                new ArticleService();
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
         }
     }
 }

@@ -16,6 +16,7 @@
 package org.b3log.rhythm.repository.impl;
 
 import org.b3log.latke.repository.AbstractRepository;
+import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.rhythm.model.BroadcastChance;
 import org.b3log.rhythm.repository.BroadcastChanceRepository;
 
@@ -26,44 +27,14 @@ import org.b3log.rhythm.repository.BroadcastChanceRepository;
  * @version 1.0.0.0, Apr 15, 2013
  * @since 0.1.6
  */
+@Repository
 public final class BroadcastChanceRepositoryImpl extends AbstractRepository
         implements BroadcastChanceRepository {
 
     /**
-     * Gets the {@link BroadcastChanceRepositoryImpl} singleton.
-     *
-     * @return the singleton
+     * Public constructor.
      */
-    public static BroadcastChanceRepositoryImpl getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     * 
-     * @param name the specified name
-     */
-    private BroadcastChanceRepositoryImpl(final String name) {
-        super(name);
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Apr 15, 2013
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final BroadcastChanceRepositoryImpl SINGLETON = new BroadcastChanceRepositoryImpl(BroadcastChance.BROADCAST_CHANCE);
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
+    public BroadcastChanceRepositoryImpl() {
+        super(BroadcastChance.BROADCAST_CHANCE);
     }
 }

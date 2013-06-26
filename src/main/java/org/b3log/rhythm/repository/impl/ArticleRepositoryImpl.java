@@ -16,6 +16,7 @@
 package org.b3log.rhythm.repository.impl;
 
 import org.b3log.latke.repository.AbstractRepository;
+import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.repository.ArticleRepository;
 
@@ -26,43 +27,13 @@ import org.b3log.rhythm.repository.ArticleRepository;
  * @version 1.0.0.2, Jan 23, 2011
  * @since 0.1.4
  */
+@Repository
 public final class ArticleRepositoryImpl extends AbstractRepository implements ArticleRepository {
 
     /**
-     * Gets the {@link ArticleRepositoryImpl} singleton.
-     *
-     * @return the singleton
+     * Public constructor.
      */
-    public static ArticleRepositoryImpl getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     * 
-     * @param name the specified name
-     */
-    private ArticleRepositoryImpl(final String name) {
-        super(name);
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Jan 23, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final ArticleRepositoryImpl SINGLETON = new ArticleRepositoryImpl(Article.ARTICLE);
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
+    public ArticleRepositoryImpl() {
+        super(Article.ARTICLE);
     }
 }

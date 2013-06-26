@@ -15,6 +15,7 @@
  */
 package org.b3log.rhythm.processor;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
@@ -57,7 +58,8 @@ public final class BroadcastProcessor {
     /**
      * Broadcast chance service.
      */
-    private BroadcastChanceService broadcastChanceService = BroadcastChanceService.getInstance();
+    @Inject
+    private BroadcastChanceService broadcastChanceService;
 
     /**
      * Generates broadcast chances.
@@ -181,5 +183,14 @@ public final class BroadcastProcessor {
         broadcastChanceService.removeBroadcastChance(email);
 
         ret.put(Keys.STATUS_CODE, true);
+    }
+
+    /**
+     * Sets the broadcast chance service with the specified broadcast chance service.
+     * 
+     * @param broadcastChanceService the specified broadcast chance service
+     */
+    public void setBroadcastChanceService(final BroadcastChanceService broadcastChanceService) {
+        this.broadcastChanceService = broadcastChanceService;
     }
 }

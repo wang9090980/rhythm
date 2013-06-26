@@ -26,6 +26,7 @@ import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
+import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Tag;
@@ -40,12 +41,20 @@ import org.json.JSONObject;
  * @version 1.0.0.7, Jun 27, 2012
  * @since 0.1.4
  */
+@Repository
 public final class TagArticleRepositoryImpl extends AbstractRepository implements TagArticleRepository {
 
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(TagArticleRepositoryImpl.class.getName());
+
+    /**
+     * Public constructor.
+     */
+    public TagArticleRepositoryImpl() {
+        super(Tag.TAG + "_" + Article.ARTICLE);
+    }
 
     @Override
     public List<JSONObject> getByArticleId(final String articleId) throws RepositoryException {
@@ -73,44 +82,5 @@ public final class TagArticleRepositoryImpl extends AbstractRepository implement
                 setPageSize(pageSize).setPageCount(1);
 
         return get(query);
-    }
-
-    /**
-     * Gets the {@link TagArticleRepositoryImpl} singleton.
-     *
-     * @return the singleton
-     */
-    public static TagArticleRepositoryImpl getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     * 
-     * @param name the specified name
-     */
-    private TagArticleRepositoryImpl(final String name) {
-        super(name);
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Jan 23, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final TagArticleRepositoryImpl SINGLETON =
-                new TagArticleRepositoryImpl(Tag.TAG + "_" + Article.ARTICLE);
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
     }
 }

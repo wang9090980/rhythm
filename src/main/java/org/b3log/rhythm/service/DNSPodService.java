@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.urlfetch.HTTPHeader;
 import org.b3log.latke.urlfetch.HTTPRequest;
@@ -42,6 +43,7 @@ import org.json.JSONObject;
  * @version 1.0.0.3, Apr 24, 2013
  * @since 0.1.6
  */
+@Service
 public final class DNSPodService {
 
     /**
@@ -87,7 +89,7 @@ public final class DNSPodService {
             httpRequest.setRequestMethod(HTTPRequestMethod.POST);
             httpRequest.setURL(new URL(DNSPOD_API + "/Record.List"));
             httpRequest.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION + " (DL88250gmail.com)"));
-       
+
             final String data = "login_email=" + Rhythms.CFG.getString("dnspod.username")
                     + "&login_password=" + Rhythms.CFG.getString("dnspod.password")
                     + "&format=json" + "&lang=cn" + "&error_on_empty=no" + "&domain_id=" + B3LOGORG_DOMAIN_ID
@@ -135,40 +137,5 @@ public final class DNSPodService {
         LOGGER.log(Level.INFO, "Got [{0}] sub-domains", ret.size());
 
         return ret;
-    }
-
-    /**
-     * Gets the {@link DNSPodService} singleton.
-     *
-     * @return the singleton
-     */
-    public static DNSPodService getInstance() {
-        return DNSPodService.SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
-     */
-    private DNSPodService() {
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, May 18, 2012
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final DNSPodService SINGLETON = new DNSPodService();
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
     }
 }

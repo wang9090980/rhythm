@@ -18,6 +18,7 @@ package org.b3log.rhythm.repository.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -27,6 +28,7 @@ import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
 import org.b3log.latke.repository.SortDirection;
+import org.b3log.latke.repository.annotation.Repository;
 import org.b3log.latke.util.CollectionUtils;
 import org.b3log.rhythm.model.Tag;
 import org.b3log.rhythm.repository.TagRepository;
@@ -41,16 +43,26 @@ import org.json.JSONObject;
  * @version 1.0.0.9, Jun 27, 2012
  * @since 0.1.4
  */
+@Repository
 public final class TagRepositoryImpl extends AbstractRepository implements TagRepository {
 
     /**
      * Logger.
      */
     private static final Logger LOGGER = Logger.getLogger(TagRepositoryImpl.class.getName());
+
+    /**
+     * Public constructor.
+     */
+    public TagRepositoryImpl() {
+        super(Tag.TAG);
+    }
+
     /**
      * Tag-Article relation repository.
      */
-    private TagArticleRepositoryImpl tagArticleRepository = TagArticleRepositoryImpl.getInstance();
+    @Inject
+    private TagArticleRepositoryImpl tagArticleRepository;
 
     @Override
     public JSONObject getByTitle(final String tagTitle) throws RepositoryException {
@@ -76,7 +88,7 @@ public final class TagRepositoryImpl extends AbstractRepository implements TagRe
     @Override
     public List<JSONObject> getMostUsedTags(final int num) {
         final Query query = new Query().addSort(Tag.TAG_REFERENCE_COUNT,
-                                                SortDirection.DESCENDING).
+                SortDirection.DESCENDING).
                 setCurrentPageNum(1).
                 setPageSize(num).setPageCount(1);
 
@@ -113,40 +125,11 @@ public final class TagRepositoryImpl extends AbstractRepository implements TagRe
     }
 
     /**
-     * Gets the {@link TagRepositoryImpl} singleton.
-     *
-     * @return the singleton
-     */
-    public static TagRepositoryImpl getInstance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    /**
-     * Private constructor.
+     * Sets the tag article repository with the specified tag article repository.
      * 
-     * @param name the specified name
+     * @param tagArticleRepository the specified tag article repository
      */
-    private TagRepositoryImpl(final String name) {
-        super(name);
-    }
-
-    /**
-     * Singleton holder.
-     *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, Jan 23, 2011
-     */
-    private static final class SingletonHolder {
-
-        /**
-         * Singleton.
-         */
-        private static final TagRepositoryImpl SINGLETON = new TagRepositoryImpl(Tag.TAG);
-
-        /**
-         * Private default constructor.
-         */
-        private SingletonHolder() {
-        }
+    public void setTagArticleRepository(final TagArticleRepositoryImpl tagArticleRepository) {
+        this.tagArticleRepository = tagArticleRepository;
     }
 }
