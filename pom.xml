@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.0.3.0, Feb 19, 2013
+    Version: 1.0.3.1, Jul 2, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -250,7 +250,7 @@
                     </mapping>
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
-                        <year>2009, 2010, 2011, 2012</year>
+                        <year>2009, 2010, 2011, 2012, 2013</year>
                         <devTeam>B3log Team</devTeam>
                     </properties>
                     <encoding>UTF-8</encoding>
@@ -327,9 +327,9 @@
 
     <repositories>
         <repository>
-            <id>m2-release</id>
-            <name>88250 at Google Maven repository of releases</name>
-            <url>http://m2-repos.googlecode.com/svn/release</url>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -337,11 +337,10 @@
                 <enabled>true</enabled>
             </releases>
         </repository>
-        
         <repository>
-            <id>m2-snapshot</id>
-            <name>88250 at Google Maven repository of snapshots</name>
-            <url>http://m2-repos.googlecode.com/svn/snapshot</url>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Snapshots Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -350,7 +349,30 @@
             </releases>
         </repository>
     </repositories>
-
-
+    
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+        <pluginRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Snapshots Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
 
