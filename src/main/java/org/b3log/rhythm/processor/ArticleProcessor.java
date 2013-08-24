@@ -59,11 +59,11 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.14, Apr 26, 2013
+ * @version 1.0.0.15, Aug 24, 2013
  * @since 0.1.4
  */
 @RequestProcessor
-public final class ArticleProcessor {
+public class ArticleProcessor {
 
     /**
      * Logger.

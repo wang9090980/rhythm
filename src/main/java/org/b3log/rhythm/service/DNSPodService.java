@@ -40,11 +40,11 @@ import org.json.JSONObject;
  * </p>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Apr 24, 2013
+ * @version 1.0.0.4, Aug 24, 2013
  * @since 0.1.6
  */
 @Service
-public final class DNSPodService {
+public class DNSPodService {
 
     /**
      * Logger.

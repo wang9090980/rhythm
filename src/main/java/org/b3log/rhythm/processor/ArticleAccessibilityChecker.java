@@ -42,11 +42,11 @@ import org.json.JSONObject;
  * permalink of an article.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.6, Dec 26, 2012
+ * @version 1.0.0.7, Aug 24, 2013
  * @since 0.1.5
  */
 @RequestProcessor
-public final class ArticleAccessibilityChecker {
+public class ArticleAccessibilityChecker {
 
     /**
      * Logger.

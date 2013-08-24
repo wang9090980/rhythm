@@ -49,11 +49,11 @@ import org.json.JSONObject;
  * Article service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Sep 26, 2012
+ * @version 1.0.0.5, Aug 24, 2013
  * @since 0.1.5
  */
 @Service
-public final class ArticleService {
+public class ArticleService {
 
     /**
      * Logger.

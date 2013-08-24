@@ -33,11 +33,11 @@ import org.json.JSONObject;
  * Version processor.
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.4, Dec 28, 2012
+ * @version 1.0.0.5, Aug 24, 2013
  * @since 0.1.4
  */
 @RequestProcessor
-public final class VersionProcessor {
+public class VersionProcessor {
 
     /**
      * Logger.
@@ -78,6 +78,6 @@ public final class VersionProcessor {
 
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 
-        jsonObject.put(Solo.SOLO_DOWNLOAD, "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F0.6.0");
+        jsonObject.put(Solo.SOLO_DOWNLOAD, Rhythms.LATEST_SOLO_DL_URL);
     }
 }

@@ -44,11 +44,11 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.2, Jun 14, 2013
+ * @version 1.0.0.3, Aug 24, 2013
  * @since 0.1.6
  */
 @RequestProcessor
-public final class BroadcastProcessor {
+public class BroadcastProcessor {
 
     /**
      * Logger.

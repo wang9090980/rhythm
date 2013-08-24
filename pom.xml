@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.0.3.1, Jul 2, 2013
+    Version: 1.0.3.2, Aug 24, 2013
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -211,6 +211,20 @@
         </resources>
         
         <plugins>
+            <plugin>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>maven-jetty-plugin</artifactId>
+                <version>6.1.22</version>
+                <configuration>
+                    <stopKey>stop</stopKey>
+                    <stopPort>4500</stopPort>
+                    <classesDirectory>${basedir}/target/${project.build.finalName}/WEB-INF/classes</classesDirectory>
+                    <contextPath>/</contextPath>
+
+                    <reload>manual</reload>
+                </configuration>
+            </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

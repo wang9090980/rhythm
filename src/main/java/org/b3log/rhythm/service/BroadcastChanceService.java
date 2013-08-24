@@ -43,11 +43,11 @@ import org.json.JSONObject;
  * Broadcast chance service.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, Apr 15, 2013
+ * @version 1.0.0.1, Aug 24, 2013
  * @since 0.1.6
  */
 @Service
-public final class BroadcastChanceService {
+public class BroadcastChanceService {
 
     /**
      * Logger.

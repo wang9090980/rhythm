@@ -46,11 +46,11 @@ import org.json.JSONObject;
  * </p>
  * 
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.1, May 22, 2012
+ * @version 1.0.0.2, Aug 24, 2013
  * @since 0.1.6
  */
 @RequestProcessor
-public final class SubdomainMonitor {
+public class SubdomainMonitor {
 
     /**
      * Logger.
