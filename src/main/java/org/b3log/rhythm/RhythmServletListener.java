@@ -21,6 +21,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import org.b3log.latke.event.EventManager;
+import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.AbstractServletListener;
@@ -99,7 +100,7 @@ public final class RhythmServletListener extends AbstractServletListener {
      */
     private void registerEventProcessor() {
         try {
-            final EventManager eventManager = EventManager.getInstance();
+            final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);;
 
             eventManager.registerListener(new ArticleSender());
             eventManager.registerListener(new ArticleUpdater());

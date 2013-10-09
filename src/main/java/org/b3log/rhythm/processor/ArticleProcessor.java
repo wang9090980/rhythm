@@ -103,7 +103,8 @@ public class ArticleProcessor {
     /**
      * Event manager.
      */
-    private EventManager eventManager = EventManager.getInstance();
+    @Inject
+    private EventManager eventManager;
 
     /**
      * Index, redirects to the B3log.org home: <a href="http://www.b3log.org">http://www.b3log.org</a>.
