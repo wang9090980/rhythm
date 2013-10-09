@@ -100,7 +100,7 @@ public final class RhythmServletListener extends AbstractServletListener {
      */
     private void registerEventProcessor() {
         try {
-            final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);;
+            final EventManager eventManager = Lifecycle.getBeanManager().getReference(EventManager.class);
 
             eventManager.registerListener(new ArticleSender());
             eventManager.registerListener(new ArticleUpdater());
