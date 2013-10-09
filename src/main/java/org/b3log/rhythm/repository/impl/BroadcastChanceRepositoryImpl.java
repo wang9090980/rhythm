@@ -28,7 +28,7 @@ import org.b3log.rhythm.repository.BroadcastChanceRepository;
  * @since 0.1.6
  */
 @Repository
-public final class BroadcastChanceRepositoryImpl extends AbstractRepository
+public class BroadcastChanceRepositoryImpl extends AbstractRepository
         implements BroadcastChanceRepository {
 
     /**

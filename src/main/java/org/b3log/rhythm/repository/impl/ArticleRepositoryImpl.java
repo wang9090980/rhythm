@@ -28,7 +28,7 @@ import org.b3log.rhythm.repository.ArticleRepository;
  * @since 0.1.4
  */
 @Repository
-public final class ArticleRepositoryImpl extends AbstractRepository implements ArticleRepository {
+public class ArticleRepositoryImpl extends AbstractRepository implements ArticleRepository {
 
     /**
      * Public constructor.

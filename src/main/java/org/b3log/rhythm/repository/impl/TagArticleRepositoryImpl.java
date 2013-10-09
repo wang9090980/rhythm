@@ -42,7 +42,7 @@ import org.json.JSONObject;
  * @since 0.1.4
  */
 @Repository
-public final class TagArticleRepositoryImpl extends AbstractRepository implements TagArticleRepository {
+public class TagArticleRepositoryImpl extends AbstractRepository implements TagArticleRepository {
 
     /**
      * Logger.

@@ -37,7 +37,7 @@ import org.json.JSONObject;
  * @since 0.1.5
  */
 @Repository
-public final class UserRepositoryImpl extends AbstractRepository implements UserRepository {
+public class UserRepositoryImpl extends AbstractRepository implements UserRepository {
 
     /**
      * Logger.
