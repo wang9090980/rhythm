@@ -23,14 +23,14 @@ import org.jsoup.safety.Whitelist;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
- * @version 1.0.0.0, Oct 15, 2012
+ * @version 1.0.0.1, Oct 31, 2013
  * @since 0.1.6
  */
 public final class Securities {
 
     /**
      * Security processing for the specified HTML content.
-     * 
+     *
      * <p>
      *   <ul>
      *     <li>Removes all event properties (onclick, onblur, etc.) in a tag, for example,  
@@ -42,13 +42,13 @@ public final class Securities {
      *     <pre>&lt;div&gt;content&lt;/div&gt;</pre></li>
      *   </ul>
      * </p>
-     * 
+     *
      * @param html the specified HTML content
-     * @return secured HTML content 
+     * @return secured HTML content
      */
     public static String securedHTML(final String html) {
         return Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
-                "", Whitelist.relaxed());
+                "", Whitelist.relaxed().addTags("span").addAttributes(":all", "id", "target", "class", "style").addTags("hr"));
     }
 
     /**
