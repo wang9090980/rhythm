@@ -37,14 +37,14 @@ import org.json.JSONObject;
 
 /**
  * Broadcast processor.
- * 
+ *
  * <ul>
  *   <li>Generates broadcast chances</li>
  *   <li>Add broadcast</li>
  * </ul>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.3, Aug 24, 2013
+ * @version 1.0.0.4, Nov 9, 2013
  * @since 0.1.6
  */
 @RequestProcessor
@@ -63,9 +63,9 @@ public class BroadcastProcessor {
 
     /**
      * Generates broadcast chances.
-     * 
+     *
      * @param context the specified context
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/broadcast/chance/gen", method = HTTPRequestMethod.GET)
     public void generateBroadcastChance(final HTTPRequestContext context) throws Exception {
@@ -78,10 +78,9 @@ public class BroadcastProcessor {
 
     /**
      * Adds a broadcast.
-     * 
+     *
      * @param context the specified context
-     * @param request the specified http servlet request, for example,
-     * <pre>
+     * @param request the specified http servlet request, for example,      <pre>
      * {
      *     "b3logKey": "",
      *     "email": "",
@@ -97,8 +96,9 @@ public class BroadcastProcessor {
      *     }
      * }
      * </pre>
+     *
      * @param response the specified http servlet response
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/broadcast", method = HTTPRequestMethod.POST)
     public void addBroadcast(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
@@ -154,9 +154,15 @@ public class BroadcastProcessor {
         final long time = System.currentTimeMillis();
 
         String content = broadcast.getString("content");
-        final String link = broadcast.optString("link");
+        String link = broadcast.optString("link");
         if (!Strings.isEmptyOrNull(link)) {
-            content += "<p><a href='" + link + ">" + link + "</a></p>";
+            if (!Strings.isURL(link)) {
+                link = "http://" + link;
+            }
+
+            if (Strings.isURL(link)) {
+                content += "<p><a href='" + link + "'>" + link + "</a></p>";
+            }
         }
 
         article.put(Article.ARTICLE_AUTHOR_EMAIL, email);
@@ -187,7 +193,7 @@ public class BroadcastProcessor {
 
     /**
      * Sets the broadcast chance service with the specified broadcast chance service.
-     * 
+     *
      * @param broadcastChanceService the specified broadcast chance service
      */
     public void setBroadcastChanceService(final BroadcastChanceService broadcastChanceService) {
