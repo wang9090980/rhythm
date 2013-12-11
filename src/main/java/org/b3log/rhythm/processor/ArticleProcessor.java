@@ -591,6 +591,8 @@ public class ArticleProcessor {
             article.remove(ARTICLE_ORIGINAL_ID);
             article.remove(ARTICLE_AUTHOR_EMAIL);
             article.remove(ARTICLE_TAGS_REF);
+            article.remove(ARTICLE_ACCESSIBILITY_CHECK_CNT);
+            article.remove(ARTICLE_ACCESSIBILITY_NOT_200_CNT);
             article.remove(Blog.BLOG_HOST);
             article.remove(Blog.BLOG_TITLE);
             article.remove(Blog.BLOG_VERSION);
