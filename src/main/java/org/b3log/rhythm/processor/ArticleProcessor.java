@@ -22,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
@@ -59,7 +60,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.15, Aug 24, 2013
+ * @version 1.0.1.15, Dec 11, 2013
  * @since 0.1.4
  */
 @RequestProcessor
@@ -108,9 +109,9 @@ public class ArticleProcessor {
 
     /**
      * Index, redirects to the B3log.org home: <a href="http://www.b3log.org">http://www.b3log.org</a>.
-     * 
+     *
      * @param context the specified context
-     * @throws IOException io exception 
+     * @throws IOException io exception
      */
     @RequestProcessing(value = "/", method = HTTPRequestMethod.GET)
     public void index(final HTTPRequestContext context) throws IOException {
@@ -121,7 +122,7 @@ public class ArticleProcessor {
 
     /**
      * Updates an article.
-     * 
+     *
      * <p>
      * Renders the response with a json object, for example,
      * <pre>
@@ -131,12 +132,12 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context, 
+     * @param context the specified context,
      * including a request json object, for example,
      * <pre>
      * {
      *     "article": {
-     *         "oId": "", 
+     *         "oId": "",
      *         "articleTitle": "",
      *         "articlePermalink": "/test",
      *         "articleTags": "tag1, tag2, ....",
@@ -192,7 +193,7 @@ public class ArticleProcessor {
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
                 LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                        new String[]{blogHost, blogVersion});
+                           new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
                 return;
@@ -202,7 +203,7 @@ public class ArticleProcessor {
             securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                    new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
+                       new Object[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
             final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
 
             Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
@@ -288,7 +289,7 @@ public class ArticleProcessor {
 
     /**
      * Adds an article.
-     * 
+     *
      * <p>
      * Renders the response with a json object, for example,
      * <pre>
@@ -298,12 +299,12 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context, 
+     * @param context the specified context,
      * including a request json object, for example,
      * <pre>
      * {
      *     "article": {
-     *         "oId": "", 
+     *         "oId": "",
      *         "articleTitle": "",
      *         "articlePermalink": "/test",
      *         "articleTags": "tag1, tag2, ....",
@@ -359,7 +360,7 @@ public class ArticleProcessor {
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
                 LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                        new String[]{blogHost, blogVersion});
+                           new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
                 return;
@@ -369,7 +370,7 @@ public class ArticleProcessor {
             securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                    new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
+                       new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
             final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
 
             Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
@@ -455,9 +456,9 @@ public class ArticleProcessor {
 
     /**
      * Gets articles by tags.
-     * 
+     *
      * @param context the specified context
-     * @throws IOException io exception 
+     * @throws IOException io exception
      */
     @RequestProcessing(value = "/get-articles-by-tags.do", method = HTTPRequestMethod.GET)
     public void getArticlesByTags(final HTTPRequestContext context) throws IOException {
@@ -475,7 +476,12 @@ public class ArticleProcessor {
             return;
         }
 
+        if (soloHost.contains("://")) {
+            soloHost = StringUtils.substringAfter(soloHost, "://");
+        }
+
         soloHost = soloHost.split(":")[0];
+
         final int pageSize = Integer.valueOf(request.getParameter(Pagination.PAGINATION_PAGE_SIZE));
         String callbackFuncName = request.getParameter("callback");
         if (Strings.isEmptyOrNull(callbackFuncName)) {
@@ -491,7 +497,7 @@ public class ArticleProcessor {
 
         jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
 
-        LOGGER.log(Level.INFO, "Getting articles by tags[{0}]....", tagString);
+        LOGGER.log(Level.DEBUG, "Getting articles by tags[{0}]....", tagString);
         try {
             final String[] tags = tagString.split(",");
 
@@ -514,7 +520,15 @@ public class ArticleProcessor {
                         LOGGER.log(Level.TRACE, "Relation[{0}]", tagArticleRelation.toString());
                         final String relatedArticleId = tagArticleRelation.getString(Article.ARTICLE + "_" + Keys.OBJECT_ID);
                         final JSONObject article = articleRepository.get(relatedArticleId);
-                        if (article.getString(Blog.BLOG_HOST).split(":")[0].equalsIgnoreCase(soloHost)) {
+
+                        String articleHost = article.getString(Blog.BLOG_HOST);
+                        if (articleHost.contains("://")) {
+                            articleHost = StringUtils.substringAfter(articleHost, "://");
+                        }
+
+                        articleHost = articleHost.split(":")[0];
+
+                        if (articleHost.equalsIgnoreCase(soloHost)) {
                             continue; // Excludes articles from requested host
                         }
 
@@ -560,15 +574,15 @@ public class ArticleProcessor {
 
     /**
      * Removes unused properties of each article in the specified articles.
-     * 
+     *
      * <p>
      * Remains the following properties:
      * <ul>
-     *   <li>{@link Article#ARTICLE_TITLE article title}</li>
-     *   <li>{@link Article#ARTICLE_PERMALINK article permalink}</li>
+     * <li>{@link Article#ARTICLE_TITLE article title}</li>
+     * <li>{@link Article#ARTICLE_PERMALINK article permalink}</li>
      * </ul>
      * </p>
-     * 
+     *
      * @param articles the specified articles
      */
     private void removeUnusedProperties(final List<JSONObject> articles) {
@@ -586,7 +600,7 @@ public class ArticleProcessor {
 
     /**
      * Security process for the specified article.
-     * 
+     *
      * @param article the specified article
      * @throws JSONException json exception
      */

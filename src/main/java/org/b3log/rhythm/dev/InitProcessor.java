@@ -20,6 +20,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Latkes;
+import org.b3log.latke.RuntimeMode;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.repository.jdbc.util.JdbcRepositories;
@@ -46,15 +47,19 @@ public class InitProcessor {
 
     /**
      * Generates tables.
-     * 
+     *
      * @param context the specified context
      * @param request the specified request
      * @param response the specified response
-     * @throws IOException io exception 
+     * @throws IOException io exception
      */
     @RequestProcessing(value = "/dev/db/table/gen", method = HTTPRequestMethod.GET)
     public void genTables(final HTTPRequestContext context, final HttpServletRequest request, final HttpServletResponse response)
             throws IOException {
+        if (RuntimeMode.PRODUCTION == Latkes.getRuntimeMode()) {
+            return;
+        }
+
         Stopwatchs.start("Gen Tables");
 
         try {
