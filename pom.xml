@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.0.3.2, Aug 24, 2013
+    Version: 1.0.3.3, Jan 2, 2014
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -107,14 +107,6 @@
                 <version>${org.b3log.latke.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>c3p0</groupId>
-                        <artifactId>c3p0</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.jolbox</groupId>
-                        <artifactId>bonecp</artifactId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
                     </exclusion>
@@ -127,12 +119,6 @@
                         <artifactId>jboss-vfs</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-            
-            <dependency>
-                <groupId>org.b3log</groupId>
-                <artifactId>latke-bae</artifactId>
-                <version>${org.b3log.latke.version}</version>
             </dependency>
             
             <!-- Latke BAE dep -->
@@ -182,11 +168,6 @@
         <dependency>
             <groupId>org.b3log</groupId>
             <artifactId>latke-repository-mysql</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.b3log</groupId>
-            <artifactId>latke-bae</artifactId>
         </dependency>
         
         <dependency>
