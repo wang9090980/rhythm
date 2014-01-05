@@ -23,7 +23,6 @@
         <org.b3log.latke-repository-mysql.version>0.5.0-SNAPSHOT</org.b3log.latke-repository-mysql.version>
         <jsoup.version>1.7.1</jsoup.version>
         <slf4j.version>1.7.5</slf4j.version>
-        <httpclient.version>4.1.1</httpclient.version>
         <!-- JDBC Drivers -->
         <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- maven plugin -->
@@ -121,13 +120,6 @@
                 </exclusions>
             </dependency>
             
-            <!-- Latke BAE dep -->
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            
             <dependency>
                 <groupId>org.b3log</groupId>
                 <artifactId>latke-repository-mysql</artifactId>
@@ -170,11 +162,6 @@
             <artifactId>latke-repository-mysql</artifactId>
         </dependency>
         
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
