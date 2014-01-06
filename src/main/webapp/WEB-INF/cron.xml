@@ -20,20 +20,20 @@
     Description: Cron job for GAE. See
                  http://code.google.com/intl/en/appengine/docs/java/config/cron.html
                  for more details.
-    Version: 1.0.0.8, Jan 5, 2014
+    Version: 1.0.0.9, Jan 6, 2014
     Author: Liang Ding
 -->
 <cronentries>
     <cron>
         <url>/articles/accessibility</url>
         <description>Checks accessibility of articles</description>
-        <schedule>every 1 hours</schedule>
+        <schedule>every 24 hours</schedule>
     </cron>
     
     <cron>
         <url>/articles/accessibility/remove</url>
         <description>Removes not found articles</description>
-        <schedule>every 1 hours</schedule>
+        <schedule>every 24 hours</schedule>
     </cron>
     
     <!--
