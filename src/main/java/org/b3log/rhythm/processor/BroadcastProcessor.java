@@ -25,7 +25,6 @@ import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
 import org.b3log.latke.servlet.annotation.RequestProcessor;
-import org.b3log.latke.servlet.renderer.AbstractHTTPResponseRenderer;
 import org.b3log.latke.servlet.renderer.DoNothingRenderer;
 import org.b3log.latke.servlet.renderer.JSONRenderer;
 import org.b3log.latke.util.Requests;
@@ -39,8 +38,8 @@ import org.json.JSONObject;
  * Broadcast processor.
  *
  * <ul>
- *   <li>Generates broadcast chances</li>
- *   <li>Add broadcast</li>
+ * <li>Generates broadcast chances</li>
+ * <li>Add broadcast</li>
  * </ul>
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
@@ -69,11 +68,19 @@ public class BroadcastProcessor {
      */
     @RequestProcessing(value = "/broadcast/chance/gen", method = HTTPRequestMethod.GET)
     public void generateBroadcastChance(final HTTPRequestContext context) throws Exception {
+        final DoNothingRenderer renderer = new DoNothingRenderer();
+        context.setRenderer(renderer);
+
+        final String remoteAddr = Requests.getRemoteAddr(context.getRequest());
+
+        LOGGER.debug(remoteAddr);
+
+        if (!"127.0.0.1".equals(remoteAddr)) {
+            return;
+        }
+
         broadcastChanceService.generateBroadcastChances();
         broadcastChanceService.sendBroadcastChances();
-
-        final AbstractHTTPResponseRenderer renderer = new DoNothingRenderer();
-        context.setRenderer(renderer);
     }
 
     /**
