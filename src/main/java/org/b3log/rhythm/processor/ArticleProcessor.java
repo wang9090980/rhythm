@@ -108,14 +108,14 @@ public class ArticleProcessor {
     private EventManager eventManager;
 
     /**
-     * Index, redirects to the B3log.org home: <a href="http://www.b3log.org">http://www.b3log.org</a>.
+     * Index, redirects to the B3log.org home: <a href="http://b3log.org">http://b3log.org</a>.
      *
      * @param context the specified context
      * @throws IOException io exception
      */
     @RequestProcessing(value = "/", method = HTTPRequestMethod.GET)
     public void index(final HTTPRequestContext context) throws IOException {
-        context.getResponse().sendRedirect("http://www.b3log.org");
+        context.getResponse().sendRedirect("http://b3log.org");
 
         context.setRenderer(new DoNothingRenderer());
     }
