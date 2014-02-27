@@ -16,6 +16,7 @@
 package org.b3log.rhythm.util;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
 /**
@@ -23,11 +24,11 @@ import org.jsoup.safety.Whitelist;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
- * @version 1.0.0.1, Oct 31, 2013
+ * @version 1.0.0.2, Feb 27, 2014
  * @since 0.1.6
  */
 public final class Securities {
-
+    
     /**
      * Security processing for the specified HTML content.
      *
@@ -47,8 +48,12 @@ public final class Securities {
      * @return secured HTML content
      */
     public static String securedHTML(final String html) {
+        final Document.OutputSettings outputSettings = new Document.OutputSettings();
+        outputSettings.prettyPrint(false);
+        
         return Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
-                "", Whitelist.relaxed().addTags("span").addAttributes(":all", "id", "target", "class", "style").addTags("hr"));
+                "", Whitelist.relaxed().addTags("span").addAttributes(":all", "id", "target", "class", "style").addTags("hr"),
+                outputSettings);
     }
 
     /**
