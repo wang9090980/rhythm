@@ -497,11 +497,12 @@ public class ArticleProcessor {
 
         jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
 
+        final List<JSONObject> articles = new ArrayList<JSONObject>();
+       
         LOGGER.log(Level.DEBUG, "Getting articles by tags[{0}]....", tagString);
         try {
             final String[] tags = tagString.split(",");
-
-            final List<JSONObject> articles = new ArrayList<JSONObject>();
+           
             for (int i = 0; i < tags.length; i++) {
                 final String tagTitle = tags[i];
                 final JSONObject tag = tagRepository.getByTitle(tagTitle);
