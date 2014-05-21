@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009, 2010, 2011, 2012, 2013, B3log Team
+ * Copyright (c) 2009, 2010, 2011, 2012, 2013, 2014, B3log Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ public class ArticleAccessibilityChecker {
     /**
      * Check count.
      */
-    private static final int CHECK_CNT = 10;
+    private static final int CHECK_CNT = 200;
 
     /**
      * Check timeout.
@@ -86,7 +86,7 @@ public class ArticleAccessibilityChecker {
     /**
      * Threshold of not 200.
      */
-    private static final int NOT_200_THRESHOLD = 20;
+    private static final int NOT_200_THRESHOLD = 5;
 
     /**
      * Checks and saves the check results.
