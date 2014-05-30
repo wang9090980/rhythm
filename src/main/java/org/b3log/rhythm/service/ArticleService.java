@@ -194,7 +194,7 @@ public class ArticleService {
     }
 
     /**
-     * Gets article randomly with the specified fetch size.
+     * Gets articles randomly with the specified fetch size.
      * 
      * @param fetchSize the specified fetch size
      * @return a list of json objects, its size less or equal to the specified 

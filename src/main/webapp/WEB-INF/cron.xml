@@ -20,7 +20,7 @@
     Description: Cron job for GAE. See
                  http://code.google.com/intl/en/appengine/docs/java/config/cron.html
                  for more details.
-    Version: 1.0.0.9, Jan 6, 2014
+    Version: 1.1.0.9, May 30, 2014
     Author: Liang Ding
 -->
 <cronentries>
@@ -34,6 +34,12 @@
         <url>/articles/accessibility/remove</url>
         <description>Removes not found articles</description>
         <schedule>every 24 hours</schedule>
+    </cron>
+    
+    <cron>
+        <url>/users/accessibility</url>
+        <description>Checks accessibility of users</description>
+        <schedule>every 12 hours</schedule>
     </cron>
     
     <!--
