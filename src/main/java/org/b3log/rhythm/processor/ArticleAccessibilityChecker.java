@@ -103,9 +103,9 @@ public class ArticleAccessibilityChecker {
 
         LOGGER.debug(remoteAddr);
 
-        if (!"127.0.0.1".equals(remoteAddr)) {
-            return;
-        }
+//        if (!"127.0.0.1".equals(remoteAddr)) {
+//            return;
+//        }
 
         final List<JSONObject> articles = articleService.getArticlesRandomly(CHECK_CNT);
 

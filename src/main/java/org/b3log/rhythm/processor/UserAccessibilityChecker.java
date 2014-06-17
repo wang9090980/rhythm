@@ -97,9 +97,9 @@ public class UserAccessibilityChecker {
 
         LOGGER.debug(remoteAddr);
 
-        if (!"127.0.0.1".equals(remoteAddr)) {
-            return;
-        }
+//        if (!"127.0.0.1".equals(remoteAddr)) {
+//            return;
+//        }
 
         final List<JSONObject> users = userService.getUsersRandomly(CHECK_CNT);
 
