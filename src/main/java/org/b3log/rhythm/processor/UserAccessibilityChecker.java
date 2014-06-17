@@ -116,7 +116,7 @@ public class UserAccessibilityChecker {
      * User accessibility check task.
      *
      * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
-     * @version 1.0.0.0, May 30, 2014
+     * @version 1.0.1.0, Jun 17, 2014
      */
     private class CheckTask implements Runnable {
 
@@ -140,6 +140,8 @@ public class UserAccessibilityChecker {
 
             LOGGER.debug("Checks user[url=" + userUrl + "] accessibility");
 
+            int responseCode = 0;
+
             try {
                 final HTTPRequest request = new HTTPRequest();
                 request.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION));
@@ -147,14 +149,14 @@ public class UserAccessibilityChecker {
 
                 final HTTPResponse response = urlFetchService.fetch(request);
 
-                final int responseCode = response.getResponseCode();
+                responseCode = response.getResponseCode();
                 LOGGER.log(Level.INFO, "Accesses user[url=" + userUrl + "] response[code={0}]", responseCode);
-
+            } catch (final Exception e) {
+                LOGGER.warn("User[url=" + userUrl + "] accessibility check failed [msg=" + e.getMessage() + "]");
+            } finally {
                 if (HttpServletResponse.SC_OK != responseCode) {
                     userService.removeUser(user.optString(Keys.OBJECT_ID));
                 }
-            } catch (final Exception e) {
-                LOGGER.warn("User[url=" + userUrl + "] accessibility check failed [msg=" + e.getMessage() + "]");
             }
         }
     }

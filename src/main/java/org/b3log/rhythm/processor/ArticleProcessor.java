@@ -60,7 +60,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.15, Dec 11, 2013
+ * @version 1.0.2.15, Jun 17, 2014
  * @since 0.1.4
  */
 @RequestProcessor
@@ -226,7 +226,7 @@ public class ArticleProcessor {
 //                    return ret;
 //                }
             } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, e.getMessage(), e);
+                LOGGER.log(Level.ERROR, "Invalid request [blogHost=" + blogHost + "]", e);
                 return;
             }
 
@@ -337,7 +337,6 @@ public class ArticleProcessor {
         try {
             final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
-            LOGGER.log(Level.ERROR, "Request[data={0}]", requestJSONObject);
             final String blog = requestJSONObject.optString(Blog.BLOG);
             if (!Rhythms.isValidClient(blog)) {
                 jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
@@ -393,7 +392,7 @@ public class ArticleProcessor {
 //                    return ret;
 //                }
             } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, e.getMessage(), e);
+                LOGGER.log(Level.ERROR, "Invalid request [blogHost=" + blogHost + "]", e);
                 return;
             }
 
@@ -498,11 +497,11 @@ public class ArticleProcessor {
         jsonObject.put(Keys.STATUS_CODE, StatusCodes.GET_ARTICLES_SUCC);
 
         final List<JSONObject> articles = new ArrayList<JSONObject>();
-       
+
         LOGGER.log(Level.DEBUG, "Getting articles by tags[{0}]....", tagString);
         try {
             final String[] tags = tagString.split(",");
-           
+
             for (int i = 0; i < tags.length; i++) {
                 final String tagTitle = tags[i];
                 final JSONObject tag = tagRepository.getByTitle(tagTitle);
