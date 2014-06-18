@@ -46,7 +46,7 @@ import org.json.JSONObject;
  * of an article.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.8, Jan 10, 2014
+ * @version 1.0.1.8, Jun 18, 2014
  * @since 0.1.5
  */
 @RequestProcessor
@@ -106,7 +106,6 @@ public class ArticleAccessibilityChecker {
 //        if (!"127.0.0.1".equals(remoteAddr)) {
 //            return;
 //        }
-
         final List<JSONObject> articles = articleService.getArticlesRandomly(CHECK_CNT);
 
         for (final JSONObject article : articles) {
@@ -141,7 +140,6 @@ public class ArticleAccessibilityChecker {
 //        if (!"127.0.0.1".equals(remoteAddr)) {
 //            return;
 //        }
-
         final Set<String> articleIds = articleService.getArticleIdsByAccessibilityCheckCnt('>', NOT_200_THRESHOLD);
 
         for (final String articleId : articleIds) {
@@ -177,6 +175,7 @@ public class ArticleAccessibilityChecker {
 
             LOGGER.debug("Checks article[permalink=" + articlePermalink + "] accessibility");
 
+            int responseCode = 0;
             try {
                 final HTTPRequest request = new HTTPRequest();
                 request.addHeader(new HTTPHeader("User-Agent", "B3log Rhythm/" + Rhythms.RHYTHM_VERSION));
@@ -184,12 +183,14 @@ public class ArticleAccessibilityChecker {
 
                 final HTTPResponse response = urlFetchService.fetch(request);
 
-                final int responseCode = response.getResponseCode();
+                responseCode = response.getResponseCode();
+            } catch (final Exception e) {
+                LOGGER.warn("Article[permalink=" + articlePermalink + "] accessibility check failed [msg=" + e.getMessage() + "]");
+                responseCode = HttpServletResponse.SC_NOT_FOUND;
+            } finally {
                 LOGGER.log(Level.INFO, "Accesses article[permalink=" + articlePermalink + "] response[code={0}]", responseCode);
 
                 articleService.updateAccessibility(article, responseCode);
-            } catch (final Exception e) {
-                LOGGER.warn("Article[permalink=" + articlePermalink + "] accessibility check failed [msg=" + e.getMessage() + "]");
             }
         }
     }
