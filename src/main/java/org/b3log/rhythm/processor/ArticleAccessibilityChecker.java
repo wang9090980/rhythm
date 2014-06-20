@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -34,7 +35,7 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
-import org.b3log.latke.util.Requests;
+import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.service.ArticleService;
 import org.b3log.rhythm.util.Rhythms;
@@ -45,7 +46,7 @@ import org.json.JSONObject;
  * of an article.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.8, Jun 18, 2014
+ * @version 1.1.1.8, Jun 20, 2014
  * @since 0.1.5
  */
 @RequestProcessor
@@ -98,13 +99,12 @@ public class ArticleAccessibilityChecker {
         final DoNothingRenderer renderer = new DoNothingRenderer();
         context.setRenderer(renderer);
 
-        final String remoteAddr = Requests.getRemoteAddr(context.getRequest());
+        final HttpServletRequest request = context.getRequest();
+        final String key = request.getParameter("key");
+        if (Strings.isEmptyOrNull(key) || !key.equals(Rhythms.CFG.getString("key"))) {
+            return;
+        }
 
-        LOGGER.debug(remoteAddr);
-
-//        if (!"127.0.0.1".equals(remoteAddr)) {
-//            return;
-//        }
         final List<JSONObject> articles = articleService.getArticlesRandomly(CHECK_CNT);
 
         for (final JSONObject article : articles) {
@@ -128,13 +128,12 @@ public class ArticleAccessibilityChecker {
         final DoNothingRenderer renderer = new DoNothingRenderer();
         context.setRenderer(renderer);
 
-        final String remoteAddr = Requests.getRemoteAddr(context.getRequest());
+        final HttpServletRequest request = context.getRequest();
+        final String key = request.getParameter("key");
+        if (Strings.isEmptyOrNull(key) || !key.equals(Rhythms.CFG.getString("key"))) {
+            return;
+        }
 
-        LOGGER.debug(remoteAddr);
-
-//        if (!"127.0.0.1".equals(remoteAddr)) {
-//            return;
-//        }
         final Set<String> articleIds = articleService.getArticleIdsByAccessibilityCheckCnt('>', NOT_200_THRESHOLD);
 
         for (final String articleId : articleIds) {
@@ -169,6 +168,7 @@ public class ArticleAccessibilityChecker {
             final String articlePermalink = article.optString(Article.ARTICLE_PERMALINK);
 
             LOGGER.debug("Checks article[permalink=" + articlePermalink + "] accessibility");
+            final long start = System.currentTimeMillis();
 
             int responseCode = 0;
             try {
@@ -183,7 +183,10 @@ public class ArticleAccessibilityChecker {
                 LOGGER.warn("Article[permalink=" + articlePermalink + "] accessibility check failed [msg=" + e.getMessage() + "]");
                 responseCode = HttpServletResponse.SC_NOT_FOUND;
             } finally {
-                LOGGER.log(Level.INFO, "Accesses article[permalink=" + articlePermalink + "] response[code={0}]", responseCode);
+                final long elapsed = System.currentTimeMillis() - start;
+
+                LOGGER.log(Level.DEBUG, "Accesses article[permalink=" + articlePermalink + "] response[code=" + responseCode + "], "
+                                        + "elapsed [" + elapsed + ']');
 
                 articleService.updateAccessibility(article, responseCode);
             }

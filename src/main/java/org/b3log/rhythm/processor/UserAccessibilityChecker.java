@@ -18,6 +18,7 @@ package org.b3log.rhythm.processor;
 import java.net.URL;
 import java.util.List;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
@@ -35,7 +36,7 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
-import org.b3log.latke.util.Requests;
+import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.service.UserService;
 import org.b3log.rhythm.util.Rhythms;
 import org.json.JSONObject;
@@ -44,7 +45,7 @@ import org.json.JSONObject;
  * Checks accessibility of users.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.0, May 30, 2014
+ * @version 1.1.0.0, Jun 20, 2014
  * @since 0.2.0
  */
 @RequestProcessor
@@ -92,13 +93,11 @@ public class UserAccessibilityChecker {
         final DoNothingRenderer renderer = new DoNothingRenderer();
         context.setRenderer(renderer);
 
-        final String remoteAddr = Requests.getRemoteAddr(context.getRequest());
-
-        LOGGER.debug(remoteAddr);
-
-//        if (!"127.0.0.1".equals(remoteAddr)) {
-//            return;
-//        }
+        final HttpServletRequest request = context.getRequest();
+        final String key = request.getParameter("key");
+        if (Strings.isEmptyOrNull(key) || !key.equals(Rhythms.CFG.getString("key"))) {
+            return;
+        }
 
         final List<JSONObject> users = userService.getUsersRandomly(CHECK_CNT);
 
