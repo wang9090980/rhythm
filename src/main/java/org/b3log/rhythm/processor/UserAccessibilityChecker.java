@@ -17,7 +17,6 @@ package org.b3log.rhythm.processor;
 
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.Future;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.Keys;
@@ -104,11 +103,7 @@ public class UserAccessibilityChecker {
         final List<JSONObject> users = userService.getUsersRandomly(CHECK_CNT);
 
         for (final JSONObject user : users) {
-            final Future<?> future = threadService.submit(new CheckTask(user), CHECK_TIMEOUT);
-
-            if (null == future) {
-                LOGGER.warn("Checks user [" + user.optString(Keys.OBJECT_ID) + "] timeout");
-            }
+            threadService.submit(new CheckTask(user), CHECK_TIMEOUT);
         }
     }
 

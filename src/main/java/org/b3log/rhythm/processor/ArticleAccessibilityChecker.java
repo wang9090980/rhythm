@@ -18,7 +18,6 @@ package org.b3log.rhythm.processor;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Future;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import org.b3log.latke.logging.Level;
@@ -109,11 +108,7 @@ public class ArticleAccessibilityChecker {
         final List<JSONObject> articles = articleService.getArticlesRandomly(CHECK_CNT);
 
         for (final JSONObject article : articles) {
-            final Future<?> future = threadService.submit(new CheckTask(article), CHECK_TIMEOUT);
-
-            if (null == future) {
-                articleService.updateAccessibility(article, HttpServletResponse.SC_NOT_FOUND);
-            }
+            threadService.submit(new CheckTask(article), CHECK_TIMEOUT);
         }
     }
 
