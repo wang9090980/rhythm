@@ -68,7 +68,7 @@ public final class Rhythms {
      * The latest B3log Solo download URL.
      */
     public static final String LATEST_SOLO_DL_URL 
-            = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F0.6.6";
+            = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F0.6.7";
     /**
      * The latest development B3log Solo version.
      */
