@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.1.10, Apr 25, 2014
+ * @version 1.0.1.11, Oct 16, 2014
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -72,7 +72,7 @@ public final class Rhythms {
     /**
      * The latest development B3log Solo version.
      */
-    public static final String SNAPSHOT_SOLO_VERSION = "0.6.7";
+    public static final String SNAPSHOT_SOLO_VERSION = "0.6.8";
    
 
     static {
@@ -82,6 +82,7 @@ public final class Rhythms {
         RELEASED_SOLO_VERSIONS.add("0.6.1");
         RELEASED_SOLO_VERSIONS.add("0.6.5");
         RELEASED_SOLO_VERSIONS.add("0.6.6");
+        RELEASED_SOLO_VERSIONS.add("0.6.7");
 
         KEY_OF_SYMPHONY = CFG.getString("keyOfSymphony");
         MIN_STEP_POST_TIME = Long.valueOf(CFG.getString("minStepPostTime"));
