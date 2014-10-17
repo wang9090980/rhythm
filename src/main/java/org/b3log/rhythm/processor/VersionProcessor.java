@@ -31,9 +31,9 @@ import org.json.JSONObject;
 
 /**
  * Version processor.
- * 
+ *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.5, Aug 24, 2013
+ * @version 1.1.0.5, Oct 17, 2014
  * @since 0.1.4
  */
 @RequestProcessor
@@ -46,9 +46,9 @@ public class VersionProcessor {
 
     /**
      * Gets the latest version of the B3log Solo.
-     * 
+     *
      * @param context the specified context
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     @RequestProcessing(value = {"/version/solo/latest/*", "/version/solo/latest"}, method = HTTPRequestMethod.GET)
     public void getLatestSoloVersion(final HTTPRequestContext context) throws Exception {
@@ -79,5 +79,41 @@ public class VersionProcessor {
         jsonObject.put(Solo.SOLO_VERSION, latestVersion);
 
         jsonObject.put(Solo.SOLO_DOWNLOAD, Rhythms.LATEST_SOLO_DL_URL);
+    }
+
+    /**
+     * Gets the latest version of the B3log Wide.
+     *
+     * @param context the specified context
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = {"/version/wide/latest/*", "/version/wide/latest"}, method = HTTPRequestMethod.GET)
+    public void getLatestWideVersion(final HTTPRequestContext context) throws Exception {
+        final HttpServletRequest request = context.getRequest();
+        String callbackFuncName = request.getParameter("callback");
+        if (Strings.isEmptyOrNull(callbackFuncName)) {
+            callbackFuncName = "callback";
+        }
+
+        final JSONObject jsonObject = new JSONObject();
+
+        final JSONRenderer renderer = new JSONRenderer();
+        context.setRenderer(renderer);
+
+        renderer.setCallback(callbackFuncName); // Sets JSONP
+        renderer.setJSONObject(jsonObject);
+
+        String currentVersion = request.getRequestURI();
+        currentVersion = StringUtils.substringAfter(currentVersion, "/version/wide/latest");
+        if (currentVersion.startsWith("/")) {
+            currentVersion = currentVersion.substring(1);
+        }
+
+        final String latestVersion = Rhythms.getLatestWideVersion(currentVersion);
+
+        LOGGER.log(Level.DEBUG, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
+
+        jsonObject.put("wideVersion", latestVersion);
+        jsonObject.put("wideDownload", Rhythms.LATEST_WIDE_DL_URL);
     }
 }
