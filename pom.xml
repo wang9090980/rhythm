@@ -109,8 +109,8 @@
                         <artifactId>h2</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>c3p0</groupId>
-                        <artifactId>c3p0</artifactId>
+                        <groupId>com.alibaba</groupId>
+                        <artifactId>druid</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>com.jolbox</groupId>
