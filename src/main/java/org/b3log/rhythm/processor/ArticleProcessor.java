@@ -42,7 +42,15 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
-import static org.b3log.rhythm.model.Article.*;
+import static org.b3log.rhythm.model.Article.ARTICLE;
+import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_CHECK_CNT;
+import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT;
+import static org.b3log.rhythm.model.Article.ARTICLE_AUTHOR_EMAIL;
+import static org.b3log.rhythm.model.Article.ARTICLE_CONTENT;
+import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
+import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
+import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
+import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.model.Tag;
@@ -60,7 +68,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.2.15, Jun 17, 2014
+ * @version 1.1.2.15, Mar 28, 2015
  * @since 0.1.4
  */
 @RequestProcessor
@@ -241,13 +249,14 @@ public class ArticleProcessor {
             article.put(ARTICLE_TITLE, originalArticle.getString(ARTICLE_TITLE));
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
-            final String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
+            String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
             if (tagString.contains("B3log Broadcast")) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
 
                 return;
             }
-
+            
+            tagString = tagString.replaceAll("，", ",");
             article.put(ARTICLE_TAGS_REF, tagString);
 
             String permalink = originalArticle.getString(ARTICLE_PERMALINK);
@@ -407,13 +416,14 @@ public class ArticleProcessor {
             article.put(ARTICLE_TITLE, originalArticle.getString(ARTICLE_TITLE));
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
-            final String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
+            String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
             if (tagString.contains("B3log Broadcast")) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
 
                 return;
             }
 
+            tagString = tagString.replaceAll("，", ",");
             article.put(ARTICLE_TAGS_REF, tagString);
 
             String permalink = originalArticle.getString(ARTICLE_PERMALINK);
