@@ -17,7 +17,10 @@ package org.b3log.rhythm.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Parser;
 import org.jsoup.safety.Whitelist;
+import org.jsoup.select.Elements;
 
 /**
  * Security utilities.
@@ -28,20 +31,21 @@ import org.jsoup.safety.Whitelist;
  * @since 0.1.6
  */
 public final class Securities {
-    
+
     /**
      * Security processing for the specified HTML content.
      *
      * <p>
-     *   <ul>
-     *     <li>Removes all event properties (onclick, onblur, etc.) in a tag, for example,  
-     *     <pre>&lt;a href='google.com' onclick='xxxx'&gt;a link&lt;/a&gt;</pre> produce to
-     *     <pre>&lt;a href='google.com'&gt;a link&lt;/a&gt;</pre></li>
-     *     <li>Escapes <pre>&lt;script&gt;&lt;/script&gt;</pre></li>
-     *     <li>Matches the tag start and end, for example, 
-     *     <pre>&lt;div&gt;content</pre> produce to
-     *     <pre>&lt;div&gt;content&lt;/div&gt;</pre></li>
-     *   </ul>
+     * <ul>
+     * <li>Removes all event properties (onclick, onblur, etc.) in a tag, for example,
+     * <pre>&lt;a href='google.com' onclick='xxxx'&gt;a link&lt;/a&gt;</pre> produce to
+     * <pre>&lt;a href='google.com'&gt;a link&lt;/a&gt;</pre></li>
+     * <li>Escapes
+     * <pre>&lt;script&gt;&lt;/script&gt;</pre></li>
+     * <li>Matches the tag start and end, for example,
+     * <pre>&lt;div&gt;content</pre> produce to
+     * <pre>&lt;div&gt;content&lt;/div&gt;</pre></li>
+     * </ul>
      * </p>
      *
      * @param html the specified HTML content
@@ -50,10 +54,22 @@ public final class Securities {
     public static String securedHTML(final String html) {
         final Document.OutputSettings outputSettings = new Document.OutputSettings();
         outputSettings.prettyPrint(false);
-        
-        return Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
-                "", Whitelist.relaxed().addTags("span").addAttributes(":all", "id", "target", "class", "style").addTags("hr"),
-                outputSettings);
+
+        final String tmp = Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
+                                       "", Whitelist.relaxed().addAttributes(":all", "id", "target", "class", "style").addTags("span").
+                                       addTags("hr").addTags("iframe").addAttributes("iframe", "src", "width", "height"),
+                                       outputSettings);
+        final Document doc = Jsoup.parse(tmp, "", Parser.xmlParser());
+        final Elements iframes = doc.getElementsByTag("iframe");
+
+        for (final Element iframe : iframes) {
+            final String src = iframe.attr("src");
+            if (!src.startsWith("https://wide.b3log.org")) {
+                iframe.remove();
+            }
+        }
+
+        return doc.html();
     }
 
     /**
