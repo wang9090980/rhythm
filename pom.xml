@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: B3log Rhythm.
-    Version: 1.1.3.10, Mar 28, 2015
+    Version: 1.2.3.10, Apr 8, 2015
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -22,6 +22,7 @@
         <org.b3log.latke.version>1.0.21</org.b3log.latke.version>
         <jsoup.version>1.7.1</jsoup.version>
         <slf4j.version>1.7.5</slf4j.version>
+        <commons-validator.version>1.4.1</commons-validator.version>
         <!-- JDBC Drivers -->
         <mysql-connector-java.version>5.1.18</mysql-connector-java.version>
         <!-- maven plugin -->
@@ -145,6 +146,12 @@
                 <artifactId>jsoup</artifactId>
                 <version>${jsoup.version}</version>
             </dependency>
+            
+            <dependency>
+                <groupId>commons-validator</groupId>
+                <artifactId>commons-validator</artifactId>
+                <version>${commons-validator.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -184,6 +191,11 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
         </dependency>
         
     </dependencies>
