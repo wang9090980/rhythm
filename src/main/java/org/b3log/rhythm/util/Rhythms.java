@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.1.1.14, Mar 24, 2015
+ * @version 1.2.1.14, Apr 9, 2015
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -111,6 +111,27 @@ public final class Rhythms {
     public static final String SNAPSHOT_WIDE_VERSION = "1.3.0";
 
     /**
+     * Released B3log Symphony versions.
+     */
+    public static final List<String> RELEASED_SYMPHONY_VERSIONS = new ArrayList<String>() {
+        {
+            add("0.2.5");
+            add("1.0.0");
+        }
+    };
+
+    /**
+     * The latest B3log Symphony download URL.
+     */
+    public static final String LATEST_SYMPHONY_DL_URL = "https://github.com/b3log/b3log-symphony/releases/tag/"
+                                                        + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
+
+    /**
+     * The latest development B3log Symphony version.
+     */
+    public static final String SNAPSHOT_SYMPHONY_VERSION = "1.1.0";
+
+    /**
      * Checks whether the specified client name is valid.
      *
      * @param clientName the specified client name
@@ -148,6 +169,25 @@ public final class Rhythms {
      */
     public static String getLatestWideVersion(final String currentVersion) {
         final String latest = RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
+        if (Strings.isEmptyOrNull(currentVersion)) {
+            return latest;
+        }
+
+        if (currentVersion.compareTo(latest) > 0) {
+            return currentVersion;
+        }
+
+        return latest;
+    }
+
+    /**
+     * Gets the latest Symphony version with the specified current versions.
+     *
+     * @param currentVersion the specified current version
+     * @return the latest Solo version
+     */
+    public static String getLatestSymphonyVersion(final String currentVersion) {
+        final String latest = RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
         if (Strings.isEmptyOrNull(currentVersion)) {
             return latest;
         }

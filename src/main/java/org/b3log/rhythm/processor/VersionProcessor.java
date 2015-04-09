@@ -116,4 +116,40 @@ public class VersionProcessor {
         jsonObject.put("wideVersion", latestVersion);
         jsonObject.put("wideDownload", Rhythms.LATEST_WIDE_DL_URL);
     }
+
+    /**
+     * Gets the latest version of the B3log Symphony.
+     *
+     * @param context the specified context
+     * @throws Exception exception
+     */
+    @RequestProcessing(value = {"/version/symphony/latest/*", "/version/symphony/latest"}, method = HTTPRequestMethod.GET)
+    public void getLatestSymphonyVersion(final HTTPRequestContext context) throws Exception {
+        final HttpServletRequest request = context.getRequest();
+        String callbackFuncName = request.getParameter("callback");
+        if (Strings.isEmptyOrNull(callbackFuncName)) {
+            callbackFuncName = "callback";
+        }
+
+        final JSONObject jsonObject = new JSONObject();
+
+        final JSONRenderer renderer = new JSONRenderer();
+        context.setRenderer(renderer);
+
+        renderer.setCallback(callbackFuncName); // Sets JSONP
+        renderer.setJSONObject(jsonObject);
+
+        String currentVersion = request.getRequestURI();
+        currentVersion = StringUtils.substringAfter(currentVersion, "/version/symphony/latest");
+        if (currentVersion.startsWith("/")) {
+            currentVersion = currentVersion.substring(1);
+        }
+
+        final String latestVersion = Rhythms.getLatestSymphonyVersion(currentVersion);
+
+        LOGGER.log(Level.DEBUG, "Version[client={0}, latest={1}]", new Object[]{currentVersion, latestVersion});
+
+        jsonObject.put("symphonyVersion", latestVersion);
+        jsonObject.put("symphonyDownload", Rhythms.LATEST_SYMPHONY_DL_URL);
+    }
 }
