@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
- * @version 1.1.0.1, Apr 8, 2015
+ * @version 1.2.0.1, Apr 17, 2015
  * @since 0.1.6
  */
 public class SecuritiesTestCase {
@@ -33,13 +33,26 @@ public class SecuritiesTestCase {
      */
     @Test
     public void securedHTML() {
-        final String html = "<a href='google.com' onclick='test'>a link</a><script>alert(1);</script><p>test";
+        final String html = "<a href='http://google.com' onclick='test'>a link</a><script>alert(1);</script><p>test";
 
         final String securedHTML = Securities.securedHTML(html);
 
         Assert.assertFalse(securedHTML.contains("onclick"));
         Assert.assertFalse(securedHTML.contains("<script>"));
         Assert.assertTrue(securedHTML.contains("</p>"));
+        Assert.assertTrue(securedHTML.contains("href"));
+    }
+
+    /**
+     * Tests {@link Securities#securedHTML(java.lang.String)} for data XSS.
+     */
+    @Test
+    public void securedHTML1() {
+        final String html = "<a href='data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K'>a link</a>";
+
+        final String securedHTML = Securities.securedHTML(html);
+
+        Assert.assertFalse(securedHTML.contains("<script>"));
     }
 
     /**
@@ -49,18 +62,17 @@ public class SecuritiesTestCase {
     public void securedHTMLIFrame() {
         // secured 
         final String html = "<iframe style=\"border:1px solid\" "
-                      + "src=\"https://wide.b3log.org/playground/8b7cc38b4c12e6fde5c4d15a4f2f32e5.go?embed=true\" "
-                      + "width=\"100%\" height=\"600\"></iframe>";
+                            + "src=\"https://wide.b3log.org/playground/8b7cc38b4c12e6fde5c4d15a4f2f32e5.go?embed=true\" "
+                            + "width=\"100%\" height=\"600\"></iframe>";
 
         final String securedHTML = Securities.securedHTML(html);
 
         Assert.assertEquals(html, securedHTML);
 
         // insecured
-        
         final String securedPart = "<iframe style=\"border:1px solid\" "
-                      + "src=\"https://wide.b3log.org/playground/8b7cc38b4c12e6fde5c4d15a4f2f32e5.go?embed=true\" "
-                      + "width=\"100%\" height=\"600\"></iframe>";
+                                   + "src=\"https://wide.b3log.org/playground/8b7cc38b4c12e6fde5c4d15a4f2f32e5.go?embed=true\" "
+                                   + "width=\"100%\" height=\"600\"></iframe>";
         final String inscuredPart = "<iframe style=\"border:1px solid\" src=\"https://insecured.com\"</iframe>";
 
         final String filtered = Securities.securedHTML(securedPart + inscuredPart);

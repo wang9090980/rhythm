@@ -38,8 +38,8 @@ public final class Securities {
      * <p>
      * <ul>
      * <li>Removes all event properties (onclick, onblur, etc.) in a tag, for example,
-     * <pre>&lt;a href='google.com' onclick='xxxx'&gt;a link&lt;/a&gt;</pre> produce to
-     * <pre>&lt;a href='google.com'&gt;a link&lt;/a&gt;</pre></li>
+     * <pre>&lt;a href='http://google.com' onclick='xxxx'&gt;a link&lt;/a&gt;</pre> produce to
+     * <pre>&lt;a href='http://google.com'&gt;a link&lt;/a&gt;</pre></li>
      * <li>Escapes
      * <pre>&lt;script&gt;&lt;/script&gt;</pre></li>
      * <li>Matches the tag start and end, for example,
@@ -56,9 +56,10 @@ public final class Securities {
         outputSettings.prettyPrint(false);
 
         final String tmp = Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
-                                       "", Whitelist.relaxed().addAttributes(":all", "id", "target", "class", "style").addTags("span").
-                                       addTags("hr").addTags("iframe").addAttributes("iframe", "src", "width", "height"),
-                                       outputSettings);
+                                       "", Whitelist.relaxed().
+                                       addAttributes(":all", "id", "target", "class", "style").
+                                       addTags("span", "hr").
+                                       addAttributes("iframe", "src", "width", "height"), outputSettings);
         final Document doc = Jsoup.parse(tmp, "", Parser.xmlParser());
         final Elements iframes = doc.getElementsByTag("iframe");
 
