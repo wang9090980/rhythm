@@ -31,7 +31,7 @@ import org.b3log.rhythm.event.symphony.ArticleSender;
 import org.b3log.rhythm.event.symphony.ArticleUpdater;
 
 /**
- * B3log Rhythm servlet listener.
+ * Rhythm servlet listener.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
  * @version 1.0.0.6, Apr 26, 2013
