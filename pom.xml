@@ -13,7 +13,7 @@
     <packaging>war</packaging>
     <version>0.2.0</version>
     <name>Rhythm</name>
-    <url>https://github.com/b3log/b3log-rhythm</url>
+    <url>https://github.com/b3log/rhythm</url>
     <description>Rhythm is the community server for Solo.</description>
     <inceptionYear>2010</inceptionYear>
 
@@ -68,7 +68,7 @@
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/b3log/b3log-rhythm/issues</url>
+        <url>https://github.com/b3log/rhythm/issues</url>
     </issueManagement>
 
     <!--
@@ -83,7 +83,7 @@
     </mailingLists>
 
     <scm>
-        <url>https://github.com/b3log/b3log-rhythm</url>
+        <url>https://github.com/b3log/rhythm</url>
     </scm>
 
     <dependencyManagement>

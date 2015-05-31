@@ -121,13 +121,13 @@ public final class Rhythms {
     };
 
     /**
-     * The latest B3log Symphony download URL.
+     * The latest Symphony download URL.
      */
-    public static final String LATEST_SYMPHONY_DL_URL = "https://github.com/b3log/b3log-symphony/releases/tag/"
+    public static final String LATEST_SYMPHONY_DL_URL = "https://github.com/b3log/symphony/releases/tag/"
                                                         + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
 
     /**
-     * The latest development B3log Symphony version.
+     * The latest development Symphony version.
      */
     public static final String SNAPSHOT_SYMPHONY_VERSION = "1.1.0";
 

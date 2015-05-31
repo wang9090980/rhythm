@@ -41,7 +41,7 @@
     </cron>
     
     <!--
-    See https://github.com/b3log/b3log-rhythm/issues/5 for more details.
+    See https://github.com/b3log/rhythm/issues/5 for more details.
     <cron>
         <url>/dns/monitor</url>
         <description>Monitor *.b3log.org and Report</description>
