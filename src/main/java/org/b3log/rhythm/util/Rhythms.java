@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.2.1.14, Apr 9, 2015
+ * @version 1.3.1.14, Jun 28, 2015
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -32,7 +32,7 @@ public final class Rhythms {
     /**
      * Version.
      */
-    public static final String RHYTHM_VERSION = "0.2.0";
+    public static final String RHYTHM_VERSION = "1.0.0";
 
     /**
      * Indent factor.
@@ -60,7 +60,7 @@ public final class Rhythms {
     public static final long MIN_STEP_POST_TIME = Long.valueOf(CFG.getString("minStepPostTime"));
 
     /**
-     * Released B3log Solo versions.
+     * Released Solo versions.
      */
     public static final List<String> RELEASED_SOLO_VERSIONS = new ArrayList<String>() {
         {
@@ -72,23 +72,24 @@ public final class Rhythms {
             add("0.6.6");
             add("0.6.7");
             add("0.6.8");
+            add("0.6.9");
         }
     };
 
     /**
-     * The latest B3log Solo download URL.
+     * The latest Solo download URL.
      */
     public static final String LATEST_SOLO_DL_URL
                                = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F"
                                  + RELEASED_SOLO_VERSIONS.get(RELEASED_SOLO_VERSIONS.size() - 1);
 
     /**
-     * The latest development B3log Solo version.
+     * The latest development Solo version.
      */
-    public static final String SNAPSHOT_SOLO_VERSION = "0.6.9";
+    public static final String SNAPSHOT_SOLO_VERSION = "1.0.0";
 
     /**
-     * Released B3log Wide versions.
+     * Released Wide versions.
      */
     public static final List<String> RELEASED_WIDE_VERSIONS = new ArrayList<String>() {
         {
@@ -100,13 +101,13 @@ public final class Rhythms {
     };
 
     /**
-     * The latest B3log Wide download URL.
+     * The latest Wide download URL.
      */
     public static final String LATEST_WIDE_DL_URL = "http://pan.baidu.com/s/1dD3XwOT#path=%252FWide%252F"
                                                     + RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
 
     /**
-     * The latest development B3log Wide version.
+     * The latest development Wide version.
      */
     public static final String SNAPSHOT_WIDE_VERSION = "1.3.0";
 
