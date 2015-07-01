@@ -48,7 +48,6 @@ import static org.b3log.rhythm.model.Article.ARTICLE;
 import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_CHECK_CNT;
 import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT;
 import static org.b3log.rhythm.model.Article.ARTICLE_AUTHOR_EMAIL;
-import static org.b3log.rhythm.model.Article.ARTICLE_CONTENT;
 import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
 import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
 import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
@@ -70,7 +69,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.2.2.15, Apr 8, 2015
+ * @version 1.2.3.15, Jul 1, 2015
  * @since 0.1.4
  */
 @RequestProcessor
@@ -147,9 +146,7 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context,
-     * including a request json object, for example,
-     * <pre>
+     * @param context the specified context, including a request json object, for example,      <pre>
      * {
      *     "article": {
      *         "oId": "",
@@ -208,7 +205,7 @@ public class ArticleProcessor {
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
                 LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                           new String[]{blogHost, blogVersion});
+                        new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
                 return;
@@ -218,7 +215,7 @@ public class ArticleProcessor {
             securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                       new Object[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
+                    new Object[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
             final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
 
             Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
@@ -315,9 +312,7 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context,
-     * including a request json object, for example,
-     * <pre>
+     * @param context the specified context, including a request json object, for example,      <pre>
      * {
      *     "article": {
      *         "oId": "",
@@ -375,7 +370,7 @@ public class ArticleProcessor {
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
                 LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                           new String[]{blogHost, blogVersion});
+                        new String[]{blogHost, blogVersion});
                 jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
 
                 return;
@@ -385,7 +380,7 @@ public class ArticleProcessor {
             securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                       new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
+                    new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
             final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
 
             Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
@@ -624,9 +619,9 @@ public class ArticleProcessor {
      * @throws JSONException json exception
      */
     public static void securityProcess(final JSONObject article) throws JSONException {
-        String content = article.getString(ARTICLE_CONTENT);
-        content = Securities.securedHTML(content);
-        article.put(ARTICLE_CONTENT, content);
+        //String content = article.getString(ARTICLE_CONTENT);
+        //content = Securities.securedHTML(content);
+        //article.put(ARTICLE_CONTENT, content);
 
         String title = article.getString(ARTICLE_TITLE);
         title = Securities.securedHTML(title);
