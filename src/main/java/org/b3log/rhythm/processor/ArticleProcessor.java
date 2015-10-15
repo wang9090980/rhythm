@@ -69,7 +69,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.2.3.15, Jul 1, 2015
+ * @version 1.2.4.15, Oct 16, 2015
  * @since 0.1.4
  */
 @RequestProcessor
@@ -201,6 +201,13 @@ public class ArticleProcessor {
                 }
             }
 
+            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
+            if (!validTitle(blogTitle)) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid title");
+
+                return;
+            }
+
             final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
@@ -243,8 +250,6 @@ public class ArticleProcessor {
             }
 
             latestPostTime = currentPostTime;
-
-            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
 
             final JSONObject article = new JSONObject();
 
@@ -366,6 +371,13 @@ public class ArticleProcessor {
                 }
             }
 
+            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
+            if (!validTitle(blogTitle)) {
+                jsonObject.put(Keys.STATUS_CODE, "Invalid title");
+
+                return;
+            }
+
             final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
 
             if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
@@ -408,8 +420,6 @@ public class ArticleProcessor {
             }
 
             latestPostTime = currentPostTime;
-
-            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
 
             final JSONObject article = new JSONObject();
 
@@ -663,6 +673,24 @@ public class ArticleProcessor {
                 return false;
             }
         } catch (final Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks the specified title is valid.
+     *
+     * @param title the specified title
+     * @return {@code true} if valid, returns {@code false} otherwise
+     */
+    private static boolean validTitle(final String title) {
+        if (!Strings.isEmptyOrNull(title)) {
+            return false;
+        }
+
+        if ("Solo 示例".equals(title)) {
             return false;
         }
 
