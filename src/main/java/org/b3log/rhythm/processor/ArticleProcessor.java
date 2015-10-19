@@ -69,7 +69,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.2.4.15, Oct 16, 2015
+ * @version 1.2.5.15, Oct 19, 2015
  * @since 0.1.4
  */
 @RequestProcessor
@@ -686,7 +686,7 @@ public class ArticleProcessor {
      * @return {@code true} if valid, returns {@code false} otherwise
      */
     private static boolean validTitle(final String title) {
-        if (!Strings.isEmptyOrNull(title)) {
+        if (Strings.isEmptyOrNull(title)) {
             return false;
         }
 
