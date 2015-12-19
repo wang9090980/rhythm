@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.5.1.17, Dec 2, 2015
+ * @version 1.5.1.18, Dec 19, 2015
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -76,6 +76,7 @@ public final class Rhythms {
             add("1.0.0");
             add("1.1.0");
             add("1.2.0");
+            add("1.3.0");
         }
     };
 
@@ -83,13 +84,12 @@ public final class Rhythms {
      * The latest Solo download URL.
      */
     public static final String LATEST_SOLO_DL_URL
-                               = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F"
-                                 + RELEASED_SOLO_VERSIONS.get(RELEASED_SOLO_VERSIONS.size() - 1);
+                               = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F";
 
     /**
      * The latest development Solo version.
      */
-    public static final String SNAPSHOT_SOLO_VERSION = "1.3.0";
+    public static final String SNAPSHOT_SOLO_VERSION = "1.4.0";
 
     /**
      * Released Wide versions.
