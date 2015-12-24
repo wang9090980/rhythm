@@ -37,7 +37,7 @@ import org.json.JSONObject;
 /**
  * This listener is responsible for sending article to B3log Symphony.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.1.7, Jun 13, 2013
  * @since 0.1.4
  */
@@ -116,9 +116,8 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
 
     /**
      * Adds an article to B3log Symphony with the specified request.
-     * 
-     * @param request the specified request, for example, 
-     * <pre>
+     *
+     * @param request the specified request, for example,      <pre>
      * {
      *     "article": {
      *         "articleAuthorEmail": "DL88250@gmail.com",
@@ -139,6 +138,7 @@ public final class ArticleSender extends AbstractEventListener<JSONObject> {
      *     "clientAdminEmail": ""
      * }
      * </pre>
+     *
      * @throws Exception exception
      */
     public static void addArticleToSymphony(final JSONObject request) throws Exception {

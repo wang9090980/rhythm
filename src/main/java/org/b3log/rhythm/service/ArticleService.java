@@ -48,7 +48,7 @@ import org.json.JSONObject;
 /**
  * Article service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.5, Aug 24, 2013
  * @since 0.1.5
  */
@@ -111,14 +111,13 @@ public class ArticleService {
                 tag.put(Tag.TAG_TITLE_LOWER_CASE, tagTitle.toLowerCase());
                 tag.put(Tag.TAG_REFERENCE_COUNT, 1);
 
-
                 tagId = tagRepository.add(tag);
                 tag.put(Keys.OBJECT_ID, tagId);
             } else {
                 tagId = tag.getString(Keys.OBJECT_ID);
                 LOGGER.log(Level.TRACE, "Found a existing tag[title={0}, oId={1}] in article[title={2}]",
                         new Object[]{tag.getString(Tag.TAG_TITLE_LOWER_CASE), tag.getString(Keys.OBJECT_ID),
-                    article.getString(Article.ARTICLE_TITLE)});
+                            article.getString(Article.ARTICLE_TITLE)});
                 final int refCnt = tag.getInt(Tag.TAG_REFERENCE_COUNT);
                 final JSONObject tagTmp = new JSONObject(tag, JSONObject.getNames(tag));
                 tagTmp.put(Tag.TAG_REFERENCE_COUNT, refCnt + 1);
@@ -132,8 +131,7 @@ public class ArticleService {
     }
 
     /**
-     * Decrements reference count of every tag of an article specified by the
-     * given article id.
+     * Decrements reference count of every tag of an article specified by the given article id.
      *
      * @param articleId the given article id
      * @throws JSONException json exception
@@ -195,10 +193,10 @@ public class ArticleService {
 
     /**
      * Gets articles randomly with the specified fetch size.
-     * 
+     *
      * @param fetchSize the specified fetch size
-     * @return a list of json objects, its size less or equal to the specified 
-     * fetch size, returns an empty list if not found
+     * @return a list of json objects, its size less or equal to the specified fetch size, returns an empty list if not
+     * found
      */
     public List<JSONObject> getArticlesRandomly(final int fetchSize) {
         Stopwatchs.start("Gets Articles Randomly");
@@ -215,8 +213,9 @@ public class ArticleService {
     }
 
     /**
-     * Gets a list of articles specified by the given greater/less operation and the specified accessibility check count. 
-     * 
+     * Gets a list of articles specified by the given greater/less operation and the specified accessibility check
+     * count.
+     *
      * @param greaterOrLess the given greater/less operation, '>' or '<'
      * @param checkCnt the specified accessibility check count
      * @return a list of articles, returns an empty list if not found by the specified condition
@@ -250,9 +249,9 @@ public class ArticleService {
 
     /**
      * Updates the accessibility of the specified article.
-     * 
+     *
      * @param article the specified article
-     * @param statusCode the specified HTTP status code 
+     * @param statusCode the specified HTTP status code
      */
     public void updateAccessibility(final JSONObject article, final int statusCode) {
         if (null == article) {
@@ -286,7 +285,7 @@ public class ArticleService {
 
     /**
      * Removes an article specified by the given article id.
-     * 
+     *
      * @param articleId the given article id
      */
     public void removeArticle(final String articleId) {
@@ -309,9 +308,8 @@ public class ArticleService {
 
     /**
      * Adds the specified article.
-     * 
-     * @param article the specified article, for example,
-     * <pre>
+     *
+     * @param article the specified article, for example,      <pre>
      * {
      *     "articleOriginalId": "",
      *     "articleTitle": "",
@@ -352,9 +350,8 @@ public class ArticleService {
 
     /**
      * Updates the specified article.
-     * 
-     * @param article the specified article, for example,
-     * <pre>
+     *
+     * @param article the specified article, for example,      <pre>
      * {
      *     "articleOriginalId": "",
      *     "articleTitle": "",
@@ -404,7 +401,7 @@ public class ArticleService {
 
     /**
      * Updates the author's recent post time with the specified article.
-     * 
+     *
      * @param article the specified article
      * @throws ServiceException service exception
      */

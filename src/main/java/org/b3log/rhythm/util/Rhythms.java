@@ -23,7 +23,7 @@ import org.b3log.latke.util.Strings;
 /**
  * Rhythm utilities.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.5.1.17, Dec 2, 2015
  * @since 0.1.4
  */
@@ -83,8 +83,8 @@ public final class Rhythms {
      * The latest Solo download URL.
      */
     public static final String LATEST_SOLO_DL_URL
-                               = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F"
-                                 + RELEASED_SOLO_VERSIONS.get(RELEASED_SOLO_VERSIONS.size() - 1);
+            = "http://pan.baidu.com/share/link?shareid=541735&uk=3255126224#dir/path=%2Fb3log-solo%2F"
+            + RELEASED_SOLO_VERSIONS.get(RELEASED_SOLO_VERSIONS.size() - 1);
 
     /**
      * The latest development Solo version.
@@ -109,7 +109,7 @@ public final class Rhythms {
      * The latest Wide download URL.
      */
     public static final String LATEST_WIDE_DL_URL = "http://pan.baidu.com/s/1dD3XwOT#path=%252FWide%252F"
-                                                    + RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
+            + RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
 
     /**
      * The latest development Wide version.
@@ -131,7 +131,7 @@ public final class Rhythms {
      * The latest Symphony download URL.
      */
     public static final String LATEST_SYMPHONY_DL_URL = "https://github.com/b3log/symphony/releases/tag/"
-                                                        + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
+            + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
 
     /**
      * The latest development Symphony version.

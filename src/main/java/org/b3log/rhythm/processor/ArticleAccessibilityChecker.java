@@ -45,7 +45,7 @@ import org.json.JSONObject;
  * Checks and removes whether the articles indexed by Rhythm can accessibility (HTTP status code 200) with the permalink
  * of an article.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.1.8, Jun 20, 2014
  * @since 0.1.5
  */
@@ -144,7 +144,7 @@ public class ArticleAccessibilityChecker {
     /**
      * Article accessibility check task.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.0.0, Jan 10, 2014
      */
     private class CheckTask implements Runnable {
@@ -186,7 +186,7 @@ public class ArticleAccessibilityChecker {
                 final long elapsed = System.currentTimeMillis() - start;
 
                 LOGGER.log(Level.DEBUG, "Accesses article[permalink=" + articlePermalink + "] response[code=" + responseCode + "], "
-                                        + "elapsed [" + elapsed + ']');
+                        + "elapsed [" + elapsed + ']');
 
                 articleService.updateAccessibility(article, responseCode);
             }

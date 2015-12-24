@@ -44,7 +44,7 @@ import org.json.JSONObject;
 /**
  * Checks accessibility of users.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.0.0, Jun 20, 2014
  * @since 0.2.0
  */
@@ -109,7 +109,7 @@ public class UserAccessibilityChecker {
     /**
      * User accessibility check task.
      *
-     * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+     * @author <a href="http://88250.b3log.org">Liang Ding</a>
      * @version 1.0.1.0, Jun 17, 2014
      */
     private class CheckTask implements Runnable {

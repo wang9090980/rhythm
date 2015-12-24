@@ -23,7 +23,7 @@ import org.json.JSONObject;
 /**
  * Tag-Article repository.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Aug 23, 2010
  * @since 0.1.4
  */
@@ -33,14 +33,14 @@ public interface TagArticleRepository extends Repository {
      * Gets tag-article relations by the specified article id.
      *
      * @param articleId the specified article id
-     * @return for example
-     * <pre>
+     * @return for example      <pre>
      * [{
      *         "oId": "",
      *         "tag_oId": "",
      *         "article_oId": articleId
      * }, ....], returns an empty list if not found
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     List<JSONObject> getByArticleId(final String articleId)
@@ -50,12 +50,9 @@ public interface TagArticleRepository extends Repository {
      * Gets tag-article relations by the specified tag id.
      *
      * @param tagId the specified tag id
-     * @param currentPageNum the specified current page number, MUST greater
-     * then 0
-     * @param pageSize the specified page size(count of a page contains objects),
-     * MUST greater then 0
-     * @return for example
-     * <pre>
+     * @param currentPageNum the specified current page number, MUST greater then 0
+     * @param pageSize the specified page size(count of a page contains objects), MUST greater then 0
+     * @return for example      <pre>
      * {
      *     "pagination": {
      *       "paginationPageCount": 88250
@@ -69,9 +66,10 @@ public interface TagArticleRepository extends Repository {
      * page size, returns pagination info as the only attribute of the returned
      * json object
      * </pre>
+     *
      * @throws RepositoryException repository exception
      */
     JSONObject getByTagId(final String tagId,
-                          final int currentPageNum,
-                          final int pageSize) throws RepositoryException;
+            final int currentPageNum,
+            final int pageSize) throws RepositoryException;
 }

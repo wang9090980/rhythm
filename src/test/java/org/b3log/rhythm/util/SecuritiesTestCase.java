@@ -21,7 +21,7 @@ import org.testng.annotations.Test;
 /**
  * Security utilities test case.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
  * @version 1.2.0.1, Apr 17, 2015
  * @since 0.1.6

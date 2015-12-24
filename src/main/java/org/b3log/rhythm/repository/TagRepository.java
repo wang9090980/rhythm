@@ -23,7 +23,7 @@ import org.json.JSONObject;
 /**
  * Tag repository.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, Nov 17, 2010
  * @since 0.1.4
  */
@@ -31,10 +31,9 @@ public interface TagRepository extends Repository {
 
     /**
      * Gets tags of an article specified by the article id.
-     * 
+     *
      * @param articleId the specified article id
-     * @return a list of tags of the specified article, returns an empty list
-     * if not found
+     * @return a list of tags of the specified article, returns an empty list if not found
      * @throws RepositoryException repository exception
      */
     List<JSONObject> getByArticleId(final String articleId)

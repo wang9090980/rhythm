@@ -22,7 +22,7 @@ import org.json.JSONObject;
 /**
  * User repository.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Nov 3, 2011
  * @since 0.1.5
  */
@@ -30,10 +30,10 @@ public interface UserRepository extends Repository {
 
     /**
      * Gets user by the specified email.
-     * 
+     *
      * @param email the specified email
      * @return user, returns {@code null} if not found
-     * @throws RepositoryException repository exception 
+     * @throws RepositoryException repository exception
      */
     JSONObject getByEmail(final String email) throws RepositoryException;
 }

@@ -32,7 +32,7 @@ import org.json.JSONObject;
 /**
  * Version processor.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.0.5, Oct 17, 2014
  * @since 0.1.4
  */
