@@ -260,8 +260,6 @@
                     <excludes>
                         <exclude>**/src/main/java/**/package-info.java</exclude>
                         <exclude>**/src/*/webapp/js/lib/*.js</exclude>
-                        <!-- TODO: realy need this? -->
-                        <exclude>**/src/main/java/freemarker/core/TextBlock.java</exclude>
                     </excludes>
 
                     <useDefaultExcludes>true</useDefaultExcludes>
@@ -270,8 +268,8 @@
                     </mapping>
                     <useDefaultMapping>true</useDefaultMapping>
                     <properties>
-                        <year>2010-2015</year>
-                        <devTeam>b3log.org</devTeam>
+                        <year>2010-2016</year>
+                        <devTeam>b3log.org &amp; hacpai.com</devTeam>
                     </properties>
                     <encoding>UTF-8</encoding>
                 </configuration>
