@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,12 +34,12 @@ import org.json.JSONObject;
 
 /**
  * DNSPod service.
- * 
+ *
  * <p>
  * See <a href="https://www.dnspod.cn/client/user_api_doc.pdf">DNSPod API</a> for more details.
  * </p>
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.4, Aug 24, 2013
  * @since 0.1.6
  */
@@ -78,7 +78,7 @@ public class DNSPodService {
 
     /**
      * Gets sub-domains of b3log.org.
-     * 
+     *
      * @return a set of sub-domains, returns an empty set if not found or error
      */
     public Set<String> getSubdomains() {

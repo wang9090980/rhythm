@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import org.json.JSONObject;
 /**
  * Broadcast chance service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.1, Aug 24, 2013
  * @since 0.1.6
  */
@@ -78,7 +78,7 @@ public class BroadcastChanceService {
 
     /**
      * Determines whether the specified email has a broadcast chance.
-     * 
+     *
      * @param email the specified email
      * @return {@code true} if it has, returns {@code false} otherwise
      */
@@ -162,7 +162,7 @@ public class BroadcastChanceService {
 
     /**
      * Removes a broadcast chance with the specified email.
-     * 
+     *
      * @param email the specified email
      */
     public void removeBroadcastChance(final String email) {
@@ -223,7 +223,7 @@ public class BroadcastChanceService {
 
     /**
      * Generates broadcast chances with the specified size.
-     * 
+     *
      * @param size the specified size
      */
     private void gen(final int size) {
@@ -267,7 +267,7 @@ public class BroadcastChanceService {
 
     /**
      * Sets the broadcast chance repository with the specified broadcast chance repository.
-     * 
+     *
      * @param broadcastChanceRepository the specified broadcast chance repository
      */
     public void setBroadcastChanceRepository(final BroadcastChanceRepository broadcastChanceRepository) {
@@ -276,7 +276,7 @@ public class BroadcastChanceService {
 
     /**
      * Sets the user repository with the specified user repository.
-     * 
+     *
      * @param userRepository the specified user repository
      */
     public void setUserRepository(final UserRepository userRepository) {

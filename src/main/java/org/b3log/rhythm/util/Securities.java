@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.jsoup.select.Elements;
 /**
  * Security utilities.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
  * @version 1.0.0.2, Feb 27, 2014
  * @since 0.1.6
@@ -56,10 +56,10 @@ public final class Securities {
         outputSettings.prettyPrint(false);
 
         final String tmp = Jsoup.clean(html.replace("<script>", "&lt;script&gt;").replace("</script>", "&lt;/script&gt;"),
-                                       "", Whitelist.relaxed().
-                                       addAttributes(":all", "id", "target", "class", "style").
-                                       addTags("span", "hr").
-                                       addAttributes("iframe", "src", "width", "height"), outputSettings);
+                "", Whitelist.relaxed().
+                addAttributes(":all", "id", "target", "class", "style").
+                addTags("span", "hr").
+                addAttributes("iframe", "src", "width", "height"), outputSettings);
         final Document doc = Jsoup.parse(tmp, "", Parser.xmlParser());
         final Elements iframes = doc.getElementsByTag("iframe");
 

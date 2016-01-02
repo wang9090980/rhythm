@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
+import org.b3log.latke.Latkes;
 import org.b3log.latke.event.EventManager;
 import org.b3log.latke.ioc.Lifecycle;
 import org.b3log.latke.logging.Level;
@@ -33,8 +34,8 @@ import org.b3log.rhythm.event.symphony.ArticleUpdater;
 /**
  * Rhythm servlet listener.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.0.0.6, Apr 26, 2013
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.1.0.6, Dec 24, 2015
  * @since 0.1.4
  */
 public final class RhythmServletListener extends AbstractServletListener {
@@ -57,6 +58,7 @@ public final class RhythmServletListener extends AbstractServletListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
+        Latkes.setScanPath("org.b3log.org.rhythm");
         super.contextInitialized(servletContextEvent);
 
         registerEventProcessor();
@@ -81,8 +83,8 @@ public final class RhythmServletListener extends AbstractServletListener {
 
     @Override
     public void requestInitialized(final ServletRequestEvent servletRequestEvent) {
-        final HttpServletRequest servletRequest =
-                (HttpServletRequest) servletRequestEvent.getServletRequest();
+        final HttpServletRequest servletRequest
+                = (HttpServletRequest) servletRequestEvent.getServletRequest();
         Stopwatchs.start("Request Initialized[requestURI=" + servletRequest.
                 getRequestURI() + "]");
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import org.json.JSONObject;
 /**
  * This listener is responsible for updating article to B3log Symphony.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Apr 26, 2013
  * @since 0.1.6
  */
@@ -109,9 +109,8 @@ public final class ArticleUpdater extends AbstractEventListener<JSONObject> {
 
     /**
      * Adds an article to B3log Symphony with the specified request.
-     * 
-     * @param request the specified request, for example, 
-     * <pre>
+     *
+     * @param request the specified request, for example,      <pre>
      * {
      *     "article": {
      *         "articleAuthorEmail": "DL88250@gmail.com",
@@ -132,6 +131,7 @@ public final class ArticleUpdater extends AbstractEventListener<JSONObject> {
      *     "clientAdminEmail": ""
      * }
      * </pre>
+     *
      * @throws Exception exception
      */
     private static void updateArticleToSymphony(final JSONObject request) throws Exception {

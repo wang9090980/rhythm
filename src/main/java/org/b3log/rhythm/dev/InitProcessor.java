@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.b3log.latke.util.Stopwatchs;
 /**
  * Initializes database.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Sep 3, 2012
  * @since 0.2.0
  */
@@ -67,7 +67,7 @@ public class InitProcessor {
             final List<JdbcRepositories.CreateTableResult> createTableResults = JdbcRepositories.initAllTables();
             for (final JdbcRepositories.CreateTableResult createTableResult : createTableResults) {
                 LOGGER.log(Level.INFO, "Creates table result[tableName={0}, isSuccess={1}]",
-                           new Object[]{createTableResult.getName(), createTableResult.isSuccess()});
+                        new Object[]{createTableResult.getName(), createTableResult.isSuccess()});
             }
         } catch (final Exception e) {
             LOGGER.log(Level.ERROR, "Creates database tables failed", e);

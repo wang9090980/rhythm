@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package org.b3log.rhythm.model;
 /**
  * This class defines all broadcast chance model relevant keys.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, Apr 15, 2013
  * @since 0.1.6
  */
@@ -38,7 +38,7 @@ public final class BroadcastChance {
      * Key of host.
      */
     public static final String BROADCAST_CHANCE_HOST = "broadcastChanceHost";
-    
+
     /**
      * Key of email.
      */

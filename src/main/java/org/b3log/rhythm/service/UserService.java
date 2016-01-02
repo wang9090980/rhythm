@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.json.JSONObject;
 /**
  * User service.
  *
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.0, May 30, 2014
  * @since 0.2.0
  */
@@ -67,7 +67,8 @@ public class UserService {
      * Gets users randomly with the specified fetch size.
      *
      * @param fetchSize the specified fetch size
-     * @return a list of json objects, its size less or equal to the specified fetch size, returns an empty list if not found
+     * @return a list of json objects, its size less or equal to the specified fetch size, returns an empty list if not
+     * found
      */
     public List<JSONObject> getUsersRandomly(final int fetchSize) {
         try {

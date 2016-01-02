@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,7 +109,7 @@ public final class Rhythms {
      * The latest Wide download URL.
      */
     public static final String LATEST_WIDE_DL_URL = "http://pan.baidu.com/s/1dD3XwOT#path=%252FWide%252F"
-                                                    + RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
+            + RELEASED_WIDE_VERSIONS.get(RELEASED_WIDE_VERSIONS.size() - 1);
 
     /**
      * The latest development Wide version.
@@ -131,7 +131,7 @@ public final class Rhythms {
      * The latest Symphony download URL.
      */
     public static final String LATEST_SYMPHONY_DL_URL = "https://github.com/b3log/symphony/releases/tag/"
-                                                        + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
+            + RELEASED_SYMPHONY_VERSIONS.get(RELEASED_SYMPHONY_VERSIONS.size() - 1);
 
     /**
      * The latest development Symphony version.

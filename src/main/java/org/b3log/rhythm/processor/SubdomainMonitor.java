@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015, b3log.org
+ * Copyright (c) 2010-2016, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,12 +40,12 @@ import org.json.JSONObject;
 
 /**
  * Sub-domains (*.b3log.org) monitor.
- * 
+ *
  * <p>
  * Checks with <a href="https://www.dnspod.cn/client/user_api_doc.pdf">DNSPod API</a>.
  * </p>
- * 
- * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.0.0.2, Aug 24, 2013
  * @since 0.1.6
  */
@@ -68,10 +68,10 @@ public class SubdomainMonitor {
 
     /**
      * Ping all sub-domains.
-     * 
+     *
      * @param context the specified context
      * @param request the specified request
-     * @throws Exception exception 
+     * @throws Exception exception
      */
     @RequestProcessing(value = "/dns/monitor", method = HTTPRequestMethod.GET)
     public void ping(final HTTPRequestContext context, final HttpServletRequest request) throws Exception {
