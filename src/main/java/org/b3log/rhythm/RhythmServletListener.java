@@ -79,6 +79,7 @@ public final class RhythmServletListener extends AbstractServletListener {
 
     @Override
     public void sessionDestroyed(final HttpSessionEvent httpSessionEvent) {
+        super.sessionDestroyed(httpSessionEvent);
     }
 
     @Override
@@ -95,6 +96,8 @@ public final class RhythmServletListener extends AbstractServletListener {
 
         LOGGER.log(Level.DEBUG, "Stopwatch: {0}{1}", new Object[]{Strings.LINE_SEPARATOR, Stopwatchs.getTimingStat()});
         Stopwatchs.release();
+        
+        super.requestDestroyed(servletRequestEvent);
     }
 
     /**
