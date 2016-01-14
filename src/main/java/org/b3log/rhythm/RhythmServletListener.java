@@ -35,7 +35,7 @@ import org.b3log.rhythm.event.symphony.ArticleUpdater;
  * Rhythm servlet listener.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.6, Dec 24, 2015
+ * @version 1.1.1.6, Jan 14, 2016
  * @since 0.1.4
  */
 public final class RhythmServletListener extends AbstractServletListener {
@@ -58,7 +58,7 @@ public final class RhythmServletListener extends AbstractServletListener {
 
     @Override
     public void contextInitialized(final ServletContextEvent servletContextEvent) {
-        Latkes.setScanPath("org.b3log.org.rhythm");
+        Latkes.setScanPath("org.b3log.rhythm");
         super.contextInitialized(servletContextEvent);
 
         registerEventProcessor();
@@ -96,7 +96,7 @@ public final class RhythmServletListener extends AbstractServletListener {
 
         LOGGER.log(Level.DEBUG, "Stopwatch: {0}{1}", new Object[]{Strings.LINE_SEPARATOR, Stopwatchs.getTimingStat()});
         Stopwatchs.release();
-        
+
         super.requestDestroyed(servletRequestEvent);
     }
 
