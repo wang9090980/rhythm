@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.5.1.18, Dec 19, 2015
+ * @version 1.5.1.19, Feb 4, 2016
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -102,6 +102,7 @@ public final class Rhythms {
             add("1.2.0");
             add("1.3.0");
             add("1.4.0");
+            add("1.5.0");
         }
     };
 
@@ -114,7 +115,7 @@ public final class Rhythms {
     /**
      * The latest development Wide version.
      */
-    public static final String SNAPSHOT_WIDE_VERSION = "1.5.0";
+    public static final String SNAPSHOT_WIDE_VERSION = "1.6.0";
 
     /**
      * Released B3log Symphony versions.
