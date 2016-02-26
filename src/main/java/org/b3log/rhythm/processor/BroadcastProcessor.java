@@ -32,6 +32,7 @@ import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.symphony.ArticleSender;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.service.BroadcastChanceService;
+import org.b3log.rhythm.util.Securities;
 import org.json.JSONObject;
 
 /**
@@ -43,7 +44,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Nov 9, 2013
+ * @version 1.0.0.5, Feb 26, 2016
  * @since 0.1.6
  */
 @RequestProcessor
@@ -180,7 +181,7 @@ public class BroadcastProcessor {
         article.put(Article.ARTICLE_TITLE, broadcast.getString("title"));
         article.put(Keys.OBJECT_ID, String.valueOf(time));
 
-        ArticleProcessor.securityProcess(article);
+        Securities.securityProcess(article);
 
         addRequest.put("userB3Key", b3logKey);
         addRequest.put("clientName", requestJSONObject.getString("clientName"));

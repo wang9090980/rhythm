@@ -15,6 +15,14 @@
  */
 package org.b3log.rhythm.util;
 
+import java.net.URL;
+import org.apache.commons.validator.routines.InetAddressValidator;
+import org.b3log.latke.logging.Logger;
+import org.b3log.latke.util.Strings;
+import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
+import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,10 +35,19 @@ import org.jsoup.select.Elements;
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @author <a href="mailto:echowdx@gmail.com">Dongxu Wang</a>
- * @version 1.0.0.2, Feb 27, 2014
+ * @version 1.0.0.3, Feb 25, 2016
  * @since 0.1.6
  */
 public final class Securities {
+
+    /**
+     * Logger.
+     */
+    private static final Logger LOGGER = Logger.getLogger(Securities.class.getName());
+    /**
+     * IP address validator.
+     */
+    private static final InetAddressValidator ADDRESS_VALIDATOR = InetAddressValidator.getInstance();
 
     /**
      * Security processing for the specified HTML content.
@@ -71,6 +88,81 @@ public final class Securities {
         }
 
         return doc.html();
+    }
+
+    /**
+     * Security process for the specified article.
+     *
+     * @param article the specified article
+     * @throws JSONException json exception
+     */
+    public static void securityProcess(final JSONObject article) throws JSONException {
+        //String content = article.getString(ARTICLE_CONTENT);
+        //content = Securities.securedHTML(content);
+        //article.put(ARTICLE_CONTENT, content);
+
+        String title = article.getString(ARTICLE_TITLE);
+        title = securedHTML(title);
+        article.put(ARTICLE_TITLE, title);
+
+        String tagString = article.getString(ARTICLE_TAGS_REF);
+        tagString = securedHTML(tagString);
+        article.put(ARTICLE_TAGS_REF, tagString);
+    }
+
+    /**
+     * Checks the specified host is valid.
+     *
+     * @param host the specified host
+     * @return {@code true} if valid, returns {@code false} otherwise
+     */
+    public static boolean validHost(final String host) {
+        if (!Strings.isURL(host)) {
+            return false;
+        }
+
+        try {
+            final URL url = new URL(host);
+            final String hostPart = url.getHost();
+
+            if (ADDRESS_VALIDATOR.isValid(hostPart)) {
+                // not allow IP address
+
+                LOGGER.warn("Invalid host [" + host + "]");
+
+                return false;
+            }
+
+            if ("localhost".equals(hostPart)) {
+                // not allow localhost
+
+                LOGGER.warn("Invalid host [" + host + "]");
+
+                return false;
+            }
+        } catch (final Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks the specified title is valid.
+     *
+     * @param title the specified title
+     * @return {@code true} if valid, returns {@code false} otherwise
+     */
+    public static boolean validTitle(final String title) {
+        if (Strings.isEmptyOrNull(title)) {
+            return false;
+        }
+
+        if ("Solo 示例".equals(title)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

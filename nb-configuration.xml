@@ -17,5 +17,6 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>permalink</word>
         <word>Rollbacks</word>
         <word>servlet</word>
+        <word>validator</word>
     </spellchecker-wordlist>
 </project-shared-configuration>

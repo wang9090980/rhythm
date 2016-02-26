@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Rhythm POM.
-    Version: 1.5.3.18, Feb 20, 2016
+    Version: 1.6.3.18, Feb 25, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -11,7 +11,7 @@
     <groupId>org.b3log</groupId>
     <artifactId>rhythm</artifactId>
     <packaging>war</packaging>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>Rhythm</name>
     <url>https://github.com/b3log/rhythm</url>
     <description>Rhythm is the community server for Solo.</description>

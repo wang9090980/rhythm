@@ -17,14 +17,12 @@ package org.b3log.rhythm.processor;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.routines.InetAddressValidator;
 import org.b3log.latke.Keys;
 import org.b3log.latke.cache.Cache;
 import org.b3log.latke.cache.CacheFactory;
@@ -62,14 +60,13 @@ import org.b3log.rhythm.service.ArticleService;
 import org.b3log.rhythm.util.Rhythms;
 import org.b3log.rhythm.util.Securities;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
  * Article processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.5.15, Oct 19, 2015
+ * @version 1.2.5.16, Feb 25, 2016
  * @since 0.1.4
  */
 @RequestProcessor
@@ -117,12 +114,7 @@ public class ArticleProcessor {
     private EventManager eventManager;
 
     /**
-     * IP address validator.
-     */
-    private static final InetAddressValidator ADDRESS_VALIDATOR = InetAddressValidator.getInstance();
-
-    /**
-     * Index, redirects to the B3log.org home: <a href="http://b3log.org">http://b3log.org</a>.
+     * Index, redirects to the <b>b3log.org</b> home: <a href="http://b3log.org">http://b3log.org</a>.
      *
      * @param context the specified context
      * @throws IOException io exception
@@ -194,7 +186,7 @@ public class ArticleProcessor {
             if (!Strings.isURL(blogHost)) {
                 blogHost = "http://" + blogHost;
 
-                if (!validHost(blogHost)) {
+                if (!Securities.validHost(blogHost)) {
                     jsonObject.put(Keys.STATUS_CODE, "Invalid Host");
 
                     return;
@@ -202,7 +194,7 @@ public class ArticleProcessor {
             }
 
             final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
-            if (!validTitle(blogTitle)) {
+            if (!Securities.validTitle(blogTitle)) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid title");
 
                 return;
@@ -219,7 +211,7 @@ public class ArticleProcessor {
             }
 
             final JSONObject originalArticle = requestJSONObject.getJSONObject(ARTICLE);
-            securityProcess(originalArticle);
+            Securities.securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
                     new Object[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
@@ -364,7 +356,7 @@ public class ArticleProcessor {
             if (!Strings.isURL(blogHost)) {
                 blogHost = "http://" + blogHost;
 
-                if (!validHost(blogHost)) {
+                if (!Securities.validHost(blogHost)) {
                     jsonObject.put(Keys.STATUS_CODE, "Invalid Host");
 
                     return;
@@ -372,7 +364,7 @@ public class ArticleProcessor {
             }
 
             final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
-            if (!validTitle(blogTitle)) {
+            if (!Securities.validTitle(blogTitle)) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid title");
 
                 return;
@@ -389,7 +381,7 @@ public class ArticleProcessor {
             }
 
             final JSONObject originalArticle = requestJSONObject.getJSONObject(ARTICLE);
-            securityProcess(originalArticle);
+            Securities.securityProcess(originalArticle);
 
             LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
                     new String[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
@@ -620,80 +612,5 @@ public class ArticleProcessor {
             article.remove(Blog.BLOG_VERSION);
             article.remove(Blog.BLOG);
         }
-    }
-
-    /**
-     * Security process for the specified article.
-     *
-     * @param article the specified article
-     * @throws JSONException json exception
-     */
-    public static void securityProcess(final JSONObject article) throws JSONException {
-        //String content = article.getString(ARTICLE_CONTENT);
-        //content = Securities.securedHTML(content);
-        //article.put(ARTICLE_CONTENT, content);
-
-        String title = article.getString(ARTICLE_TITLE);
-        title = Securities.securedHTML(title);
-        article.put(ARTICLE_TITLE, title);
-
-        String tagString = article.getString(ARTICLE_TAGS_REF);
-        tagString = Securities.securedHTML(tagString);
-        article.put(ARTICLE_TAGS_REF, tagString);
-    }
-
-    /**
-     * Checks the specified host is valid.
-     *
-     * @param host the specified host
-     * @return {@code true} if valid, returns {@code false} otherwise
-     */
-    private static boolean validHost(final String host) {
-        if (!Strings.isURL(host)) {
-            return false;
-        }
-
-        try {
-            final URL url = new URL(host);
-            final String hostPart = url.getHost();
-
-            if (ADDRESS_VALIDATOR.isValid(hostPart)) {
-                // not allow IP address
-
-                LOGGER.warn("Invalid host [" + host + "]");
-
-                return false;
-            }
-
-            if ("localhost".equals(hostPart)) {
-                // not allow localhost
-
-                LOGGER.warn("Invalid host [" + host + "]");
-
-                return false;
-            }
-        } catch (final Exception e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks the specified title is valid.
-     *
-     * @param title the specified title
-     * @return {@code true} if valid, returns {@code false} otherwise
-     */
-    private static boolean validTitle(final String title) {
-        if (Strings.isEmptyOrNull(title)) {
-            return false;
-        }
-
-        if ("Solo 示例".equals(title)) {
-            return false;
-        }
-
-        return true;
     }
 }
