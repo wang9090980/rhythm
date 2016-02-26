@@ -24,7 +24,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.5.1.19, Feb 4, 2016
+ * @version 1.5.1.20, Feb 26, 2016
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -32,7 +32,7 @@ public final class Rhythms {
     /**
      * Version.
      */
-    public static final String RHYTHM_VERSION = "1.0.0";
+    public static final String RHYTHM_VERSION = "1.1.0";
 
     /**
      * Indent factor.
