@@ -19,7 +19,7 @@ package org.b3log.rhythm.model;
  * This class defines all article model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Oct 15, 2012
+ * @version 1.1.0.5, Mar 5, 2016
  * @since 0.1.4
  */
 public final class Article {
@@ -65,6 +65,11 @@ public final class Article {
      * Key of article content.
      */
     public static final String ARTICLE_CONTENT = "articleContent";
+
+    /**
+     * Key of article create date.
+     */
+    public static final String ARTICLE_CREATE_DATE = "articleCreateDate";
 
     /**
      * Private default constructor.

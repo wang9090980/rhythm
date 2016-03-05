@@ -19,10 +19,70 @@ package org.b3log.rhythm.model;
  * This class defines all common model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Nov 3, 2011
+ * @version 1.1.0.0, Mar 5, 2016
  * @since 0.1.5
  */
 public final class Common {
+
+    /**
+     * Key of successful.
+     */
+    public static final String SUCC = "succ";
+    
+    /**
+     * Key of id.
+     */
+    public static final String ID = "id";
+
+    /**
+     * Key of title.
+     */
+    public static final String TITLE = "title";
+
+    /**
+     * Key of permalink.
+     */
+    public static final String PERMALINK = "permalink";
+
+    /**
+     * Key of content.
+     */
+    public static final String CONTENT = "content";
+
+    /**
+     * Key of email.
+     */
+    public static final String EMAIL = "email";
+
+    /**
+     * Key of client.
+     */
+    public static final String CLIENT = "client";
+
+    /**
+     * Key of host.
+     */
+    public static final String HOST = "host";
+
+    /**
+     * Key of key.
+     */
+    public static final String KEY = "key";
+
+    /**
+     * Key of user b3 key.
+     */
+    public static final String USER_B3_KEY = "userB3Key";
+
+    /**
+     * Key of client runtime environment.
+     */
+    public static final String CLIENT_RUNTIME_ENV = "clientRuntimeEnv";
+
+    /**
+     * Key of client admin email.
+     */
+    public static final String CLIENT_ADMIN_EMAIL = "clientAdminEmail";
 
     /**
      * Key of post to community.
