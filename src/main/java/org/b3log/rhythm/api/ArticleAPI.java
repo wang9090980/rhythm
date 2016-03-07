@@ -15,6 +15,7 @@
  */
 package org.b3log.rhythm.api;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import javax.inject.Inject;
@@ -53,7 +54,7 @@ import org.b3log.rhythm.util.Securities;
 import org.json.JSONObject;
 
 /**
- * Article API processor.
+ * Article API processor. Please visit <a href="https://hacpai.com/article/1457158841475">社区内容 API 开放，欢迎各位独立博客主进行连接</a> for more details.
  *
  * <ul>
  * <li>Posts (adds/updates) an article (/article), POST</li>
@@ -110,7 +111,18 @@ public class ArticleAPI {
     private static final int ARTICLE_PERMALINK_MAX_LENGTH = 64;
 
     /**
-     * Posts an article.
+     * Shows post article.
+     *
+     * @param context the specified context
+     * @throws IOException exception
+     */
+    @RequestProcessing(value = "/api/article", method = HTTPRequestMethod.GET)
+    public void showPostArticle(final HTTPRequestContext context) throws IOException {
+        context.getResponse().sendRedirect("https://hacpai.com/article/1457158841475");
+    }
+
+    /**
+     * Posts an article. 
      *
      * <p>
      * Renders the response with a json object, for example,
@@ -125,17 +137,17 @@ public class ArticleAPI {
      * @param context the specified context, including a request json object, for example,      <pre>
      * {
      *     "article": {
-     *         "id": "1165070220000",                  // 客户端的文章 id，如果该 id 文章在社区已经存在，则视为更新文章
-     *         "title": "这是一篇测试文章",               // 文章标题
-     *         "permalink": "/test-post",              // 客户端固定链接
-     *         "tags": "tag1, tag2, ....",             // 文章标签，英文输入状态的逗号分隔
-     *         "content": "Test"                       // 文章内容，HTML 或 Markdown 格式
+     *         "id": "1165070220000",
+     *         "title": "这是一篇测试文章",
+     *         "permalink": "/test-post",
+     *         "tags": "tag1, tag2",
+     *         "content": "Test"
      *     },
      *     "client": {
-     *         "title": "我的个人博客",                  // 客户端标题，比如博客的名字
-     *         "host": "http://xxx.com",               // 客户端 URL
-     *         "email": "test@hacpai.com",             // 账号邮箱，需要和社区注册的账号邮箱一致
-     *         "key": "xxxx"                           // 账号同步 Key，需要和社区中配置的一致
+     *         "title": "我的个人博客",
+     *         "host": "http://xxx.com",
+     *         "email": "test@hacpai.com",
+     *         "key": "xxxx"
      *     }
      * }
      * </pre>
