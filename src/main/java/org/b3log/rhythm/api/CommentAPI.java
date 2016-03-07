@@ -70,19 +70,19 @@ public class CommentAPI {
     @SuppressWarnings("unchecked")
     private Cache<String, Serializable> cache = (Cache<String, Serializable>) CacheFactory.getCache("RhythmCache");
 
-     /**
+    /**
      * URL fetch service.
      */
     private final URLFetchService urlFetchService = URLFetchServiceFactory.getURLFetchService();
 
     /**
-     * Shows post article.
+     * Shows add comment.
      *
      * @param context the specified context
      * @throws IOException exception
      */
-    @RequestProcessing(value = "/api/article", method = HTTPRequestMethod.GET)
-    public void showPostArticle(final HTTPRequestContext context) throws IOException {
+    @RequestProcessing(value = "/api/comment", method = HTTPRequestMethod.GET)
+    public void showAddComment(final HTTPRequestContext context) throws IOException {
         context.getResponse().sendRedirect("https://hacpai.com/article/1457158841475");
     }
 
