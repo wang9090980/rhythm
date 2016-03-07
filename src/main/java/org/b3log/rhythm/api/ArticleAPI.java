@@ -16,6 +16,7 @@
 package org.b3log.rhythm.api;
 
 import java.io.Serializable;
+import java.net.URL;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +39,6 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
-import static org.b3log.rhythm.model.Article.ARTICLE;
 import static org.b3log.rhythm.model.Article.ARTICLE_AUTHOR_EMAIL;
 import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
 import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
@@ -47,7 +47,6 @@ import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.model.Tag;
-import org.b3log.rhythm.processor.StatusCodes;
 import org.b3log.rhythm.service.ArticleService;
 import org.b3log.rhythm.util.Rhythms;
 import org.b3log.rhythm.util.Securities;
@@ -57,12 +56,11 @@ import org.json.JSONObject;
  * Article API processor.
  *
  * <ul>
- * <li>Adds an article (/article/add), POST</li>
- * <li>Updates an article (/article/update), POST</li>
+ * <li>Posts (adds/updates) an article (/article), POST</li>
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Mar 5, 2016
+ * @version 1.0.0.2, Mar 7, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -112,7 +110,7 @@ public class ArticleAPI {
     private static final int ARTICLE_PERMALINK_MAX_LENGTH = 64;
 
     /**
-     * Adds an article.
+     * Posts an article.
      *
      * <p>
      * Renders the response with a json object, for example,
@@ -127,7 +125,7 @@ public class ArticleAPI {
      * @param context the specified context, including a request json object, for example,      <pre>
      * {
      *     "article": {
-     *         "id": "1165070220000",                  // 客户端的文章 id，如果在社区重复了将不能发布成功
+     *         "id": "1165070220000",                  // 客户端的文章 id，如果该 id 文章在社区已经存在，则视为更新文章
      *         "title": "这是一篇测试文章",               // 文章标题
      *         "permalink": "/test-post",              // 客户端固定链接
      *         "tags": "tag1, tag2, ....",             // 文章标签，英文输入状态的逗号分隔
@@ -142,14 +140,14 @@ public class ArticleAPI {
      * }
      * </pre>
      */
-    @RequestProcessing(value = "/article/add", method = HTTPRequestMethod.POST)
-    public void addArticle(final HTTPRequestContext context) {
+    @RequestProcessing(value = "/api/article", method = HTTPRequestMethod.POST)
+    public void postArticle(final HTTPRequestContext context) {
         final HttpServletRequest request = context.getRequest();
         final HttpServletResponse response = context.getResponse();
 
         final JSONObject jsonObject = new JSONObject();
         jsonObject.put(Common.SUCC, true);
-        jsonObject.put(Keys.MSG, "Publish an article successfully");
+        jsonObject.put(Keys.MSG, "Post an article successfully");
 
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
@@ -188,6 +186,12 @@ public class ArticleAPI {
 
                     return;
                 }
+            }
+
+            final URL hostURL = new URL(clientHost);
+            clientHost = hostURL.getProtocol() + "://" + hostURL.getHost();
+            if (-1 != hostURL.getPort()) {
+                clientHost += ":" + hostURL.getPort();
             }
 
             final String clientEmail = client.optString(Common.EMAIL);
@@ -252,8 +256,16 @@ public class ArticleAPI {
                 return;
             }
 
+            if (!StringUtils.startsWith(articlePermalink, "/")) {
+                jsonObject.put(Keys.STATUS_CODE, "[article.permalink] should start with /, for example, /hello-world");
+
+                return;
+            }
+
             String articleTags = article.optString(Tag.TAGS);
             articleTags = Securities.securedHTML(articleTags);
+            articleTags = articleService.formatArticleTags(articleTags);
+
             // TODO: check article.tags
             String articleContent = article.optString(Common.CONTENT);
             // TODO: check article.content
@@ -292,7 +304,6 @@ public class ArticleAPI {
                 return;
             }
 
-            articleTags = articleTags.replaceAll("，", ",");
             postArticle.put(ARTICLE_TAGS_REF, articleTags);
 
             if ("aBroadcast".equals(articlePermalink)) {
@@ -368,176 +379,4 @@ public class ArticleAPI {
             jsonObject.put(Keys.STATUS_CODE, e.getMessage());
         }
     }
-
-    /**
-     * Updates an article.
-     *
-     * <p>
-     * Renders the response with a json object, for example,
-     * <pre>
-     * {
-     *     "sc": "ADD_ARTICLE_SUCC"
-     * }
-     * </pre>
-     * </p>
-     *
-     * @param context the specified context, including a request json object, for example,      <pre>
-     * {
-     *     "article": {
-     *         "oId": "",
-     *         "articleTitle": "",
-     *         "articlePermalink": "/test",
-     *         "articleTags": "tag1, tag2, ....",
-     *         "articleAuthorEmail": "",
-     *         "articleContent": "",
-     *         "articleCreateDate": long,
-     *         "postToCommunity": boolean
-     *     },
-     *     "blogTitle": "",
-     *     "blogHost": "http://xxx.com", // clientHost
-     *     "blogVersion": "", // clientVersion
-     *     "blog": "", // clientName
-     *     "userB3Key": ""
-     *     "clientRuntimeEnv": "",
-     *     "clientAdminEmail": ""
-     * }
-     * </pre>
-     */
-    @RequestProcessing(value = "/article/update", method = HTTPRequestMethod.POST)
-    public void updateArticle(final HTTPRequestContext context) {
-        final HttpServletRequest request = context.getRequest();
-        final HttpServletResponse response = context.getResponse();
-
-        final JSONObject jsonObject = new JSONObject();
-
-        final JSONRenderer renderer = new JSONRenderer();
-        context.setRenderer(renderer);
-        renderer.setJSONObject(jsonObject);
-
-        try {
-            final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
-
-            LOGGER.log(Level.TRACE, "Request[data={0}]", requestJSONObject);
-            final String blog = requestJSONObject.optString(Blog.BLOG);
-            if (!Rhythms.isValidClient(blog)) {
-                jsonObject.put(Keys.STATUS_CODE, "Unsupported Client");
-
-                return;
-            }
-
-            String blogHost = requestJSONObject.getString(Blog.BLOG_HOST);
-            if (!Strings.isURL(blogHost)) {
-                blogHost = "http://" + blogHost;
-
-                if (!Securities.validHost(blogHost)) {
-                    jsonObject.put(Keys.STATUS_CODE, "Invalid Host");
-
-                    return;
-                }
-            }
-
-            final String blogTitle = requestJSONObject.getString(Blog.BLOG_TITLE);
-            if (!Securities.validTitle(blogTitle)) {
-                jsonObject.put(Keys.STATUS_CODE, "Invalid title");
-
-                return;
-            }
-
-            final String blogVersion = requestJSONObject.optString(Blog.BLOG_VERSION);
-
-            if (!Rhythms.RELEASED_SOLO_VERSIONS.contains(blogVersion) && !Rhythms.SNAPSHOT_SOLO_VERSION.equals(blogVersion)) {
-                LOGGER.log(Level.WARN, "Version of Solo[host={0}] is [{1}], so ignored this request",
-                        new String[]{blogHost, blogVersion});
-                jsonObject.put(Keys.STATUS_CODE, StatusCodes.IGNORE_REQUEST);
-
-                return;
-            }
-
-            final JSONObject originalArticle = requestJSONObject.getJSONObject(ARTICLE);
-            Securities.securityProcess(originalArticle);
-
-            LOGGER.log(Level.INFO, "Data[articleTitle={0}] come from Solo[host={1}, version={2}]",
-                    new Object[]{originalArticle.getString(ARTICLE_TITLE), blogHost, blogVersion});
-            final String authorEmail = originalArticle.getString(ARTICLE_AUTHOR_EMAIL);
-
-            Long latestPostTime = (Long) cache.get(authorEmail + ".lastPostTime");
-            final Long currentPostTime = System.currentTimeMillis();
-            if (null == latestPostTime) {
-                latestPostTime = 0L;
-            }
-            try {
-                if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
-                    jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
-
-                    return;
-                }
-
-                // TODO: check article
-//                if (isInvalid(data)) {
-//                    ret.put(Keys.STATUS_CODE, false);
-//                    ret.put(Keys.MSG, Langs.get("badRequestLabel"));
-//
-//                    return ret;
-//                }
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Invalid request [blogHost=" + blogHost + "]", e);
-                return;
-            }
-
-            latestPostTime = currentPostTime;
-
-            final JSONObject article = new JSONObject();
-
-            final String id = originalArticle.getString(Keys.OBJECT_ID);
-            article.put(ARTICLE_ORIGINAL_ID, id);
-            article.put(ARTICLE_TITLE, originalArticle.getString(ARTICLE_TITLE));
-
-            article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
-            String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
-            if (tagString.contains("B3log Broadcast")) {
-                jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
-
-                return;
-            }
-
-            tagString = tagString.replaceAll("，", ",");
-            article.put(ARTICLE_TAGS_REF, tagString);
-
-            String permalink = originalArticle.getString(ARTICLE_PERMALINK);
-            if ("aBroadcast".equals(permalink)) {
-                jsonObject.put(Keys.STATUS_CODE, "Invalid Permalink");
-
-                return;
-            }
-
-            permalink = blogHost + originalArticle.getString(ARTICLE_PERMALINK);
-
-            article.put(ARTICLE_PERMALINK, permalink);
-            article.put(Blog.BLOG_HOST, blogHost);
-            article.put(Blog.BLOG, blog);
-            article.put(Blog.BLOG_VERSION, blogVersion);
-            article.put(Blog.BLOG_TITLE, blogTitle);
-
-            articleService.updateByOriginalId(article);
-
-            if (originalArticle.optBoolean(Common.POST_TO_COMMUNITY, true)) {
-                try {
-                    originalArticle.remove(Common.POST_TO_COMMUNITY);
-
-                    eventManager.fireEventSynchronously(new Event<JSONObject>(EventTypes.UPDATE_ARTICLE_TO_SYMPHONY, requestJSONObject));
-                } catch (final EventException e) {
-                    LOGGER.log(Level.ERROR, e.getMessage(), e);
-                }
-            }
-
-            jsonObject.put(Keys.STATUS_CODE, StatusCodes.ADD_ARTICLE_SUCC);
-
-            cache.put(authorEmail + ".lastPostTime", latestPostTime);
-        } catch (final Exception e) {
-            LOGGER.log(Level.ERROR, "Can not add article", e);
-
-            jsonObject.put(Keys.STATUS_CODE, e.getMessage());
-        }
-    }
-
 }

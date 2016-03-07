@@ -15,12 +15,15 @@
  */
 package org.b3log.rhythm.service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -33,6 +36,7 @@ import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.service.ServiceException;
 import org.b3log.latke.service.annotation.Service;
 import org.b3log.latke.util.Stopwatchs;
+import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.model.Article;
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
@@ -332,7 +336,10 @@ public class ArticleService {
 
             articleRepository.add(article);
 
-            final String[] tagTitles = article.getString(Article.ARTICLE_TAGS_REF).split(",");
+            String articleTags = article.getString(Article.ARTICLE_TAGS_REF);
+            articleTags = formatArticleTags(articleTags);
+            final String[] tagTitles = articleTags.split(",");
+
             final JSONArray tags = tag(tagTitles, article);
             addTagArticleRelation(tags, article);
 
@@ -434,5 +441,40 @@ public class ArticleService {
 
             throw new ServiceException(e);
         }
+    }
+
+    /**
+     * Formats the specified article tags.
+     *
+     * <ul>
+     * <li>Trims every tag</li>
+     * <li>Deduplication</li>
+     * </ul>
+     *
+     * @param articleTags the specified article tags
+     * @return formatted tags string
+     */
+    public String formatArticleTags(final String articleTags) {
+        final String articleTags1 = articleTags.replaceAll("，", ",").replaceAll("、", ",").replaceAll("；", ",")
+                .replaceAll(";", ",");
+        String[] tagTitles = articleTags1.split(",");
+
+        tagTitles = Strings.trimAll(tagTitles);
+        final Set<String> titles = new LinkedHashSet<String>(Arrays.asList(tagTitles)); // deduplication
+        tagTitles = titles.toArray(new String[0]);
+
+        final StringBuilder tagsBuilder = new StringBuilder();
+        for (final String tagTitle : tagTitles) {
+            if (StringUtils.isBlank(tagTitle.trim())) {
+                continue;
+            }
+
+            tagsBuilder.append(tagTitle.trim()).append(",");
+        }
+        if (tagsBuilder.length() > 0) {
+            tagsBuilder.deleteCharAt(tagsBuilder.length() - 1);
+        }
+
+        return tagsBuilder.toString();
     }
 }
