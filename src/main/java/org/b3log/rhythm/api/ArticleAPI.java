@@ -54,10 +54,11 @@ import org.b3log.rhythm.util.Securities;
 import org.json.JSONObject;
 
 /**
- * Article API processor. Please visit <a href="https://hacpai.com/article/1457158841475">社区内容 API 开放，欢迎各位独立博客主进行连接</a> for more details.
+ * Article API processor. Please visit <a href="https://hacpai.com/article/1457158841475">社区内容 API 开放，欢迎各位独立博客主进行连接</a>
+ * for more details.
  *
  * <ul>
- * <li>Posts (adds/updates) an article (/article), POST</li>
+ * <li>Posts (adds/updates) an article (/api/article), POST</li>
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
@@ -93,22 +94,27 @@ public class ArticleAPI {
     /**
      * Client title max length.
      */
-    private static final int CLIENT_TITLE_MAX_LENGTH = 32;
+    public static final int CLIENT_TITLE_MAX_LENGTH = 32;
 
     /**
      * Article id max length.
      */
-    private static final int ARTICLE_ID_MAX_LENGTH = 32;
+    public static final int ARTICLE_ID_MAX_LENGTH = 32;
+
+    /**
+     * Comment id max length.
+     */
+    public static final int COMMENT_ID_MAX_LENGTH = 32;
 
     /**
      * Article title max length.
      */
-    private static final int ARTICLE_TITLE_MAX_LENGTH = 32;
+    public static final int ARTICLE_TITLE_MAX_LENGTH = 32;
 
     /**
      * Article permalink max length.
      */
-    private static final int ARTICLE_PERMALINK_MAX_LENGTH = 64;
+    public static final int ARTICLE_PERMALINK_MAX_LENGTH = 64;
 
     /**
      * Shows post article.
@@ -122,7 +128,7 @@ public class ArticleAPI {
     }
 
     /**
-     * Posts an article. 
+     * Posts an article.
      *
      * <p>
      * Renders the response with a json object, for example,
@@ -235,7 +241,7 @@ public class ArticleAPI {
             }
 
             if (StringUtils.length(articleId) > ARTICLE_ID_MAX_LENGTH) {
-                jsonObject.put(Keys.STATUS_CODE, "[article.id] length should be [1, 32]");
+                jsonObject.put(Keys.STATUS_CODE, "[article.id] length should be [1, " + ARTICLE_ID_MAX_LENGTH + "]");
 
                 return;
             }
@@ -248,7 +254,7 @@ public class ArticleAPI {
             }
 
             if (StringUtils.length(articleTitle) > ARTICLE_TITLE_MAX_LENGTH) {
-                jsonObject.put(Keys.STATUS_CODE, "[article.title] length should be [1, 32]");
+                jsonObject.put(Keys.STATUS_CODE, "[article.title] length should be [1, " + ARTICLE_TITLE_MAX_LENGTH + "]");
 
                 return;
             }
@@ -263,7 +269,7 @@ public class ArticleAPI {
             }
 
             if (StringUtils.length(articlePermalink) > ARTICLE_PERMALINK_MAX_LENGTH) {
-                jsonObject.put(Keys.STATUS_CODE, "[article.permalink] length should be [1, 64]");
+                jsonObject.put(Keys.STATUS_CODE, "[article.permalink] length should be [1, " + ARTICLE_PERMALINK_MAX_LENGTH + "]");
 
                 return;
             }

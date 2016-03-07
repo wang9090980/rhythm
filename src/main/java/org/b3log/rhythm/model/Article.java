@@ -67,6 +67,11 @@ public final class Article {
     public static final String ARTICLE_CONTENT = "articleContent";
 
     /**
+     * Key of article id.
+     */
+    public static final String ARTICLE_ID = "articleId";
+
+    /**
      * Key of article create date.
      */
     public static final String ARTICLE_CREATE_DATE = "articleCreateDate";

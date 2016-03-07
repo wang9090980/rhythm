@@ -28,7 +28,7 @@ public final class Common {
      * Key of successful.
      */
     public static final String SUCC = "succ";
-    
+
     /**
      * Key of id.
      */
@@ -58,6 +58,21 @@ public final class Common {
      * Key of client.
      */
     public static final String CLIENT = "client";
+    
+    /**
+     * Key of client name.
+     */
+    public static final String CLIENT_NAME = "clientName";
+    
+    /**
+     * Key of client version.
+     */
+    public static final String CLIENT_VERSION = "clientVersion";
+    
+    /**
+     * Key of client host.
+     */
+    public static final String CLIENT_HOST = "clientHost";
 
     /**
      * Key of host.
@@ -88,10 +103,46 @@ public final class Common {
      * Key of post to community.
      */
     public static final String POST_TO_COMMUNITY = "postToCommunity";
+
     /**
      * Key of recent post time.
      */
     public static final String RECENT_POST_TIME = "recentPostTime";
+    
+    /**
+     * Key of comment.
+     */
+    public static final String COMMENT = "comment";
+
+    /**
+     * Key of comment id.
+     */
+    public static final String COMMENT_ID = "commentId";
+
+    /**
+     * Key of comment content.
+     */
+    public static final String COMMENT_CONTENT = "commentContent";
+
+    /**
+     * Key of comment author name.
+     */
+    public static final String COMMENT_AUTHOR_NAME = "commentAuthorName";
+    
+    /**
+     * Key of author name.
+     */
+    public static final String AUTHOR_NAME = "authorName";
+
+    /**
+     * Key of comment author email.
+     */
+    public static final String COMMENT_AUTHOR_EMAIL = "commentAuthorEmail";
+    
+    /**
+     * Key of author email.
+     */
+    public static final String AUTHOR_EMAIL = "authorEmail";
 
     /**
      * Private constructor.
