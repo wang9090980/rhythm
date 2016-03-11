@@ -62,7 +62,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 7, 2016
+ * @version 1.0.0.3, Mar 11, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -284,10 +284,7 @@ public class ArticleAPI {
             articleTags = Securities.securedHTML(articleTags);
             articleTags = articleService.formatArticleTags(articleTags);
 
-            // TODO: check article.tags
-            String articleContent = article.optString(Common.CONTENT);
-            // TODO: check article.content
-            articleContent = Securities.securedHTML(articleContent);
+            final String articleContent = article.optString(Common.CONTENT);
 
             LOGGER.log(Level.INFO, "Data [{0}]", requestJSONObject.toString(Rhythms.INDENT_FACTOR));
 
