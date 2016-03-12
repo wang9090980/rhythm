@@ -62,7 +62,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.3, Mar 11, 2016
+ * @version 1.0.0.4, Mar 12, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -109,7 +109,7 @@ public class ArticleAPI {
     /**
      * Article title max length.
      */
-    public static final int ARTICLE_TITLE_MAX_LENGTH = 32;
+    public static final int ARTICLE_TITLE_MAX_LENGTH = 128;
 
     /**
      * Article permalink max length.
