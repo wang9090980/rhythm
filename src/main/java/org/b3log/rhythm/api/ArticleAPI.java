@@ -62,7 +62,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.4, Mar 12, 2016
+ * @version 1.0.0.5, Mar 12, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -176,7 +176,7 @@ public class ArticleAPI {
 
             final JSONObject client = requestJSONObject.optJSONObject(Common.CLIENT);
             if (null == client) {
-                jsonObject.put(Common.SUCC, true);
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.MSG, "[client] is null");
 
                 return;
@@ -184,12 +184,13 @@ public class ArticleAPI {
 
             final String clientTitle = client.optString(Common.TITLE);
             if (StringUtils.isBlank(clientTitle)) {
-                jsonObject.put(Common.SUCC, true);
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.MSG, "[client] is null");
 
                 return;
             }
             if (StringUtils.length(clientTitle) > CLIENT_TITLE_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[client.title] length should be [1, 32]");
 
                 return;
@@ -200,6 +201,7 @@ public class ArticleAPI {
                 clientHost = "http://" + clientHost;
 
                 if (!Securities.validHost(clientHost)) {
+                    jsonObject.put(Common.SUCC, false);
                     jsonObject.put(Keys.STATUS_CODE, "Invalid [client.host=" + clientHost + "]");
 
                     return;
@@ -214,6 +216,7 @@ public class ArticleAPI {
 
             final String clientEmail = client.optString(Common.EMAIL);
             if (!Strings.isEmail(clientEmail)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [client.email" + clientEmail + "]");
 
                 return;
@@ -221,6 +224,7 @@ public class ArticleAPI {
 
             final String clientKey = client.optString(Common.KEY);
             if (StringUtils.isBlank(clientKey)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [client.key=" + clientKey + "]");
 
                 return;
@@ -228,6 +232,7 @@ public class ArticleAPI {
 
             final JSONObject article = requestJSONObject.optJSONObject(Article.ARTICLE);
             if (null == article) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article] is null");
 
                 return;
@@ -235,12 +240,14 @@ public class ArticleAPI {
 
             final String articleId = article.optString(Common.ID);
             if (StringUtils.isBlank(articleId)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.id] is null");
 
                 return;
             }
 
             if (StringUtils.length(articleId) > ARTICLE_ID_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.id] length should be [1, " + ARTICLE_ID_MAX_LENGTH + "]");
 
                 return;
@@ -248,12 +255,14 @@ public class ArticleAPI {
 
             String articleTitle = article.optString(Common.TITLE);
             if (StringUtils.isBlank(articleTitle)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.title] is null");
 
                 return;
             }
 
             if (StringUtils.length(articleTitle) > ARTICLE_TITLE_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.title] length should be [1, " + ARTICLE_TITLE_MAX_LENGTH + "]");
 
                 return;
@@ -263,18 +272,21 @@ public class ArticleAPI {
 
             final String articlePermalink = article.optString(Common.PERMALINK);
             if (StringUtils.isBlank(articlePermalink)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.permalink] is null");
 
                 return;
             }
 
             if (StringUtils.length(articlePermalink) > ARTICLE_PERMALINK_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.permalink] length should be [1, " + ARTICLE_PERMALINK_MAX_LENGTH + "]");
 
                 return;
             }
 
             if (!StringUtils.startsWith(articlePermalink, "/")) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.permalink] should start with /, for example, /hello-world");
 
                 return;
@@ -282,7 +294,8 @@ public class ArticleAPI {
 
             String articleTags = article.optString(Tag.TAGS);
             articleTags = Securities.securedHTML(articleTags);
-            articleTags = articleService.formatArticleTags(articleTags);
+            articleTags = "B3log," + articleTags;
+            articleTags = Tag.formatTags(articleTags);
 
             final String articleContent = article.optString(Common.CONTENT);
 
@@ -293,14 +306,10 @@ public class ArticleAPI {
             if (null == latestPostTime) {
                 latestPostTime = 0L;
             }
-            try {
-                if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
-                    jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
-
-                    return;
-                }
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Invalid request [clientHost=" + clientHost + "]", e);
+            
+            if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
+                jsonObject.put(Common.SUCC, false);
+                jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
 
                 return;
             }
@@ -314,6 +323,7 @@ public class ArticleAPI {
 
             postArticle.put(ARTICLE_AUTHOR_EMAIL, clientEmail);
             if (articleTags.contains("B3log Broadcast")) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [tags]");
 
                 return;
@@ -322,6 +332,7 @@ public class ArticleAPI {
             postArticle.put(ARTICLE_TAGS_REF, articleTags);
 
             if ("aBroadcast".equals(articlePermalink)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [permalink]");
 
                 return;

@@ -15,11 +15,16 @@
  */
 package org.b3log.rhythm.model;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.util.Strings;
+
 /**
  * This class defines all tag model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.8, Nov 7, 2010
+ * @version 1.1.0.8, Mar 12, 2016
  * @since 0.1.4
  */
 public final class Tag {
@@ -28,18 +33,81 @@ public final class Tag {
      * Tag.
      */
     public static final String TAG = "tag";
+
     /**
      * Tags.
      */
     public static final String TAGS = "tags";
+
     /**
      * Key of title in lower case.
      */
     public static final String TAG_TITLE_LOWER_CASE = "tagTitleLowerCase";
+
     /**
      * Key of tag reference count.
      */
     public static final String TAG_REFERENCE_COUNT = "tagReferenceCount";
+
+    /**
+     * Formats the specified tags.
+     *
+     * <ul>
+     * <li>Trims every tag</li>
+     * <li>Deduplication</li>
+     * </ul>
+     *
+     * @param tagStr the specified tags
+     * @return formatted tags string
+     */
+    public static String formatTags(final String tagStr) {
+        final String tagStr1 = tagStr.replaceAll("\\s+", "").replaceAll("，", ",").replaceAll("、", ",").
+                replaceAll("；", ",").replaceAll(";", ",");
+        String[] tagTitles = tagStr1.split(",");
+
+        tagTitles = Strings.trimAll(tagTitles);
+
+        // deduplication
+        final Set<String> titles = new LinkedHashSet<String>();
+        for (final String tagTitle : tagTitles) {
+            if (!exists(titles, tagTitle)) {
+                titles.add(tagTitle);
+            }
+        }
+
+        tagTitles = titles.toArray(new String[0]);
+
+        final StringBuilder tagsBuilder = new StringBuilder();
+        for (final String tagTitle : tagTitles) {
+            if (StringUtils.isBlank(tagTitle.trim())) {
+                continue;
+            }
+
+            tagsBuilder.append(tagTitle.trim()).append(",");
+        }
+        if (tagsBuilder.length() > 0) {
+            tagsBuilder.deleteCharAt(tagsBuilder.length() - 1);
+        }
+
+        return tagsBuilder.toString();
+    }
+
+    /**
+     * Checks the specified title exists in the specified title set.
+     * 
+     * @param titles the specified title set
+     * @param title the specified title to check
+     * @return {@code true} if exists, returns {@code false} otherwise
+     */
+    private static boolean exists(final Set<String> titles, final String title) {
+        for (final String setTitle : titles) {
+            if (setTitle.equalsIgnoreCase(title)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Private default constructor.

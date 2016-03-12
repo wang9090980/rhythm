@@ -53,7 +53,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Mar 7, 2016
+ * @version 1.0.0.3, Mar 12, 2016
  * @since 1.1.0
  */
 @RequestProcessor
@@ -135,7 +135,7 @@ public class CommentAPI {
 
             final JSONObject client = requestJSONObject.optJSONObject(Common.CLIENT);
             if (null == client) {
-                jsonObject.put(Common.SUCC, true);
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.MSG, "[client] is null");
 
                 return;
@@ -143,12 +143,13 @@ public class CommentAPI {
 
             final String clientTitle = client.optString(Common.TITLE);
             if (StringUtils.isBlank(clientTitle)) {
-                jsonObject.put(Common.SUCC, true);
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.MSG, "[client] is null");
 
                 return;
             }
             if (StringUtils.length(clientTitle) > ArticleAPI.CLIENT_TITLE_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[client.title] length should be [1, 32]");
 
                 return;
@@ -159,6 +160,7 @@ public class CommentAPI {
                 clientHost = "http://" + clientHost;
 
                 if (!Securities.validHost(clientHost)) {
+                    jsonObject.put(Common.SUCC, false);
                     jsonObject.put(Keys.STATUS_CODE, "Invalid [client.host=" + clientHost + "]");
 
                     return;
@@ -173,6 +175,7 @@ public class CommentAPI {
 
             final String clientEmail = client.optString(Common.EMAIL);
             if (!Strings.isEmail(clientEmail)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [client.email" + clientEmail + "]");
 
                 return;
@@ -180,6 +183,7 @@ public class CommentAPI {
 
             final String clientKey = client.optString(Common.KEY);
             if (StringUtils.isBlank(clientKey)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [client.key=" + clientKey + "]");
 
                 return;
@@ -187,6 +191,7 @@ public class CommentAPI {
 
             final JSONObject comment = requestJSONObject.optJSONObject(Common.COMMENT);
             if (null == comment) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[comment] is null");
 
                 return;
@@ -194,12 +199,14 @@ public class CommentAPI {
 
             final String commentId = comment.optString(Common.ID);
             if (StringUtils.isBlank(commentId)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[comment.id] is null");
 
                 return;
             }
 
             if (StringUtils.length(commentId) > ArticleAPI.COMMENT_ID_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[comment.id] length should be [1, " + ArticleAPI.COMMENT_ID_MAX_LENGTH + "]");
 
                 return;
@@ -207,12 +214,14 @@ public class CommentAPI {
 
             final String articleId = comment.optString(Article.ARTICLE_ID);
             if (StringUtils.isBlank(articleId)) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[comment.articleId] is null");
 
                 return;
             }
 
             if (StringUtils.length(articleId) > ArticleAPI.ARTICLE_ID_MAX_LENGTH) {
+                jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[comment.articleId] length should be [1, " + ArticleAPI.ARTICLE_ID_MAX_LENGTH + "]");
 
                 return;
@@ -229,14 +238,10 @@ public class CommentAPI {
             if (null == latestPostTime) {
                 latestPostTime = 0L;
             }
-            try {
-                if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
-                    jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
-
-                    return;
-                }
-            } catch (final Exception e) {
-                LOGGER.log(Level.ERROR, "Invalid request [clientHost=" + clientHost + "]", e);
+            
+            if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
+                jsonObject.put(Common.SUCC, false);
+                jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
 
                 return;
             }
