@@ -322,7 +322,7 @@ public class ArticleAPI {
             postArticle.put(ARTICLE_TITLE, articleTitle);
 
             postArticle.put(ARTICLE_AUTHOR_EMAIL, clientEmail);
-            if (articleTags.contains("B3log Broadcast")) {
+            if (articleTags.contains("B3log广播") || articleTags.contains("B3log Broadcast")) {
                 jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Invalid [tags]");
 

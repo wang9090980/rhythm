@@ -251,7 +251,7 @@ public class ArticleProcessor {
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
             String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
-            if (tagString.contains("B3log Broadcast")) {
+            if (tagString.contains("B3log广播") || tagString.contains("B3log Broadcast")) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
 
                 return;
@@ -421,7 +421,7 @@ public class ArticleProcessor {
 
             article.put(ARTICLE_AUTHOR_EMAIL, authorEmail);
             String tagString = originalArticle.getString(ARTICLE_TAGS_REF);
-            if (tagString.contains("B3log Broadcast")) {
+            if (tagString.contains("B3log广播") || tagString.contains("B3log广播")) {
                 jsonObject.put(Keys.STATUS_CODE, "Invalid Tag");
 
                 return;

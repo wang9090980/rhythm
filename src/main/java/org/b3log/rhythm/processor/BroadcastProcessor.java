@@ -145,7 +145,7 @@ public class BroadcastProcessor {
          *         "articleContent": "&lt;p&gt;test&lt;\/p&gt;",
          *         "articleCreateDate": long,
          *         "articlePermalink": "aBroadcast"
-         *         "articleTags": "B3log Broadcast",
+         *         "articleTags": "B3log广播",
          *         "articleTitle": "test",
          *         "clientArticleId": long,
          *         "oId": ""
@@ -177,7 +177,7 @@ public class BroadcastProcessor {
         article.put(Article.ARTICLE_CONTENT, content);
         article.put("articleCreateDate", time);
         article.put(Article.ARTICLE_PERMALINK, "aBroadcast");
-        article.put(Article.ARTICLE_TAGS_REF, "B3log Broadcast");
+        article.put(Article.ARTICLE_TAGS_REF, "B3log广播");
         article.put(Article.ARTICLE_TITLE, broadcast.getString("title"));
         article.put(Keys.OBJECT_ID, String.valueOf(time));
 
