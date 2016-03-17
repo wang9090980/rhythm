@@ -49,7 +49,7 @@ import org.json.JSONObject;
  * Article service.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.6, Mar 12, 2016
+ * @version 1.0.1.6, Mar 14, 2016
  * @since 0.1.5
  */
 @Service
@@ -330,10 +330,12 @@ public class ArticleService {
             article.put(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT, 0);
             article.put(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT, 0);
 
-            articleRepository.add(article);
-
             String articleTags = article.getString(Article.ARTICLE_TAGS_REF);
             articleTags = Tag.formatTags(articleTags);
+            article.put(Article.ARTICLE_TAGS_REF, articleTags);
+
+            articleRepository.add(article);
+
             final String[] tagTitles = articleTags.split(",");
 
             final JSONArray tags = tag(tagTitles, article);
@@ -390,6 +392,10 @@ public class ArticleService {
 
             article.put(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT, old.getInt(Article.ARTICLE_ACCESSIBILITY_CHECK_CNT));
             article.put(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT, old.getInt(Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT));
+
+            String articleTags = article.getString(Article.ARTICLE_TAGS_REF);
+            articleTags = Tag.formatTags(articleTags);
+            article.put(Article.ARTICLE_TAGS_REF, articleTags);
 
             articleRepository.update(id, article);
 

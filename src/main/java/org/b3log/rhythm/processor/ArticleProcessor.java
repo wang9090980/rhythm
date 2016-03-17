@@ -66,7 +66,7 @@ import org.json.JSONObject;
  * Article processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.5.16, Feb 25, 2016
+ * @version 1.2.6.16, Mar 14, 2016
  * @since 0.1.4
  */
 @RequestProcessor
@@ -258,6 +258,9 @@ public class ArticleProcessor {
             }
 
             tagString = tagString.replaceAll("，", ",");
+            tagString = "B3log," + tagString;
+            tagString = Tag.formatTags(tagString);
+            
             article.put(ARTICLE_TAGS_REF, tagString);
 
             String permalink = originalArticle.getString(ARTICLE_PERMALINK);
@@ -428,6 +431,8 @@ public class ArticleProcessor {
             }
 
             tagString = tagString.replaceAll("，", ",");
+            tagString = "B3log," + tagString;
+            tagString = Tag.formatTags(tagString);
             article.put(ARTICLE_TAGS_REF, tagString);
 
             String permalink = originalArticle.getString(ARTICLE_PERMALINK);
