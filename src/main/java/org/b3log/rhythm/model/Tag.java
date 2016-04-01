@@ -17,6 +17,7 @@ package org.b3log.rhythm.model;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.util.Strings;
 
@@ -24,7 +25,7 @@ import org.b3log.latke.util.Strings;
  * This class defines all tag model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.8, Mar 12, 2016
+ * @version 1.1.0.9, Apr 1, 2016
  * @since 0.1.4
  */
 public final class Tag {
@@ -48,6 +49,22 @@ public final class Tag {
      * Key of tag reference count.
      */
     public static final String TAG_REFERENCE_COUNT = "tagReferenceCount";
+
+    /// Validation
+    /**
+     * Max tag title length.
+     */
+    public static final int MAX_TAG_TITLE_LENGTH = 9;
+
+    /**
+     * Max tag count.
+     */
+    public static final int MAX_TAG_COUNT = 4;
+
+    /**
+     * Tag title pattern.
+     */
+    public static final Pattern TAG_TITLE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5,\\w,\\s,&,\\+,\\-,\\.]+");
 
     /**
      * Formats the specified tags.
@@ -77,13 +94,28 @@ public final class Tag {
 
         tagTitles = titles.toArray(new String[0]);
 
+        int count = 0;
         final StringBuilder tagsBuilder = new StringBuilder();
         for (final String tagTitle : tagTitles) {
-            if (StringUtils.isBlank(tagTitle.trim())) {
+            String title = tagTitle.trim();
+            if (StringUtils.isBlank(title)) {
                 continue;
             }
 
-            tagsBuilder.append(tagTitle.trim()).append(",");
+            if (StringUtils.length(title) > MAX_TAG_TITLE_LENGTH) {
+                continue;
+            }
+
+            if (!TAG_TITLE_PATTERN.matcher(title).matches()) {
+                continue;
+            }
+
+            tagsBuilder.append(title).append(",");
+            count++;
+
+            if (count >= MAX_TAG_COUNT) {
+                break;
+            }
         }
         if (tagsBuilder.length() > 0) {
             tagsBuilder.deleteCharAt(tagsBuilder.length() - 1);
@@ -94,7 +126,7 @@ public final class Tag {
 
     /**
      * Checks the specified title exists in the specified title set.
-     * 
+     *
      * @param titles the specified title set
      * @param title the specified title to check
      * @return {@code true} if exists, returns {@code false} otherwise
