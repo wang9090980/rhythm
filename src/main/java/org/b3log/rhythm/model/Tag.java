@@ -97,7 +97,7 @@ public final class Tag {
         int count = 0;
         final StringBuilder tagsBuilder = new StringBuilder();
         for (final String tagTitle : tagTitles) {
-            String title = tagTitle.trim();
+            final String title = tagTitle.trim();
             if (StringUtils.isBlank(title)) {
                 continue;
             }
