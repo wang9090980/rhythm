@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
     Description: Rhythm POM.
-    Version: 1.6.3.25, Aug 10, 2016
+    Version: 1.6.4.25, Aug 26, 2016
     Author: Liang Ding
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -19,7 +19,7 @@
 
     <!-- Version -->
     <properties>
-        <org.b3log.latke.version>2.2.10</org.b3log.latke.version>
+        <org.b3log.latke.version>2.2.11</org.b3log.latke.version>
         
         <jsoup.version>1.7.1</jsoup.version>
         <slf4j.version>1.7.5</slf4j.version>
