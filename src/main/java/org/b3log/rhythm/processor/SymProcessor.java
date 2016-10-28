@@ -15,6 +15,7 @@
  */
 package org.b3log.rhythm.processor;
 
+import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +52,38 @@ public class SymProcessor {
      */
     @Inject
     private SymService symService;
+
+    /**
+     * Gets syms.
+     *
+     * <p>
+     * Renders the response with a json object, for example,
+     * <pre>
+     * {
+     *     "sc": boolean,
+     *     "syms": []
+     * }
+     * </pre>
+     * </p>
+     *
+     * @param context the specified context
+     */
+    @RequestProcessing(value = "/syms", method = HTTPRequestMethod.GET)
+    public void getSyms(final HTTPRequestContext context) {
+        final JSONObject ret = new JSONObject();
+        context.renderJSON(ret);
+
+        try {
+            final List<JSONObject> syms = symService.getSyms();
+            ret.put(Sym.SYMS, syms);
+
+            ret.put(Keys.STATUS_CODE, true);
+        } catch (final Exception e) {
+            LOGGER.log(Level.ERROR, "Can not add sym", e);
+
+            ret.put(Keys.STATUS_CODE, false);
+        }
+    }
 
     /**
      * Adds a sym.

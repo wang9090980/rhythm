@@ -15,6 +15,8 @@
  */
 package org.b3log.rhythm.service;
 
+import java.util.Collections;
+import java.util.List;
 import javax.inject.Inject;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
@@ -23,8 +25,10 @@ import org.b3log.latke.repository.FilterOperator;
 import org.b3log.latke.repository.PropertyFilter;
 import org.b3log.latke.repository.Query;
 import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.SortDirection;
 import org.b3log.latke.repository.annotation.Transactional;
 import org.b3log.latke.service.annotation.Service;
+import org.b3log.latke.util.CollectionUtils;
 import org.b3log.rhythm.model.Sym;
 import org.b3log.rhythm.repository.SymRepository;
 import org.json.JSONArray;
@@ -50,6 +54,25 @@ public class SymService {
      */
     @Inject
     private SymRepository symRepository;
+
+    /**
+     * Gets syms.
+     *
+     * @return a list of syms :p
+     */
+    public List<JSONObject> getSyms() {
+        final Query query = new Query().
+                addSort(Keys.OBJECT_ID, SortDirection.ASCENDING).
+                addProjection(Sym.SYM_URL, String.class).
+                addProjection(Sym.SYM_TITLE, String.class);
+        try {
+            return CollectionUtils.jsonArrayToList(symRepository.get(query).optJSONArray(Keys.RESULTS));
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Gets syms failed", e);
+
+            return Collections.emptyList();
+        }
+    }
 
     /**
      * Adds or updates a sym.
