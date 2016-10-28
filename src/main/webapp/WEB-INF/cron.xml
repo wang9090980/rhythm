@@ -18,7 +18,7 @@
 -->
 <!--
     Description: Cron job.
-    Version: 1.2.0.9, Jun 20, 2014
+    Version: 1.4.0.9, Oct 28, 2016
     Author: Liang Ding
 -->
 <cronentries>
@@ -38,6 +38,12 @@
         <url>/users/accessibility?key=0</url>
         <description>Checks accessibility of users</description>
         <schedule>every 12 hours</schedule>
+    </cron>
+    
+    <cron>
+        <url>/syms/accessibility?key=0</url>
+        <description>Checks accessibility of syms</description>
+        <schedule>every 6 hours</schedule>
     </cron>
     
     <!--

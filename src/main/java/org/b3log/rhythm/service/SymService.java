@@ -62,6 +62,7 @@ public class SymService {
      */
     public List<JSONObject> getSyms() {
         final Query query = new Query().
+                setFilter(new PropertyFilter(Sym.SYM_STATUS, FilterOperator.EQUAL, Sym.SYM_STATUS_C_VALID)).
                 addSort(Keys.OBJECT_ID, SortDirection.ASCENDING).
                 addProjection(Sym.SYM_URL, String.class).
                 addProjection(Sym.SYM_TITLE, String.class);
@@ -71,6 +72,20 @@ public class SymService {
             LOGGER.log(Level.ERROR, "Gets syms failed", e);
 
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Updates the specified sym.
+     *
+     * @param sym the specified sym
+     */
+    @Transactional
+    public void updateSym(final JSONObject sym) {
+        try {
+            symRepository.update(sym.optString(Keys.OBJECT_ID), sym);
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Updates sym failed", e);
         }
     }
 
