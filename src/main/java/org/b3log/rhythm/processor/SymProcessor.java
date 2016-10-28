@@ -36,7 +36,7 @@ import org.json.JSONObject;
  * Sym processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 28, 2016
+ * @version 1.0.0.1, Oct 29, 2016
  * @since 1.2.0
  */
 @RequestProcessor
@@ -105,7 +105,7 @@ public class SymProcessor {
      * </pre>
      */
     @RequestProcessing(value = "/sym", method = HTTPRequestMethod.POST)
-    public void addArticle(final HTTPRequestContext context) {
+    public void addSym(final HTTPRequestContext context) {
         final HttpServletRequest request = context.getRequest();
         final HttpServletResponse response = context.getResponse();
 

@@ -20,6 +20,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
 import org.b3log.latke.servlet.HTTPRequestContext;
@@ -44,7 +45,7 @@ import org.json.JSONObject;
  * Checks accessibility of Syms.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 28, 2016
+ * @version 1.0.0.1, Oct 29, 2016
  * @since 1.2.0
  */
 @RequestProcessor
@@ -136,8 +137,16 @@ public class SymAccessibilityChecker {
                 request.setURL(new URL(symURL));
 
                 final HTTPResponse response = urlFetchService.fetch(request);
-
                 responseCode = response.getResponseCode();
+                if (HttpServletResponse.SC_OK == responseCode) {
+                    final String html = new String(response.getContent(), "UTF-8");
+                    final String favicon
+                            = StringUtils.substringBetween(html, "<link rel=\"icon\" type=\"image/png\" href=\"", "\"");
+                    sym.put(Sym.SYM_ICON, StringUtils.trim(favicon));
+                    final String desc = StringUtils.substringBetween(html, "<meta name=\"description\" content=\"", "\"");
+                    sym.put(Sym.SYM_DESC, StringUtils.trim(desc));
+                }
+
                 LOGGER.log(Level.INFO, "Accesses sym [url=" + symURL + "] response [code={0}]", responseCode);
             } catch (final Exception e) {
                 LOGGER.warn("Sym [url=" + symURL + "] accessibility check failed [msg=" + e.getMessage() + "]");

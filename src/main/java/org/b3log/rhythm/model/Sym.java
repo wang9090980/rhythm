@@ -19,7 +19,7 @@ package org.b3log.rhythm.model;
  * This class defines all Sym model relevant keys.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.0, Oct 28, 2016
+ * @version 1.0.0.1, Oct 29, 2016
  * @since 1.2.0
  */
 public final class Sym {
@@ -43,6 +43,16 @@ public final class Sym {
      * Key of sym title.
      */
     public static final String SYM_TITLE = "symTitle";
+
+    /**
+     * Key of sym icon.
+     */
+    public static final String SYM_ICON = "symIcon";
+
+    /**
+     * Key of sym description.
+     */
+    public static final String SYM_DESC = "symDesc";
 
     /**
      * Key of sym accessibility check count.

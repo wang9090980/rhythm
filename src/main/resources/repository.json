@@ -1,6 +1,6 @@
 {
     "description": "Description of repository structures, for generation (DDL: http://en.wikipedia.org/wiki/Data_Definition_Language) of the relational database table and persistence validation.",
-    "version": "1.1.0.0, Oct 28, 2016",
+    "version": "1.1.0.1, Oct 29, 2016",
     "authors": ["Liang Ding"],
     "since": "0.2.0",
     "repositories": [
@@ -19,6 +19,16 @@
                 },
                 {
                     "name": "symTitle",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "symIcon",
+                    "type": "String",
+                    "length": 255
+                },
+                {
+                    "name": "symDesc",
                     "type": "String",
                     "length": 255
                 },
