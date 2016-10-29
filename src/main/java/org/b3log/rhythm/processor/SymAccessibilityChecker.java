@@ -21,8 +21,12 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
+import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
+import org.b3log.latke.repository.Query;
+import org.b3log.latke.repository.RepositoryException;
+import org.b3log.latke.repository.Transaction;
 import org.b3log.latke.servlet.HTTPRequestContext;
 import org.b3log.latke.servlet.HTTPRequestMethod;
 import org.b3log.latke.servlet.annotation.RequestProcessing;
@@ -35,9 +39,10 @@ import org.b3log.latke.urlfetch.HTTPRequest;
 import org.b3log.latke.urlfetch.HTTPResponse;
 import org.b3log.latke.urlfetch.URLFetchService;
 import org.b3log.latke.urlfetch.URLFetchServiceFactory;
+import org.b3log.latke.util.CollectionUtils;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.model.Sym;
-import org.b3log.rhythm.service.SymService;
+import org.b3log.rhythm.repository.SymRepository;
 import org.b3log.rhythm.util.Rhythms;
 import org.json.JSONObject;
 
@@ -45,7 +50,7 @@ import org.json.JSONObject;
  * Checks accessibility of Syms.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 29, 2016
+ * @version 1.0.0.2, Oct 29, 2016
  * @since 1.2.0
  */
 @RequestProcessor
@@ -57,10 +62,10 @@ public class SymAccessibilityChecker {
     private static final Logger LOGGER = Logger.getLogger(SymAccessibilityChecker.class.getName());
 
     /**
-     * Sym service.
+     * Sym repository.
      */
     @Inject
-    private SymService symService;
+    private SymRepository symRepository;
 
     /**
      * Check timeout.
@@ -94,9 +99,14 @@ public class SymAccessibilityChecker {
             return;
         }
 
-        final List<JSONObject> syms = symService.getSyms();
-        for (final JSONObject sym : syms) {
-            threadService.submit(new CheckTask(sym), CHECK_TIMEOUT);
+        try {
+            final List<JSONObject> syms
+                    = CollectionUtils.jsonArrayToList(symRepository.get(new Query()).optJSONArray(Keys.RESULTS));
+            for (final JSONObject sym : syms) {
+                threadService.submit(new CheckTask(sym), CHECK_TIMEOUT);
+            }
+        } catch (final RepositoryException e) {
+            LOGGER.log(Level.ERROR, "Check accessibility syms failed", e);
         }
     }
 
@@ -104,14 +114,14 @@ public class SymAccessibilityChecker {
      * Sym accessibility check task.
      *
      * @author <a href="http://88250.b3log.org">Liang Ding</a>
-     * @version 1.0.0.0, Oct 28, 2016
+     * @version 1.0.0.1, Oct 29, 2016
      */
     private class CheckTask implements Runnable {
 
         /**
          * Sym to check.
          */
-        private JSONObject sym;
+        private final JSONObject sym;
 
         /**
          * Constructs a check task with the specified sym.
@@ -160,7 +170,18 @@ public class SymAccessibilityChecker {
                     sym.put(Sym.SYM_ACCESSIBILITY_NOT_200_CNT, sym.optInt(Sym.SYM_ACCESSIBILITY_NOT_200_CNT) + 1);
                 }
 
-                symService.updateSym(sym);
+                final Transaction transaction = symRepository.beginTransaction();
+                try {
+                    symRepository.update(sym.optString(Keys.OBJECT_ID), sym);
+
+                    transaction.commit();
+                } catch (final RepositoryException e) {
+                    if (null != transaction && transaction.isActive()) {
+                        transaction.rollback();
+                    }
+
+                    LOGGER.log(Level.ERROR, "Updates sym failed", e);
+                }
             }
         }
     }
