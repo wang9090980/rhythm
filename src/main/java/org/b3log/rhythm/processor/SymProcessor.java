@@ -16,9 +16,12 @@
 package org.b3log.rhythm.processor;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.logging.Level;
 import org.b3log.latke.logging.Logger;
@@ -36,7 +39,7 @@ import org.json.JSONObject;
  * Sym processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Oct 29, 2016
+ * @version 1.0.0.2, Nov 25, 2016
  * @since 1.2.0
  */
 @RequestProcessor
@@ -110,6 +113,7 @@ public class SymProcessor {
         final HttpServletResponse response = context.getResponse();
 
         final JSONObject jsonObject = new JSONObject();
+        jsonObject.put(Keys.STATUS_CODE, false);
 
         final JSONRenderer renderer = new JSONRenderer();
         context.setRenderer(renderer);
@@ -118,8 +122,19 @@ public class SymProcessor {
         try {
             final JSONObject requestJSONObject = Requests.parseRequestJSONObject(request, response);
 
+            final String url = requestJSONObject.optString(Sym.SYM_URL);
+            if (StringUtils.isBlank(url)) {
+                return;
+            }
+
+            String host = StringUtils.substringAfter(url, "://");
+            host = StringUtils.substringBefore(host, ":");
+            if (isIPv4(host)) {
+                return;
+            }
+
             final JSONObject sym = new JSONObject();
-            sym.put(Sym.SYM_URL, requestJSONObject.optString(Sym.SYM_URL));
+            sym.put(Sym.SYM_URL, url);
             sym.put(Sym.SYM_TITLE, requestJSONObject.optString(Sym.SYM_TITLE));
 
             symService.addSym(sym);
@@ -130,5 +145,27 @@ public class SymProcessor {
 
             jsonObject.put(Keys.STATUS_CODE, e.getMessage());
         }
+    }
+
+    /**
+     * Is IPv4.
+     *
+     * @param ip ip
+     * @return {@code true} if it is, returns {@code false} otherwise
+     */
+    public static boolean isIPv4(final String ip) {
+        if (StringUtils.isBlank(ip)) {
+            return false;
+        }
+
+        final String regex = "^(1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|[1-9])\\."
+                + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)\\."
+                + "(00?\\d|1\\d{2}|2[0-4]\\d|25[0-5]|[1-9]\\d|\\d)$";
+
+        final Pattern pattern = Pattern.compile(regex);
+        final Matcher matcher = pattern.matcher(ip);
+
+        return matcher.matches();
     }
 }
