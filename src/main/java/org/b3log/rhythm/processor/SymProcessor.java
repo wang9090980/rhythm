@@ -39,7 +39,7 @@ import org.json.JSONObject;
  * Sym processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Nov 25, 2016
+ * @version 1.0.0.3, Nov 29, 2016
  * @since 1.2.0
  */
 @RequestProcessor
@@ -130,6 +130,10 @@ public class SymProcessor {
             String host = StringUtils.substringAfter(url, "://");
             host = StringUtils.substringBefore(host, ":");
             if (isIPv4(host)) {
+                return;
+            }
+
+            if (StringUtils.contains(host, "localhost")) {
                 return;
             }
 
