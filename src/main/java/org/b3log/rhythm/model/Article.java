@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016, b3log.org & hacpai.com
+ * Copyright (c) 2010-2017, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,12 @@ public final class Article {
      * Key of article create date.
      */
     public static final String ARTICLE_CREATE_DATE = "articleCreateDate";
+
+    //// Constants ////
+    /**
+     * Min length of article content.
+     */
+    public static final int MIN_CONTENT_LENGTH = 128;
 
     /**
      * Private default constructor.

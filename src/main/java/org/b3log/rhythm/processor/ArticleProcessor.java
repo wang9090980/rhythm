@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016, b3log.org & hacpai.com
+ * Copyright (c) 2010-2017, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 package org.b3log.rhythm.processor;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
@@ -43,16 +35,6 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
-
-import static org.b3log.rhythm.model.Article.ARTICLE;
-import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_CHECK_CNT;
-import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT;
-import static org.b3log.rhythm.model.Article.ARTICLE_AUTHOR_EMAIL;
-import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
-import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
-import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
-import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
-
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.model.Tag;
@@ -64,7 +46,16 @@ import org.b3log.rhythm.util.Rhythms;
 import org.b3log.rhythm.util.Securities;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.b3log.rhythm.model.Article.*;
 
 /**
  * Article processor.
@@ -621,7 +612,7 @@ public class ArticleProcessor {
         final String content = article.optString(Article.ARTICLE_CONTENT);
         final String sucuredHTML = Securities.securedHTML(content);
 
-        if (sucuredHTML.length() < 128) {
+        if (sucuredHTML.length() < Article.MIN_CONTENT_LENGTH) {
             return true;
         }
 

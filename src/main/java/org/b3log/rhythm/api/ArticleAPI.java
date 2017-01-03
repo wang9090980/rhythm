@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016, b3log.org & hacpai.com
+ * Copyright (c) 2010-2017, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.net.URL;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.RuntimeEnv;
@@ -40,11 +41,13 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
+
 import static org.b3log.rhythm.model.Article.ARTICLE_AUTHOR_EMAIL;
 import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
 import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
 import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
 import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
+
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.model.Tag;
@@ -56,10 +59,11 @@ import org.json.JSONObject;
 /**
  * Article API processor. Please visit <a href="https://hacpai.com/article/1457158841475">社区内容 API 开放，欢迎各位独立博客主进行连接</a>
  * for more details.
- *
+ * <p>
  * <ul>
  * <li>Posts (adds/updates) an article (/api/article), POST</li>
  * </ul>
+ * </p>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
  * @version 1.1.0.5, Jan 3, 2017
@@ -129,7 +133,7 @@ public class ArticleAPI {
 
     /**
      * Posts an article.
-     *
+     * <p>
      * <p>
      * Renders the response with a json object, for example,
      * <pre>
@@ -141,22 +145,22 @@ public class ArticleAPI {
      * </p>
      *
      * @param context the specified context, including a request json object, for example,      <pre>
-     * {
-     *     "article": {
-     *         "id": "1165070220000",
-     *         "title": "这是一篇测试文章",
-     *         "permalink": "/test-post",
-     *         "tags": "tag1, tag2",
-     *         "content": "Test"
-     *     },
-     *     "client": {
-     *         "title": "我的个人博客",
-     *         "host": "http://xxx.com",
-     *         "email": "test@hacpai.com",
-     *         "key": "xxxx"
-     *     }
-     * }
-     * </pre>
+     *                               {
+     *                                   "article": {
+     *                                       "id": "1165070220000",
+     *                                       "title": "这是一篇测试文章",
+     *                                       "permalink": "/test-post",
+     *                                       "tags": "tag1, tag2",
+     *                                       "content": "Test"
+     *                                   },
+     *                                   "client": {
+     *                                       "title": "我的个人博客",
+     *                                       "host": "http://xxx.com",
+     *                                       "email": "test@hacpai.com",
+     *                                       "key": "xxxx"
+     *                                   }
+     *                               }
+     *                               </pre>
      */
     @RequestProcessing(value = "/api/article", method = HTTPRequestMethod.POST)
     public void postArticle(final HTTPRequestContext context) {
@@ -294,7 +298,7 @@ public class ArticleAPI {
 
             final String articleContent = article.optString(Common.CONTENT);
 
-            if (StringUtils.length(articleContent) < 128) {
+            if (StringUtils.length(articleContent) < Article.MIN_CONTENT_LENGTH) {
                 jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "[article.content] length too short");
 
@@ -307,7 +311,6 @@ public class ArticleAPI {
             articleTags = Tag.formatTags(articleTags);
 
 
-
             LOGGER.log(Level.INFO, "Data [{0}]", requestJSONObject.toString(Rhythms.INDENT_FACTOR));
 
             Long latestPostTime = (Long) cache.get(clientEmail + ".lastPostTime");
@@ -315,7 +318,7 @@ public class ArticleAPI {
             if (null == latestPostTime) {
                 latestPostTime = 0L;
             }
-            
+
             if (latestPostTime > (currentPostTime - Rhythms.MIN_STEP_POST_TIME)) {
                 jsonObject.put(Common.SUCC, false);
                 jsonObject.put(Keys.STATUS_CODE, "Too Frequent");
