@@ -62,7 +62,7 @@ import org.json.JSONObject;
  * </ul>
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.5, Mar 12, 2016
+ * @version 1.1.0.5, Jan 3, 2017
  * @since 1.1.0
  */
 @RequestProcessor
@@ -292,12 +292,21 @@ public class ArticleAPI {
                 return;
             }
 
+            final String articleContent = article.optString(Common.CONTENT);
+
+            if (StringUtils.length(articleContent) < 128) {
+                jsonObject.put(Common.SUCC, false);
+                jsonObject.put(Keys.STATUS_CODE, "[article.content] length too short");
+
+                return;
+            }
+
             String articleTags = article.optString(Tag.TAGS);
             articleTags = Securities.securedHTML(articleTags);
             articleTags = "B3log," + articleTags;
             articleTags = Tag.formatTags(articleTags);
 
-            final String articleContent = article.optString(Common.CONTENT);
+
 
             LOGGER.log(Level.INFO, "Data [{0}]", requestJSONObject.toString(Rhythms.INDENT_FACTOR));
 

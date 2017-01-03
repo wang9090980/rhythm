@@ -22,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.b3log.latke.Keys;
 import org.b3log.latke.cache.Cache;
@@ -42,6 +43,7 @@ import org.b3log.latke.util.Requests;
 import org.b3log.latke.util.Strings;
 import org.b3log.rhythm.event.EventTypes;
 import org.b3log.rhythm.model.Article;
+
 import static org.b3log.rhythm.model.Article.ARTICLE;
 import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_CHECK_CNT;
 import static org.b3log.rhythm.model.Article.ARTICLE_ACCESSIBILITY_NOT_200_CNT;
@@ -50,6 +52,7 @@ import static org.b3log.rhythm.model.Article.ARTICLE_ORIGINAL_ID;
 import static org.b3log.rhythm.model.Article.ARTICLE_PERMALINK;
 import static org.b3log.rhythm.model.Article.ARTICLE_TAGS_REF;
 import static org.b3log.rhythm.model.Article.ARTICLE_TITLE;
+
 import org.b3log.rhythm.model.Blog;
 import org.b3log.rhythm.model.Common;
 import org.b3log.rhythm.model.Tag;
@@ -61,12 +64,13 @@ import org.b3log.rhythm.util.Rhythms;
 import org.b3log.rhythm.util.Securities;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 /**
  * Article processor.
  *
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.2.6.17, Apr 1, 2016
+ * @version 1.3.6.17, Jan 3, 2017
  * @since 0.1.4
  */
 @RequestProcessor
@@ -128,7 +132,6 @@ public class ArticleProcessor {
 
     /**
      * Updates an article.
-     *
      * <p>
      * Renders the response with a json object, for example,
      * <pre>
@@ -138,27 +141,24 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context, including a request json object, for example,      <pre>
-     * {
-     *     "article": {
-     *         "oId": "",
-     *         "articleTitle": "",
-     *         "articlePermalink": "/test",
-     *         "articleTags": "tag1, tag2, ....",
-     *         "articleAuthorEmail": "",
-     *         "articleContent": "",
-     *         "articleCreateDate": long,
-     *         "postToCommunity": boolean
-     *     },
-     *     "blogTitle": "",
-     *     "blogHost": "http://xxx.com", // clientHost
-     *     "blogVersion": "", // clientVersion
-     *     "blog": "", // clientName
-     *     "userB3Key": ""
-     *     "clientRuntimeEnv": "",
-     *     "clientAdminEmail": ""
-     * }
-     * </pre>
+     * @param context the specified context, including a request json object, for example,
+     *                "article": {
+     *                "oId": "",
+     *                "articleTitle": "",
+     *                "articlePermalink": "/test",
+     *                "articleTags": "tag1, tag2, ....",
+     *                "articleAuthorEmail": "",
+     *                "articleContent": "",
+     *                "articleCreateDate": long,
+     *                "postToCommunity": boolean
+     *                },
+     *                "blogTitle": "",
+     *                "blogHost": "http://xxx.com", // clientHost
+     *                "blogVersion": "", // clientVersion
+     *                "blog": "", // clientName
+     *                "userB3Key": ""
+     *                "clientRuntimeEnv": "",
+     *                "clientAdminEmail": ""
      */
     @RequestProcessing(value = "/article", method = HTTPRequestMethod.PUT)
     public void updateArticle(final HTTPRequestContext context) {
@@ -229,13 +229,11 @@ public class ArticleProcessor {
                     return;
                 }
 
-                // TODO: check article
-//                if (isInvalid(data)) {
-//                    ret.put(Keys.STATUS_CODE, false);
-//                    ret.put(Keys.MSG, Langs.get("badRequestLabel"));
-//
-//                    return ret;
-//                }
+                if (isInvalid(originalArticle)) {
+                    jsonObject.put(Keys.STATUS_CODE, "Invalid article");
+
+                    return;
+                }
             } catch (final Exception e) {
                 LOGGER.log(Level.ERROR, "Invalid request [blogHost=" + blogHost + "]", e);
                 return;
@@ -302,7 +300,7 @@ public class ArticleProcessor {
 
     /**
      * Adds an article.
-     *
+     * <p>
      * <p>
      * Renders the response with a json object, for example,
      * <pre>
@@ -312,27 +310,24 @@ public class ArticleProcessor {
      * </pre>
      * </p>
      *
-     * @param context the specified context, including a request json object, for example,      <pre>
-     * {
-     *     "article": {
-     *         "oId": "",
-     *         "articleTitle": "",
-     *         "articlePermalink": "/test",
-     *         "articleTags": "tag1, tag2, ....",
-     *         "articleAuthorEmail": "",
-     *         "articleContent": "",
-     *         "articleCreateDate": long,
-     *         "postToCommunity": boolean
-     *     },
-     *     "blogTitle": "",
-     *     "blogHost": "http://xxx.com", // clientHost
-     *     "blogVersion": "", // clientVersion
-     *     "blog": "", // clientName
-     *     "userB3Key": ""
-     *     "clientRuntimeEnv": "",
-     *     "clientAdminEmail": ""
-     * }
-     * </pre>
+     * @param context the specified context, including a request json object, for example,
+     *                "article": {
+     *                "oId": "",
+     *                "articleTitle": "",
+     *                "articlePermalink": "/test",
+     *                "articleTags": "tag1, tag2, ....",
+     *                "articleAuthorEmail": "",
+     *                "articleContent": "",
+     *                "articleCreateDate": long,
+     *                "postToCommunity": boolean
+     *                },
+     *                "blogTitle": "",
+     *                "blogHost": "http://xxx.com", // clientHost
+     *                "blogVersion": "", // clientVersion
+     *                "blog": "", // clientName
+     *                "userB3Key": ""
+     *                "clientRuntimeEnv": "",
+     *                "clientAdminEmail": ""
      */
     @RequestProcessing(value = "/article", method = HTTPRequestMethod.POST)
     public void addArticle(final HTTPRequestContext context) {
@@ -402,13 +397,11 @@ public class ArticleProcessor {
                     return;
                 }
 
-                // TODO: check article
-//                if (isInvalid(data)) {
-//                    ret.put(Keys.STATUS_CODE, false);
-//                    ret.put(Keys.MSG, Langs.get("badRequestLabel"));
-//
-//                    return ret;
-//                }
+                if (isInvalid(originalArticle)) {
+                    jsonObject.put(Keys.STATUS_CODE, "Invalid article");
+
+                    return;
+                }
             } catch (final Exception e) {
                 LOGGER.log(Level.ERROR, "Invalid request [blogHost=" + blogHost + "]", e);
                 return;
@@ -593,7 +586,6 @@ public class ArticleProcessor {
 
     /**
      * Removes unused properties of each article in the specified articles.
-     *
      * <p>
      * Remains the following properties:
      * <ul>
@@ -617,5 +609,22 @@ public class ArticleProcessor {
             article.remove(Blog.BLOG_VERSION);
             article.remove(Blog.BLOG);
         }
+    }
+
+    /**
+     * Checks whether the specified article is invalid.
+     *
+     * @param article the specified article
+     * @return {@code true} if it is invalid, returns {@code false} otherwise
+     */
+    private static boolean isInvalid(final JSONObject article) {
+        final String content = article.optString(Article.ARTICLE_CONTENT);
+        final String sucuredHTML = Securities.securedHTML(content);
+
+        if (sucuredHTML.length() < 128) {
+            return true;
+        }
+
+        return false;
     }
 }
