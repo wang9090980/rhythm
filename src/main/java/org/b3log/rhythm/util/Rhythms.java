@@ -25,7 +25,7 @@ import org.b3log.latke.util.Strings;
  * Rhythm utilities.
  *
  * @author <a href="mailto:DL88250@gmail.com">Liang Ding</a>
- * @version 1.6.1.24, Dec 26, 2016
+ * @version 1.6.1.25, Jan 12, 2017
  * @since 0.1.4
  */
 public final class Rhythms {
@@ -137,6 +137,7 @@ public final class Rhythms {
             add("1.6.0");
             add("1.7.0");
             add("1.8.0");
+            add("1.9.0");
         }
     };
 
@@ -149,7 +150,7 @@ public final class Rhythms {
     /**
      * The latest development Symphony version.
      */
-    public static final String SNAPSHOT_SYMPHONY_VERSION = "1.9.0";
+    public static final String SNAPSHOT_SYMPHONY_VERSION = "2.0.0";
 
     /**
      * Checks whether the specified client name is valid.
